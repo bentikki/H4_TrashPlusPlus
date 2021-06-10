@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Xamarin_H4_TrashPlusPlus\Xamarin_H4_TrashPlusPlus\Xamarin_H4_TrashPlusPlus.csproj" />
+    <ProjectReference Include="..\H4_TrashPlusPlus\WebApi_H4_TrashPlusPlus.csproj" />
   </ItemGroup>
 
 </Project>
