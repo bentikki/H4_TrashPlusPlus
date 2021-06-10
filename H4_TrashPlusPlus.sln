@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H4_TrashPlusPlus", "H4_TrashPlusPlus\H4_TrashPlusPlus.csproj", "{A4ECCCF8-3133-4794-8E69-BE100E603676}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi_H4_TrashPlusPlus", "H4_TrashPlusPlus\WebApi_H4_TrashPlusPlus.csproj", "{A4ECCCF8-3133-4794-8E69-BE100E603676}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.Tests", "WebApi.Tests\WebApi.Tests.csproj", "{8ACD1E36-6EC0-4B4C-B3AE-F428AC664FE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{A4ECCCF8-3133-4794-8E69-BE100E603676}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4ECCCF8-3133-4794-8E69-BE100E603676}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4ECCCF8-3133-4794-8E69-BE100E603676}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ACD1E36-6EC0-4B4C-B3AE-F428AC664FE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ACD1E36-6EC0-4B4C-B3AE-F428AC664FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ACD1E36-6EC0-4B4C-B3AE-F428AC664FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ACD1E36-6EC0-4B4C-B3AE-F428AC664FE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
