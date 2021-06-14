@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace H4_TrashPlusPlus.Models
+namespace Library_H4_TrashPlusPlus.Users.Models
 {
     public class CreateUserRequest
     {

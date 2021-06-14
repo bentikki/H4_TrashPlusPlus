@@ -2,11 +2,18 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Dapper;
 using Dapper.Contrib.Extensions;
+using H4_TrashPlusPlus.Entities;
+using Library_H4_TrashPlusPlus.Hashing;
 using Library_H4_TrashPlusPlus.Users.Entities;
 using Library_H4_TrashPlusPlus.Users.Models;
+using Library_H4_TrashPlusPlus.Users.Tokens;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Library_H4_TrashPlusPlus.Users.Repository
 {
@@ -23,16 +30,63 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         /// <param name="mail">Mail to validate.</param>
         /// <param name="password">Password to validate.</param>
         /// <returns>Bool based on validation success.</returns>
-        public bool Authenticate(string mail, string password)
+        public AuthenticateResponse Authenticate(string mail, string password, string ipAddress)
         {
             bool userAuthenticateSuccess = false;
-            using (var conn = UserFactory.GetSqlConnection())
+            AuthenticateResponse authenticateResponse = null;
+
+            // Get auth user data from existing entry.
+            AuthUsersView authUser = this.GetAuthUserByMail(mail);
+
+            // Validate login
+            HashingService hashingService = HashingFactory.GetHashingService();
+
+            userAuthenticateSuccess = hashingService.VerifyPassword(password, authUser.Password, authUser.Salt);
+
+
+            if (userAuthenticateSuccess)
             {
-                conn.Open();
-                userAuthenticateSuccess = conn.ExecuteScalar<bool>("SELECT count(*) FROM User WHERE Mail = @mail", new { @mail = mail });
+                // Login credentials was correct.
+
+                // Get user 
+                IUser selectedUser = this.GetUserByLoginName(mail);
+                
+                var jwtToken = TokenFactory.GetJwtTokenGenerator().GenerateJwtToken(selectedUser);
+                var refreshToken = TokenFactory.GetRefreshTokenGenerator().CreateRefreshToken(selectedUser,ipAddress);
+
+                // Create AuthenticateResponse object
+                authenticateResponse = new AuthenticateResponse(selectedUser, jwtToken, refreshToken.Token);
+            }
+            else
+            {
+                // Login credentials was not correct.
+                authenticateResponse = null;
             }
 
-            return userAuthenticateSuccess;
+            return authenticateResponse;
+        }
+
+        /// <summary>
+        /// Used to refresh login tokens.
+        /// </summary>
+        /// <param name="token">Current token.</param>
+        /// <param name="ipAddress">Ip address making the request.</param>
+        /// <returns>AuthenticateResponse containing refreshed token.</returns>
+        public AuthenticateResponse RefreshToken(string token, string ipAddress)
+        {
+            // Get user 
+            IUser selectedUser = this.GetUserByToken(token);
+
+            // If selecteduser could not be found by token, the token is not valid.
+            // Therefore throw an exception
+            if (selectedUser == null) throw new ArgumentException("Token does not exist.", nameof(token));
+
+            var jwtToken = TokenFactory.GetJwtTokenGenerator().GenerateJwtToken(selectedUser);
+            var refreshToken = TokenFactory.GetRefreshTokenGenerator().ReplaceRefreshToken(selectedUser, ipAddress, token);
+
+            // Create AuthenticateResponse object
+            AuthenticateResponse authenticateResponse = new AuthenticateResponse(selectedUser, jwtToken, refreshToken.Token);
+            return authenticateResponse;
         }
 
         /// <summary>
@@ -57,6 +111,42 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
 
             if (user == null)
                 throw new Exception("An unexpected error occured. The user could not be created successfully.");
+
+            return user;
+        }
+
+        /// <summary>
+        /// Returns user based on id given in argument.
+        /// </summary>
+        /// <param name="id">Id of requested user entity</param>
+        /// <returns>User with requested id, null if no such user exists.</returns>
+        public IUser GetUserById(int id)
+        {
+            IUser user = null;
+
+            using (var conn = UserFactory.GetSqlConnection())
+            {
+                conn.Open();
+                user = conn.Get<User>(id);
+            }
+            
+            return user;
+        }
+
+        /// <summary>
+        /// Returns user based on login name given in argument.
+        /// </summary>
+        /// <param name="loginName">login name of requested user entity</param>
+        /// <returns>User with requested login name, null if no such user exists.</returns>
+        public IUser GetUserByLoginName(string loginName)
+        {
+            User user = null;
+
+            using (var conn = UserFactory.GetSqlConnection())
+            {
+                conn.Open();
+                user = conn.QuerySingleOrDefault<User>("[SPGetUserByLoginName]", new { @LoginName = loginName }, commandType: CommandType.StoredProcedure);
+            }
 
             return user;
         }
@@ -89,5 +179,40 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
 
             return userIsUnique;
         }
+
+        /// <summary>
+        /// Returns IUser based on provided token
+        /// </summary>
+        /// <param name="token">Token of requested user</param>
+        /// <returns>IUser object matching the providede token.</returns>
+        public IUser GetUserByToken(string token)
+        {
+            IUser user;
+
+            using (var conn = UserFactory.GetSqlConnection())
+            {
+                conn.Open();
+                var procedure = "[SPGetUserByToken]";
+                var values = new { @Token = token };
+                user = conn.QuerySingleOrDefault<User>(procedure, values, commandType: CommandType.StoredProcedure);
+                conn.Close();
+            }
+
+            return user;
+        }
+        
+        private AuthUsersView GetAuthUserByMail(string mail)
+        {
+            AuthUsersView authUser = null;
+
+            using (var conn = UserFactory.GetSqlConnection())
+            {
+                conn.Open();
+                authUser = conn.QuerySingleOrDefault<AuthUsersView>("SELECT * FROM AuthUsersView WHERE Mail = @Email", new { @Email = mail });
+            }
+
+            return authUser;
+        }
+
     }
 }

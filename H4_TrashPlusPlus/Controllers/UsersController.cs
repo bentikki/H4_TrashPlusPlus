@@ -6,6 +6,9 @@ using System;
 using Library_H4_TrashPlusPlus.Users;
 using H4_TrashPlusPlus.Entities;
 using System.Data;
+using Library_H4_TrashPlusPlus.Users.Models;
+using Library_H4_TrashPlusPlus.Users.Entities;
+using Microsoft.Net.Http.Headers;
 
 namespace H4_TrashPlusPlus.Controllers
 {
@@ -37,7 +40,7 @@ namespace H4_TrashPlusPlus.Controllers
             }
             catch (DuplicateNameException e)
             {
-                return BadRequest((new { message = "A user with these creadentials already exists." }));
+                return BadRequest((new { message = "A user with these credentials already exists." }));
             }
 
             if (response == null)
@@ -50,93 +53,85 @@ namespace H4_TrashPlusPlus.Controllers
         [HttpPost("Authenticate")]
         public IActionResult Authenticate([FromBody] AuthenticateRequest model)
         {
-            var response = _userService.Authenticate(model, ipAddress());
+            AuthenticateResponse response = null;
+
+            try
+            {
+                response = _userService.Authenticate(model.Username, model.Password, GetIpAddress());
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { message = "An unexpected error occured. User could not be created" });
+            }
 
             if (response == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+                return Unauthorized(new { message = "Username or password is incorrect" });
 
-            setTokenCookie(response.RefreshToken);
+            SetTokenCookie(response.RefreshToken);
 
             return Ok(response);
         }
 
+        [AllowAnonymous]
+        [HttpPost("RefreshToken")]
+        public IActionResult RefreshToken()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+            var response = _userService.RefreshToken(refreshToken, GetIpAddress());
 
+            if (response == null)
+                return Unauthorized(new { message = "Invalid token" });
 
-        //    [AllowAnonymous]
-        //    [HttpPost("refresh-token")]
-        //    public IActionResult RefreshToken()
-        //    {
-        //        var refreshToken = Request.Cookies["refreshToken"];
-        //        var response = _userService.RefreshToken(refreshToken, ipAddress());
+            SetTokenCookie(response.RefreshToken);
 
-        //        if (response == null)
-        //            return Unauthorized(new { message = "Invalid token" });
+            return Ok(response);
+        }
 
-        //        setTokenCookie(response.RefreshToken);
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            // Get current logged in user Example
+            IUser currentUser = this.GetCurrentUser();
+            if(currentUser == null)
+                return Unauthorized(new { message = "Invalid token" });
 
-        //        return Ok(response);
-        //    }
+            var user = _userService.GetUserById(id);
+            if (user == null) return NotFound();
 
-        //    [AllowAnonymous]
-        //    [HttpPost("create-user")]
-        //    public IActionResult CreateUser()
-        //    {
-        //        var refreshToken = Request.Cookies["refreshToken"];
-        //        var response = _userService.RefreshToken(refreshToken, ipAddress());
+            return Ok(user);
+        }
 
-        //        if (response == null)
-        //            return Unauthorized(new { message = "Invalid token" });
+        //[HttpPost("Logout")]
+        //public IActionResult Logout([FromBody] RevokeTokenRequest model)
+        //{
+        //    // accept token from request body or cookie
+        //    var token = model.Token ?? Request.Cookies["refreshToken"];
 
-        //        setTokenCookie(response.RefreshToken);
+        //    if (string.IsNullOrEmpty(token))
+        //        return BadRequest(new { message = "Token is required" });
 
-        //        return Ok(response);
-        //    }
+        //    var response = _userService.RevokeToken(token, ipAddress());
 
-        //    [HttpPost("revoke-token")]
-        //    public IActionResult RevokeToken([FromBody] RevokeTokenRequest model)
-        //    {
-        //        // accept token from request body or cookie
-        //        var token = model.Token ?? Request.Cookies["refreshToken"];
+        //    if (!response)
+        //        return NotFound(new { message = "Token not found" });
 
-        //        if (string.IsNullOrEmpty(token))
-        //            return BadRequest(new { message = "Token is required" });
+        //    return Ok(new { message = "Token revoked" });
+        //}
 
-        //        var response = _userService.RevokeToken(token, ipAddress());
+        private string GetCurrentUserToken()
+        {
+            var accessToken = Request.Cookies["refreshToken"];
+            return accessToken;
+        }
 
-        //        if (!response)
-        //            return NotFound(new { message = "Token not found" });
-
-        //        return Ok(new { message = "Token revoked" });
-        //    }
-
-        //    [HttpGet]
-        //    public IActionResult GetAll()
-        //    {
-        //        var users = _userService.GetAll();
-        //        return Ok(users);
-        //    }
-
-        //    [HttpGet("{id}")]
-        //    public IActionResult GetById(int id)
-        //    {
-        //        var user = _userService.GetById(id);
-        //        if (user == null) return NotFound();
-
-        //        return Ok(user);
-        //    }
-
-        //    [HttpGet("{id}/refresh-tokens")]
-        //    public IActionResult GetRefreshTokens(int id)
-        //    {
-        //        var user = _userService.GetById(id);
-        //        if (user == null) return NotFound();
-
-        //        return Ok(user.RefreshTokens);
-        //    }
-
+        private IUser GetCurrentUser()
+        {
+            IUser currentUser = this._userService.GetUserByToken(this.GetCurrentUserToken());
+            return currentUser;
+        }
 
         // helper methods
-        private void setTokenCookie(string token)
+        private void SetTokenCookie(string token)
         {
             var cookieOptions = new CookieOptions
             {
@@ -146,14 +141,13 @@ namespace H4_TrashPlusPlus.Controllers
             Response.Cookies.Append("refreshToken", token, cookieOptions);
         }
 
-        //    private string ipAddress()
-        //    {
-        //        if (Request.Headers.ContainsKey("X-Forwarded-For"))
-        //            return Request.Headers["X-Forwarded-For"];
-        //        else
-        //            return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
-        //    }
-        //}
-
+        private string GetIpAddress()
+        {
+            if (Request.Headers.ContainsKey("X-Forwarded-For"))
+                return Request.Headers["X-Forwarded-For"];
+            else
+                return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+        }
+    
     }
 }

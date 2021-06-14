@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using H4_TrashPlusPlus.Entities;
 using Library_H4_TrashPlusPlus.Users.Entities;
 using Library_H4_TrashPlusPlus.Users.Models;
 using Library_H4_TrashPlusPlus.Users.Repository;
 using Library_H4_TrashPlusPlus.Validator;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Library_H4_TrashPlusPlus.Users
 {
@@ -64,43 +69,6 @@ namespace Library_H4_TrashPlusPlus.Users
         }
 
         /// <summary>
-        /// Authenticate user by login credentials.
-        /// Returns IUser object if successfull.
-        /// </summary>
-        /// <param name="email">Email to be used for quthentication.</param>
-        /// <param name="password">Password to be used for quthentication.</param>
-        /// <returns>IUser Object, Null if IUser could not be authenticated.</returns>
-        public IUser Authenticate(string mail, string password)
-        {
-            // Run validation
-            DefaultValidators.ValidateMailException(mail);
-            DefaultValidators.ValidatePasswordException(password);
-
-            IUser user = this.userRepository.Authenticate(mail, password);
-
-        }
-
-        //            var user = _context.Users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
-
-        //            // return null if user not found
-        //            if (user == null) return null;
-
-        //            // authentication successful so generate jwt and refresh tokens
-        //            var jwtToken = generateJwtToken(user);
-        //            var refreshToken = generateRefreshToken(ipAddress);
-
-        //            // save refresh token
-        //            user.RefreshTokens.Add(refreshToken);
-        //            _context.Update(user);
-        //            _context.SaveChanges();
-
-        //            return new AuthenticateResponse(user, jwtToken, refreshToken.Token);
-
-
-
-
-
-        /// <summary>
         /// Creates a user with the repository async.
         /// </summary>
         /// <param name="mail">the users mail</param>
@@ -111,6 +79,184 @@ namespace Library_H4_TrashPlusPlus.Users
             var task = Task.Run(() => this.CreateUser(mail, username, password));
             return await task;
         }
+
+
+        /// <summary>
+        /// Authenticate user by login credentials.
+        /// Returns AuthenticateResponse object if successfull.
+        /// </summary>
+        /// <param name="email">Email to be used for quthentication.</param>
+        /// <param name="password">Password to be used for quthentication.</param>
+        /// <returns>AuthenticateResponse Object, Null if IUser could not be authenticated.</returns>
+        public AuthenticateResponse Authenticate(string mail, string password, string ipAddress)
+        {
+            // Run validation
+            DefaultValidators.ValidateMailException(mail);
+            DefaultValidators.ValidatePasswordException(password);
+
+            AuthenticateResponse authenticateResponse = null;
+
+            try
+            {
+                authenticateResponse = this.userRepository.Authenticate(mail, password, ipAddress);
+            }
+            catch(SqlException e)
+            {
+                // An error occured while saving refresh token to db.
+                throw e;
+            }
+            catch (Exception e)
+            {
+                // An unexpected error occured.
+                throw e;
+            }
+
+            return authenticateResponse;
+        }
+
+        /// <summary>
+        /// Authenticate user by login credentials.
+        /// Returns AuthenticateResponse object if successfull.
+        /// </summary>
+        /// <param name="email">Email to be used for quthentication.</param>
+        /// <param name="password">Password to be used for quthentication.</param>
+        /// <returns>AuthenticateResponse Object, Null if IUser could not be authenticated.</returns>
+        public async Task<AuthenticateResponse> AuthenticateAsync(string mail, string password, string ipAddress)
+        {
+            var task = Task.Run(() => this.Authenticate(mail, password, ipAddress));
+            return await task;
+        }
+
+        /// <summary>
+        /// Return IUser object with requested ID.
+        /// Returns null if no such id exists.
+        /// </summary>
+        /// <param name="id">Id of requested IUser object</param>
+        /// <returns>IUser object matching the requested id, or null.</returns>
+        public IUser GetUserById(int id)
+        {
+            // Id validation
+            if (id < 1) throw new ArgumentException("Id must be above 0", nameof(id));
+
+            // Get requested user from repository.
+            IUser requestedUser = this.userRepository.GetUserById(id);
+
+            return requestedUser;
+        }
+
+        /// <summary>
+        /// Return IUser object with requested ID.
+        /// Returns null if no such id exists.
+        /// </summary>
+        /// <param name="id">Id of requested IUser object</param>
+        /// <returns>IUser object matching the requested id, or null.</returns>
+        public async Task<IUser> GetUserByIdAsync(int id)
+        {
+            var task = Task.Run(() => this.GetUserById(id));
+            return await task;
+        }
+
+        /// <summary>
+        /// Return IUser object with requested email.
+        /// Returns null if no such email exists.
+        /// </summary>
+        /// <param name="loginName">email of requested IUser object</param>
+        /// <returns>IUser object matching the requested email, or null.</returns>
+        public IUser GetUserByLoginName(string loginName)
+        {
+            // Login name validation
+            DefaultValidators.ValidateMailException(loginName);
+
+            // Get requested user from repository.
+            IUser requestedUser = this.userRepository.GetUserByLoginName(loginName);
+
+            return requestedUser;
+        }
+
+        /// <summary>
+        /// Return IUser object with requested email.
+        /// Returns null if no such email exists.
+        /// </summary>
+        /// <param name="loginName">email of requested IUser object</param>
+        /// <returns>IUser object matching the requested email, or null.</returns>
+        public async Task<IUser> GetUserByLoginNameAsync(string loginName)
+        {
+            var task = Task.Run(() => this.GetUserByLoginName(loginName));
+            return await task;
+        }
+
+        /// <summary>
+        /// Return IUser object with requested token.
+        /// Returns null if no such token exists.
+        /// </summary>
+        /// <param name="token">Token of requested user</param>
+        /// <returns>IUser object matching the requested token, or null.</returns>
+        public IUser GetUserByToken(string token)
+        {
+            // Validate argument input
+            if (token == null) throw new ArgumentNullException(nameof(token), "Token must not be null.");
+            if (string.IsNullOrEmpty(token) || string.IsNullOrWhiteSpace(token)) throw new ArgumentException("Token must contain a value.", nameof(token));
+
+            // Get requested user from repository.
+            IUser requestedUser = this.userRepository.GetUserByToken(token);
+
+            return requestedUser;
+        }
+
+        /// <summary>
+        /// Return IUser object with requested token.
+        /// Returns null if no such token exists.
+        /// </summary>
+        /// <param name="token">Token of requested user</param>
+        /// <returns>IUser object matching the requested token, or null.</returns>
+        public async Task<IUser> GetUserByTokenAsync(string token)
+        {
+            var task = Task.Run(() => this.GetUserByTokenAsync(token));
+            return await task;
+        }
+
+        /// <summary>
+        /// Refreshes JWT Token based on current token and IP address.
+        /// </summary>
+        /// <param name="token">Current token to refresh.</param>
+        /// <param name="ipAddress">IP Address origin</param>
+        /// <returns>AuthenticateResponse</returns>
+        public AuthenticateResponse RefreshToken(string token, string ipAddress)
+        {
+            // Validate argument input
+            if (token == null) throw new ArgumentNullException(nameof(token), "Token must not be null.");
+            if (ipAddress == null) throw new ArgumentNullException(nameof(ipAddress), "IP Address must not be null.");
+
+            if (string.IsNullOrEmpty(token) || string.IsNullOrWhiteSpace(token)) throw new ArgumentException("Token must contain a value.", nameof(token));
+            if (string.IsNullOrEmpty(ipAddress) || string.IsNullOrWhiteSpace(ipAddress)) throw new ArgumentException("IP Address must contain a value.", nameof(ipAddress));
+
+            AuthenticateResponse authenticateResponse = null;
+
+            try
+            {
+                // Refrsh token via repository.
+                authenticateResponse = this.userRepository.RefreshToken(token, ipAddress);
+            }
+            catch (ArgumentException e)
+            {
+                // Token does not exist in DB
+                throw e;
+            }
+            catch (Exception e)
+            {
+                // An unexpected error occured.
+                throw e;
+            }
+
+            return authenticateResponse;
+        }
+
+        public async Task<AuthenticateResponse> RefreshTokenAsync(string token, string ipAddress)
+        {
+            var task = Task.Run(() => this.RefreshToken(token, ipAddress));
+            return await task;
+        }
+
 
     }
 }

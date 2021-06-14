@@ -15,5 +15,12 @@ namespace Library_H4_TrashPlusPlus
             SqlConnection sqlConnection = new SqlConnection(connectionString);
             return sqlConnection;
         }
+
+        internal static string JwtSecret()
+        {
+            string jwtSecretString = @"vxRvSjFCCkiFVDGPqnxdgg4nvqwtEn5EGDQPmmUkv0ug26Rmle2e7UOvQamObvWVvw1diOHb2ueUyaPhots+8n+gRNrP5Y6hBkKPD/Cvq9+Q+A";
+            return jwtSecretString;
+
+        }
     }
 }
