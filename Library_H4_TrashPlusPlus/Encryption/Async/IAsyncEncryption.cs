@@ -6,7 +6,7 @@ namespace Library_H4_TrashPlusPlus.Encryption
 {
     public interface IAsyncEncryption : IEncryption
     {
-        byte[] GetPublicKey();
-        void SetPublicKey(byte[] key);
+        string GetPublicKey();
+        void SetPublicKey(string key);
     }
 }

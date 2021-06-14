@@ -6,7 +6,7 @@ namespace Library_H4_TrashPlusPlus.Encryption
 {
     public interface IEncryption
     {
-        string Encrypt(string rawText);
+        string Encrypt(string plainText);
         byte[] Encrypt(byte[] rawBytes);
         string Decrypt(string encryptedText);
         byte[] Decrypt(byte[] encryptedBytes);
