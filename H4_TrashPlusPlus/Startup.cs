@@ -1,15 +1,20 @@
+using H4_TrashPlusPlus.Helpers;
+using H4_TrashPlusPlus.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 
 namespace H4_TrashPlusPlus
 {
@@ -25,8 +30,6 @@ namespace H4_TrashPlusPlus
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // in memory database used for simplicity, change to a real db for production applications
-            services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TestDb"));
             services.AddCors();
             services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.IgnoreNullValues = true);
 
@@ -62,12 +65,8 @@ namespace H4_TrashPlusPlus
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // add hardcoded test user to db on startup,  
-            // plain text password is used for simplicity, hashed passwords should be used in production applications
-            context.Users.Add(new User { FirstName = "Test", LastName = "User", Username = "test", Password = "test" });
-            context.SaveChanges();
 
             app.UseRouting();
 

@@ -7,9 +7,9 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ApiWithJwtRefreshToken.Models;
-using ApiWithJwtRefreshToken.Entities;
-using ApiWithJwtRefreshToken.Helpers;
+using H4_TrashPlusPlus.Models;
+using H4_TrashPlusPlus.Entities;
+using H4_TrashPlusPlus.Helpers;
 
 namespace H4_TrashPlusPlus.Services
 {
@@ -24,7 +24,6 @@ namespace H4_TrashPlusPlus.Services
 
     public class UserService : IUserService
     {
-        private DataContext _context;
         private readonly AppSettings _appSettings;
 
         public UserService(

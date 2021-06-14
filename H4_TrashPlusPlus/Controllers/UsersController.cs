@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using ApiWithJwtRefreshToken.Services;
-using ApiWithJwtRefreshToken.Models;
+using H4_TrashPlusPlus.Services;
+using H4_TrashPlusPlus.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 
