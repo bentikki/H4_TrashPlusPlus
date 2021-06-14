@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Library_H4_TrashPlusPlus.User.Models;
+using Library_H4_TrashPlusPlus.Users.Models;
 
-namespace Library_H4_TrashPlusPlus.User.Repository
+namespace Library_H4_TrashPlusPlus.Users.Repository
 {
     /// <summary>
     /// User Repository used while dealing with API
