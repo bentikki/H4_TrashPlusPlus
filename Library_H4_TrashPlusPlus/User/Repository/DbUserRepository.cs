@@ -40,7 +40,6 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
 
             // Validate login
             HashingService hashingService = HashingFactory.GetHashingService();
-
             userAuthenticateSuccess = hashingService.VerifyPassword(password, authUser.Password, authUser.Salt);
 
 
@@ -94,18 +93,32 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         /// </summary>
         /// <param name="userToCreate">IUser object to create user entity from</param>
         /// <returns>Created user entity as IUser object</returns>
-        public IUser CreateUser(IUser userToCreate)
+        public IUser CreateUser(CreateUserRequest userToCreate)
         {
             IUser user = null;
 
             if (!this.UserIsUnique(userToCreate))
                 throw new DuplicateNameException("A user with these credentials already exist.");
 
+            // Hash password via hashing service
+            HashingService hashingService = HashingFactory.GetHashingService();
+            IHashedUser hashedUser = hashingService.CreateHashedUser(userToCreate.Mail, userToCreate.Password);
+
             using (var conn = UserFactory.GetSqlConnection())
             {
                 conn.Open();
 
-                var identity = conn.Insert((User)userToCreate);
+                // Execute stored procedure to create new user with hashed password.
+                var procedure = "[SPCreateNewUser]";
+                var values = new { 
+                    @Username = userToCreate.Username,
+                    @Email = userToCreate.Mail,
+                    @Password = hashedUser.Password,
+                    @Salt = hashedUser.Salt
+                };
+                var identity = conn.ExecuteScalar<int>(procedure, values, commandType: CommandType.StoredProcedure);
+
+                // Get newly created user.
                 user = conn.Get<User>(identity);
             }
 

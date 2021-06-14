@@ -42,12 +42,13 @@ namespace Library_H4_TrashPlusPlus.Users
             DefaultValidators.ValidateUsernameException(username);
 
             // Create user object
-            IUser user = new User(mail, username, password);
+            IUser user;
+            CreateUserRequest createUserRequest = new CreateUserRequest(mail, username, password);
 
             try
             {
                 // Create use via repository.
-                user = this.userRepository.CreateUser(user);
+                user = this.userRepository.CreateUser(createUserRequest);
             }
             catch(SqlException e)
             {

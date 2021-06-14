@@ -42,6 +42,11 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             throw new NotImplementedException();
         }
 
+        public IUser CreateUser(CreateUserRequest userToCreate)
+        {
+            throw new NotImplementedException();
+        }
+
         public IUser GetUserById(int id)
         {
             throw new NotImplementedException();

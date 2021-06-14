@@ -10,6 +10,7 @@ namespace Library_H4_TrashPlusPlus.Users.Entities
         public int Id { get; set; }
         public string Mail { get; set; }
         public string Username { get; set; }
+        public string Password { get; set; }
 
         // An empty constructor must be used, in order to use Database entitiy mapper.
         public User() { }
@@ -18,6 +19,7 @@ namespace Library_H4_TrashPlusPlus.Users.Entities
         {
             this.Mail = mail;
             this.Username = username;
+            this.Password = password;
         }
     }
 }
