@@ -15,11 +15,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xamarin.Tests", "Xamarin.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WepApi.Tests", "WepApi.Tests\WepApi.Tests.csproj", "{08BDDD2B-26A4-4FD3-A19F-7E934C157B01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsersLibrary", "UsersLibrary\UsersLibrary.csproj", "{DE7915F3-9AB9-4009-8FAC-05754054F8FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsersLibrary", "UsersLibrary\UsersLibrary.csproj", "{DE7915F3-9AB9-4009-8FAC-05754054F8FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsersLibrary.Tests", "UsersLibrary.Tests\UsersLibrary.Tests.csproj", "{B129A71B-2A00-445C-AEA8-930D115D5FEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsersLibrary.Tests", "UsersLibrary.Tests\UsersLibrary.Tests.csproj", "{B129A71B-2A00-445C-AEA8-930D115D5FEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidatorLibrary", "ValidatorLibrary\ValidatorLibrary.csproj", "{5FD4C716-77FF-40AF-AA5D-1DB45815C9C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValidatorLibrary", "ValidatorLibrary\ValidatorLibrary.csproj", "{5FD4C716-77FF-40AF-AA5D-1DB45815C9C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EncryptionLibrary", "EncryptionLibrary\EncryptionLibrary.csproj", "{D4968132-650B-409F-9AAB-889755365DB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptionLibrary.Tests", "EncryptionLibrary.Tests\EncryptionLibrary.Tests.csproj", "{71E4F796-926E-4F64-9116-87A9138F73A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,6 +147,30 @@ Global
 		{5FD4C716-77FF-40AF-AA5D-1DB45815C9C8}.Release|iPhone.Build.0 = Release|Any CPU
 		{5FD4C716-77FF-40AF-AA5D-1DB45815C9C8}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{5FD4C716-77FF-40AF-AA5D-1DB45815C9C8}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{D4968132-650B-409F-9AAB-889755365DB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4968132-650B-409F-9AAB-889755365DB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4968132-650B-409F-9AAB-889755365DB1}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{D4968132-650B-409F-9AAB-889755365DB1}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{D4968132-650B-409F-9AAB-889755365DB1}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{D4968132-650B-409F-9AAB-889755365DB1}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{D4968132-650B-409F-9AAB-889755365DB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4968132-650B-409F-9AAB-889755365DB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4968132-650B-409F-9AAB-889755365DB1}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{D4968132-650B-409F-9AAB-889755365DB1}.Release|iPhone.Build.0 = Release|Any CPU
+		{D4968132-650B-409F-9AAB-889755365DB1}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{D4968132-650B-409F-9AAB-889755365DB1}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{71E4F796-926E-4F64-9116-87A9138F73A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71E4F796-926E-4F64-9116-87A9138F73A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71E4F796-926E-4F64-9116-87A9138F73A9}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{71E4F796-926E-4F64-9116-87A9138F73A9}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{71E4F796-926E-4F64-9116-87A9138F73A9}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{71E4F796-926E-4F64-9116-87A9138F73A9}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{71E4F796-926E-4F64-9116-87A9138F73A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71E4F796-926E-4F64-9116-87A9138F73A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71E4F796-926E-4F64-9116-87A9138F73A9}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{71E4F796-926E-4F64-9116-87A9138F73A9}.Release|iPhone.Build.0 = Release|Any CPU
+		{71E4F796-926E-4F64-9116-87A9138F73A9}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{71E4F796-926E-4F64-9116-87A9138F73A9}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
