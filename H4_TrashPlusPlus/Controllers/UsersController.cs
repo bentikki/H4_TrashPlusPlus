@@ -9,6 +9,8 @@ using System.Data;
 using Library_H4_TrashPlusPlus.Users.Models;
 using Library_H4_TrashPlusPlus.Users.Entities;
 using Microsoft.Net.Http.Headers;
+using Library_H4_TrashPlusPlus.Encryption;
+using Library_H4_TrashPlusPlus;
 
 namespace H4_TrashPlusPlus.Controllers
 {
@@ -46,7 +48,7 @@ namespace H4_TrashPlusPlus.Controllers
             if (response == null)
                 return BadRequest(new { message = "An unexpected error occured. User could not be created" });
 
-            return Ok(response);
+            return Ok(true);
         }
 
         [AllowAnonymous]
@@ -58,6 +60,9 @@ namespace H4_TrashPlusPlus.Controllers
             try
             {
                 response = _userService.Authenticate(model.Username, model.Password, GetIpAddress());
+
+                // Encrypt response before send
+                response = ObjectEncryptor.EncryptAuthenticateResponse(EncryptionFactory.GenerateAsyncEncryption(model.PublicKey), response);
             }
             catch (Exception)
             {

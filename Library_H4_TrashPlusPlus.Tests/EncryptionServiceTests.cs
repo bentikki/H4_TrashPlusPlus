@@ -43,6 +43,9 @@ namespace Library_H4_TrashPlusPlus.Tests
             // Act
             string encrypted = asyncEncryption1.Encrypt(testString);
             string newTestString = asyncEncryption.Decrypt(encrypted);
+
+            string key = asyncEncryption.GetPublicKey();
+
             // Assert
             Assert.True(testString == newTestString);
 
@@ -94,6 +97,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             // Act
             string encrypted = syncEncryption1.Encrypt(testString);
             string newTestString = syncEncryption.Decrypt(encrypted);
+
             // Assert
             Assert.True(testString == newTestString);
         }

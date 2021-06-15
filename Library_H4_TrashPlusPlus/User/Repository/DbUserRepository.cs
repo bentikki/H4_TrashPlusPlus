@@ -9,6 +9,7 @@ using System.Text;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using H4_TrashPlusPlus.Entities;
+using Library_H4_TrashPlusPlus.Encryption;
 using Library_H4_TrashPlusPlus.Hashing;
 using Library_H4_TrashPlusPlus.Users.Entities;
 using Library_H4_TrashPlusPlus.Users.Models;
@@ -32,6 +33,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         /// <returns>Bool based on validation success.</returns>
         public AuthenticateResponse Authenticate(string mail, string password, string ipAddress)
         {
+
             bool userAuthenticateSuccess = false;
             AuthenticateResponse authenticateResponse = null;
 
@@ -52,6 +54,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
                 
                 var jwtToken = TokenFactory.GetJwtTokenGenerator().GenerateJwtToken(selectedUser);
                 var refreshToken = TokenFactory.GetRefreshTokenGenerator().CreateRefreshToken(selectedUser,ipAddress);
+
 
                 // Create AuthenticateResponse object
                 authenticateResponse = new AuthenticateResponse(selectedUser, jwtToken, refreshToken.Token);
@@ -111,8 +114,8 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
                 // Execute stored procedure to create new user with hashed password.
                 var procedure = "[SPCreateNewUser]";
                 var values = new { 
-                    @Username = userToCreate.Username,
-                    @Email = userToCreate.Mail,
+                    @Username = CommonSettingsFactory.SyncEncrypter.Encrypt(userToCreate.Username),
+                    @Email = CommonSettingsFactory.SyncEncrypter.Encrypt(userToCreate.Mail),
                     @Password = hashedUser.Password,
                     @Salt = hashedUser.Salt
                 };
@@ -142,6 +145,9 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
                 conn.Open();
                 user = conn.Get<User>(id);
             }
+
+            // Decrypt object.
+            user = ObjectDecrypter.DecryptIUser(CommonSettingsFactory.SyncEncrypter, user);
             
             return user;
         }
@@ -153,13 +159,17 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         /// <returns>User with requested login name, null if no such user exists.</returns>
         public IUser GetUserByLoginName(string loginName)
         {
-            User user = null;
+            IUser user = null;
+            string loginNameEncrypted = CommonSettingsFactory.SyncEncrypter.Encrypt(loginName);
 
             using (var conn = UserFactory.GetSqlConnection())
             {
                 conn.Open();
-                user = conn.QuerySingleOrDefault<User>("[SPGetUserByLoginName]", new { @LoginName = loginName }, commandType: CommandType.StoredProcedure);
+                user = conn.QuerySingleOrDefault<User>("[SPGetUserByLoginName]", new { @LoginName = loginNameEncrypted }, commandType: CommandType.StoredProcedure);
             }
+
+            // Decrypt object.
+            user = ObjectDecrypter.DecryptIUser(CommonSettingsFactory.SyncEncrypter, user);
 
             return user;
         }
@@ -172,13 +182,19 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         private bool UserIsUnique(IUser userToCheck)
         {
             bool userIsUnique;
+            IUser userCopy = new User() 
+            { 
+                Username = userToCheck.Username,
+                Mail = userToCheck.Mail
+            };
+            userCopy = ObjectEncryptor.EncryptIUser(CommonSettingsFactory.SyncEncrypter, userCopy);
 
             using (var conn = UserFactory.GetSqlConnection())
             {
                 conn.Open();
 
                 var procedure = "[SPUserEmailIsUnique]";
-                var values = new { @Email = userToCheck.Mail };
+                var values = new { @Email = userCopy.Mail };
                 var SPreturn = conn.ExecuteScalar(procedure, values, commandType: CommandType.StoredProcedure);
 
                 conn.Close();
@@ -216,8 +232,9 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         
         private AuthUsersView GetAuthUserByMail(string mail)
         {
+            mail = CommonSettingsFactory.SyncEncrypter.Encrypt(mail);
             AuthUsersView authUser = null;
-
+            
             using (var conn = UserFactory.GetSqlConnection())
             {
                 conn.Open();

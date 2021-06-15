@@ -226,11 +226,21 @@ namespace Library_H4_TrashPlusPlus.Tests
         public void Authenticate_InvalidLogin_ShouldReturnNull()
         {
             // Arrange
+            AuthenticateResponse authenticateResponse;
+            long randomNumber = new Random().Next(0, 10000);
+            string email = "testmail" + randomNumber + "@mail.com";
+            string password = "testpassword" + randomNumber;
+
+            this.userServiceDb.CreateUser(email, "testUsername", password);
 
             // Act
+            authenticateResponse = this.userServiceDb.Authenticate(email, password+"1", "0.0.0.0");
 
             // Assert
-            Assert.Fail();
+            Assert.IsNull(authenticateResponse);
+            //Assert.IsNull(authenticateResponse.UserObject);
+            //Assert.IsNull(authenticateResponse.JwtToken);
+            //Assert.IsNull(authenticateResponse.RefreshToken);
         }
     }
 }

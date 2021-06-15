@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library_H4_TrashPlusPlus.Encryption;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
@@ -20,7 +21,34 @@ namespace Library_H4_TrashPlusPlus
         {
             string jwtSecretString = @"vxRvSjFCCkiFVDGPqnxdgg4nvqwtEn5EGDQPmmUkv0ug26Rmle2e7UOvQamObvWVvw1diOHb2ueUyaPhots+8n+gRNrP5Y6hBkKPD/Cvq9+Q+A";
             return jwtSecretString;
+        }
 
+
+        private static IEncryption syncEncrypter;
+        internal static IEncryption SyncEncrypter
+        {
+            get 
+            {
+                if (syncEncrypter == null)
+                {
+                    byte[] key = Convert.FromBase64String("FtxmJsjVZJ+tcTaheQAQh8PF3F/Gzw9c0TE1bDbaeag=");
+                    byte[] iv = Convert.FromBase64String("texUprSmmrS+TcadjTWvaQ==");
+
+                    IEncryption encryption = EncryptionFactory.GenerateSyncEncryption(key, iv);
+                    syncEncrypter = encryption;
+                }
+
+                return syncEncrypter;
+            }
+        }
+
+        internal static IEncryption GetAsyncEncryption()
+        {
+            string key = @"<RSAKeyValue><Modulus>4FEEVkMAgguDfC/UmlMLvaZrTnsJLPEmN58DUKI72fWqp77cvlqTGgzlW2+ZNrVhDrQB4bdYDm/yNNW1ULkyjudVLRS4oG3224MFnm4GzjRDTH+IEKDi95+kXHTpWLhftE3dB+9zsunVi6gl5f0vHZk6s3R7PMvJGSt9dax6Cjq79VysObJZKKFSTk7dQikRxdA1laXo0z4AoJHbEqJAtvJ8IFaQpU/YHNmW76pbTUv9ucA76rJVwgF2gfvpcipyfMMqmGhwMTz+LISHzEWD3R961fjKbFuDfE3gC6H/ycjClyPxkLaY5ZtpEIsTloK+AqmCdf5wz+AKvKMeAIJCcQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
+
+            IEncryption encryption = EncryptionFactory.GenerateAsyncEncryption(key);
+
+            return encryption;
         }
     }
 }
