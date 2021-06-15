@@ -61,7 +61,7 @@ namespace H4_TrashPlusPlus
             });
 
             // configure DI for application services
-            services.AddScoped<IUserService, UserService>(x => UserServiceFactory.GetUserServiceDB());
+            services.AddScoped<IUserService, UserService>(x => (UserService)UserServiceFactory.GetUserServiceDB());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
