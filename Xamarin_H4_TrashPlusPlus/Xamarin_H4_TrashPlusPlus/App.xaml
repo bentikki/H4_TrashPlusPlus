@@ -1,8 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Xamarin_H4_TrashPlusPlus.App">
+             x:Class="Xamarin_H4_TrashPlusPlus.App"
+             NavigationPage.HasNavigationBar="False">
     <Application.Resources>
 
+        <Thickness x:Key="PageMargin">20</Thickness>
+
+        <!-- Colors -->
+        <Color x:Key="AppPrimaryColor">#95d99b</Color>
+        <Color x:Key="LightPrimaryColor">#e9eae6</Color>
+        <Color x:Key="DarkPrimaryColor">#84c88a</Color>
+        <Color x:Key="LinkColor">#6C4AFF</Color>
+        <Color x:Key="DarkColor">#3c3d3c</Color>
+        <Color x:Key="GreyColor">#a5a5a5</Color>
+        <Color x:Key="LightColor">#ffffff</Color>
+
+        <!-- Implicit styles -->
+        <Style TargetType="ContentPage"
+               ApplyToDerivedTypes="True">
+            <Setter Property="BackgroundColor"
+                    Value="{StaticResource AppPrimaryColor}" />
+        </Style>
     </Application.Resources>
 </Application>
