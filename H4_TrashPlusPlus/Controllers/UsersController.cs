@@ -31,7 +31,7 @@ namespace H4_TrashPlusPlus.Controllers
             User response = null;
             try
             {
-                response = (User)_userService.CreateUser(model.Email, model.Username, model.Password);
+                response = (User)_userService.CreateUser(model.Mail, model.Username, model.Password);
 
             }
             catch (ArgumentException e)
