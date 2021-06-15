@@ -23,7 +23,7 @@ namespace Library_H4_TrashPlusPlus.Users
 
         private IUserRepository userRepository;
 
-        public UserService(IUserRepository userRepository)
+        internal UserService(IUserRepository userRepository)
         {
             this.userRepository = userRepository;
         }
@@ -252,6 +252,13 @@ namespace Library_H4_TrashPlusPlus.Users
             return authenticateResponse;
         }
 
+
+        /// <summary>
+        /// Refreshes JWT Token based on current token and IP address.
+        /// </summary>
+        /// <param name="token">Current token to refresh.</param>
+        /// <param name="ipAddress">IP Address origin</param>
+        /// <returns>AuthenticateResponse</returns>
         public async Task<AuthenticateResponse> RefreshTokenAsync(string token, string ipAddress)
         {
             var task = Task.Run(() => this.RefreshToken(token, ipAddress));

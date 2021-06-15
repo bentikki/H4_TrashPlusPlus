@@ -15,7 +15,7 @@ namespace Library_H4_TrashPlusPlus.Tests
         [SetUp]
         public void Setup()
         {
-            userServiceDb = new UserService(new DbUserRepository());
+            userServiceDb = UserServiceFactory.GetUserServiceDB();
         }
 
         [Test]

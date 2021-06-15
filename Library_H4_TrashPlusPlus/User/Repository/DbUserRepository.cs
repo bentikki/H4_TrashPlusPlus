@@ -107,7 +107,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             HashingService hashingService = HashingFactory.GetHashingService();
             IHashedUser hashedUser = hashingService.CreateHashedUser(userToCreate.Mail, userToCreate.Password);
 
-            using (var conn = UserFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnection())
             {
                 conn.Open();
 
@@ -140,7 +140,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         {
             IUser user = null;
 
-            using (var conn = UserFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnection())
             {
                 conn.Open();
                 user = conn.Get<User>(id);
@@ -162,7 +162,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             IUser user = null;
             string loginNameEncrypted = CommonSettingsFactory.SyncEncrypter.Encrypt(loginName);
 
-            using (var conn = UserFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnection())
             {
                 conn.Open();
                 user = conn.QuerySingleOrDefault<User>("[SPGetUserByLoginName]", new { @LoginName = loginNameEncrypted }, commandType: CommandType.StoredProcedure);
@@ -175,6 +175,27 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         }
 
         /// <summary>
+        /// Returns IUser based on provided token
+        /// </summary>
+        /// <param name="token">Token of requested user</param>
+        /// <returns>IUser object matching the providede token.</returns>
+        public IUser GetUserByToken(string token)
+        {
+            IUser user;
+
+            using (var conn = UserServiceFactory.GetSqlConnection())
+            {
+                conn.Open();
+                var procedure = "[SPGetUserByToken]";
+                var values = new { @Token = token };
+                user = conn.QuerySingleOrDefault<User>(procedure, values, commandType: CommandType.StoredProcedure);
+                conn.Close();
+            }
+
+            return user;
+        }
+
+        /// <summary>
         /// Checks if a user with thise unique paramerters already exists in the database.
         /// </summary>
         /// <param name="userToCheck">IUser object to check.</param>
@@ -182,14 +203,14 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         private bool UserIsUnique(IUser userToCheck)
         {
             bool userIsUnique;
-            IUser userCopy = new User() 
-            { 
+            IUser userCopy = new User()
+            {
                 Username = userToCheck.Username,
                 Mail = userToCheck.Mail
             };
             userCopy = ObjectEncryptor.EncryptIUser(CommonSettingsFactory.SyncEncrypter, userCopy);
 
-            using (var conn = UserFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnection())
             {
                 conn.Open();
 
@@ -209,33 +230,12 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             return userIsUnique;
         }
 
-        /// <summary>
-        /// Returns IUser based on provided token
-        /// </summary>
-        /// <param name="token">Token of requested user</param>
-        /// <returns>IUser object matching the providede token.</returns>
-        public IUser GetUserByToken(string token)
-        {
-            IUser user;
-
-            using (var conn = UserFactory.GetSqlConnection())
-            {
-                conn.Open();
-                var procedure = "[SPGetUserByToken]";
-                var values = new { @Token = token };
-                user = conn.QuerySingleOrDefault<User>(procedure, values, commandType: CommandType.StoredProcedure);
-                conn.Close();
-            }
-
-            return user;
-        }
-        
         private AuthUsersView GetAuthUserByMail(string mail)
         {
             mail = CommonSettingsFactory.SyncEncrypter.Encrypt(mail);
             AuthUsersView authUser = null;
             
-            using (var conn = UserFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnection())
             {
                 conn.Open();
                 authUser = conn.QuerySingleOrDefault<AuthUsersView>("SELECT * FROM AuthUsersView WHERE Mail = @Email", new { @Email = mail });
