@@ -62,6 +62,11 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             throw new NotImplementedException();
         }
 
+        public bool Logout(string token, string ipAddress)
+        {
+            throw new NotImplementedException();
+        }
+
         public AuthenticateResponse RefreshToken(string token, string ipAddress)
         {
             throw new NotImplementedException();

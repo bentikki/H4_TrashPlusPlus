@@ -205,6 +205,28 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         }
 
         /// <summary>
+        /// Logs out user by destoying token, and revoking token in DB.
+        /// </summary>
+        /// <param name="token">Current token</param>
+        /// <param name="ipAddress">IP Address origin</param>
+        /// <returns>Bool true if user was successfully logged out, false if not.</returns>
+        public bool Logout(string token, string ipAddress)
+        {
+            bool revokeSuccess = false;
+            IUser user = this.GetUserByToken(token);
+
+            // Check if the token exists.
+            if (user == null) throw new ArgumentException("No user could be found with this token", nameof(token));
+
+            //user = ObjectEncryptor.EncryptIUser(CommonSettingsFactory.SyncEncrypter, user);
+
+            revokeSuccess = TokenFactory.GetRefreshTokenGenerator().RevokeRefreshToken(user, ipAddress, token);
+
+            return revokeSuccess;
+
+        }
+
+        /// <summary>
         /// Checks if a user with thise unique paramerters already exists in the database.
         /// </summary>
         /// <param name="userToCheck">IUser object to check.</param>
