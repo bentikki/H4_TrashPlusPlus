@@ -6,15 +6,21 @@ using System.Text;
 
 namespace Library_H4_TrashPlusPlus.Users
 {
-    public static class UserFactory
+    public static class UserServiceFactory
     {
         internal static SqlConnection GetSqlConnection()
         {
             return CommonSettingsFactory.GetDBConnectionString();
         }
-        public static UserService GetUserServiceDB()
+        public static IUserService GetUserServiceDB()
         {
             return new UserService(new DbUserRepository());
+        }
+
+        public static IUserService GetUserServiceApi()
+        {
+            string apiString = "";
+            return new UserService(new ApiUserRepository(apiString));
         }
 
     }

@@ -25,7 +25,7 @@ namespace Library_H4_TrashPlusPlus.Users.Tokens.RefreshTokens
             // Generate jwt and refresh tokens
             var refreshToken = GenerateRefreshToken(ipAddress, selectedUser);
 
-            using (var conn = UserFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnection())
             {
                 conn.Open();
                 long refreshTokenId = conn.Insert(refreshToken);
@@ -51,7 +51,7 @@ namespace Library_H4_TrashPlusPlus.Users.Tokens.RefreshTokens
             oldRefreshToken.RevokedByIp = ipAddress;
             oldRefreshToken.ReplacedByToken = newRefreshToken.Token;
 
-            using (var conn = UserFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnection())
             {
                 conn.Open();
 
@@ -85,7 +85,7 @@ namespace Library_H4_TrashPlusPlus.Users.Tokens.RefreshTokens
 
         private RefreshToken GetRefreshTokenByToken(string token)
         {
-            using (var conn = UserFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnection())
             {
                 conn.Open();
                 RefreshToken refreshToken = conn.QuerySingleOrDefault<RefreshToken>("Select * from RefreshToken WHERE Token = @refreshToken", new { @refreshToken = token});
