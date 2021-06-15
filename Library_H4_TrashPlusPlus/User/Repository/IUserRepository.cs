@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Library_H4_TrashPlusPlus.User.Models;
+using System.Threading.Tasks;
+using Library_H4_TrashPlusPlus.Users.Models;
 
-namespace Library_H4_TrashPlusPlus.User.Repository
+namespace Library_H4_TrashPlusPlus.Users.Repository
 {
     public interface IUserRepository
     {
-        IUser CreateUser(IUser userToCreate);
+        IUser CreateUser(CreateUserRequest userToCreate);
+        IUser GetUserById(int id);
+        IUser GetUserByLoginName(string loginName);
+        AuthenticateResponse Authenticate(string mail, string password, string ipAddress);
+        AuthenticateResponse RefreshToken(string token, string ipAddress);
+        IUser GetUserByToken(string token);
     }
 }
