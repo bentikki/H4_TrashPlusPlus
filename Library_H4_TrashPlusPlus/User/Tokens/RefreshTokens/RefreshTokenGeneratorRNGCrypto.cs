@@ -4,6 +4,7 @@ using H4_TrashPlusPlus.Entities;
 using Library_H4_TrashPlusPlus.Users.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -24,14 +25,25 @@ namespace Library_H4_TrashPlusPlus.Users.Tokens.RefreshTokens
         {
             // Generate jwt and refresh tokens
             var refreshToken = GenerateRefreshToken(ipAddress, selectedUser);
+            long refreshTokenId = 0;
+            RefreshToken createdToken; 
 
-            using (var conn = UserServiceFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnectionRefreshTokenCreator())
             {
                 conn.Open();
-                long refreshTokenId = conn.Insert(refreshToken);
-
-                return conn.Get<RefreshToken>(refreshTokenId);
+                refreshTokenId = conn.Insert(refreshToken);
             }
+
+            if (refreshTokenId == 0)
+                throw new InvalidOperationException("Refresh Token could not be created.");
+
+            using (var conn = UserServiceFactory.GetSqlConnectionRefreshTokenBasicReader())
+            {
+                conn.Open();
+                createdToken = conn.Get<RefreshToken>(refreshTokenId);
+            }
+
+            return createdToken;
         }
 
         /// <summary>
@@ -51,19 +63,33 @@ namespace Library_H4_TrashPlusPlus.Users.Tokens.RefreshTokens
             oldRefreshToken.RevokedByIp = ipAddress;
             oldRefreshToken.ReplacedByToken = newRefreshToken.Token;
 
-            using (var conn = UserServiceFactory.GetSqlConnection())
+            RefreshToken refreshToken;
+            long refreshTokenId = 0;
+
+            using (var conn = UserServiceFactory.GetSqlConnectionRefreshTokenCreator())
             {
                 conn.Open();
 
                 // Update old RefreshToken
-                conn.Update(oldRefreshToken);
+                bool updatesuccess = conn.Update(oldRefreshToken);
+
+                if (!updatesuccess)
+                {
+                    conn.Close();
+                    throw new InvalidOperationException("Refresh Token could not be updated.");
+                }
 
                 // Insert new RefreshToken
-                long refreshTokenId = conn.Insert(newRefreshToken);
-                RefreshToken refreshToken = conn.Get<RefreshToken>(refreshTokenId);
-                
-                return refreshToken;
+                refreshTokenId = conn.Insert(newRefreshToken);
             }
+
+            using (var conn = UserServiceFactory.GetSqlConnectionRefreshTokenBasicReader())
+            {
+                conn.Open();
+                refreshToken = conn.Get<RefreshToken>(refreshTokenId);
+            }
+
+            return refreshToken;
         }
 
         private RefreshToken GenerateRefreshToken(string ipAddress, IUser user)
@@ -85,7 +111,7 @@ namespace Library_H4_TrashPlusPlus.Users.Tokens.RefreshTokens
 
         private RefreshToken GetRefreshTokenByToken(string token)
         {
-            using (var conn = UserServiceFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnectionRefreshTokenBasicReader())
             {
                 conn.Open();
                 RefreshToken refreshToken = conn.QuerySingleOrDefault<RefreshToken>("Select * from RefreshToken WHERE Token = @refreshToken", new { @refreshToken = token});

@@ -8,10 +8,66 @@ namespace Library_H4_TrashPlusPlus.Users
 {
     public static class UserServiceFactory
     {
-        internal static SqlConnection GetSqlConnection()
+        /// <summary>
+        /// SqlConnection with permission to create new user via SPCreateNewUser
+        /// </summary>
+        /// <returns>SqlConnection with specific permission</returns>
+        internal static SqlConnection GetSqlConnectionCreateUser()
         {
-            return CommonSettingsFactory.GetDBConnectionString();
+            string username = "UserCreator";
+            string password = "Passw0rd";
+
+            return CommonSettingsFactory.GetDBConnectionString(username, password);
         }
+
+        /// <summary>
+        /// SqlConnection with permission to basic select.
+        /// </summary>
+        /// <returns>SqlConnection with specific permission</returns>
+        internal static SqlConnection GetSqlConnectionBasicReader()
+        {
+            string username = "UserBasicReader";
+            string password = "Passw0rd";
+
+            return CommonSettingsFactory.GetDBConnectionString(username, password);
+        }
+
+        /// <summary>
+        /// SqlConnection with permission to complex select, including View and select SP.
+        /// </summary>
+        /// <returns>SqlConnection with specific permission</returns>
+        internal static SqlConnection GetSqlConnectionComplexSelect()
+        {
+            string username = "UserComplexReader";
+            string password = "Passw0rd";
+
+            return CommonSettingsFactory.GetDBConnectionString(username, password);
+        }
+
+        /// <summary>
+        /// SqlConnection with permission to create and update Refresh Tokens.
+        /// </summary>
+        /// <returns>SqlConnection with specific permission</returns>
+        internal static SqlConnection GetSqlConnectionRefreshTokenCreator()
+        {
+            string username = "RefreshTokenCreater";
+            string password = "Passw0rd";
+
+            return CommonSettingsFactory.GetDBConnectionString(username, password);
+        }
+
+        /// <summary>
+        /// SqlConnection with permission to read RefreshTokens.
+        /// </summary>
+        /// <returns>SqlConnection with specific permission</returns>
+        internal static SqlConnection GetSqlConnectionRefreshTokenBasicReader()
+        {
+            string username = "RefreshTokenBasicReader";
+            string password = "Passw0rd";
+
+            return CommonSettingsFactory.GetDBConnectionString(username, password);
+        }
+
         public static IUserService GetUserServiceDB()
         {
             return new UserService(new DbUserRepository());

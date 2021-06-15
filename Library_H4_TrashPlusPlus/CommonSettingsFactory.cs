@@ -9,9 +9,10 @@ namespace Library_H4_TrashPlusPlus
 
     public static class CommonSettingsFactory
     {
-        internal static SqlConnection GetDBConnectionString()
+        internal static SqlConnection GetDBConnectionString(string username, string password)
         {
-            string connectionString = @"Server=172.16.21.93;Database=TrashPlusPlus;User Id=User;Password=Pa$$w0rd;";
+            //string connectionString = @"Server=172.16.21.93;Database=TrashPlusPlus;User Id=User;Password=Pa$$w0rd;";
+            string connectionString = $"Server=172.16.21.93;Database=TrashPlusPlus;User Id={username};Password={password};";
 
             SqlConnection sqlConnection = new SqlConnection(connectionString);
             return sqlConnection;

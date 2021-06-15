@@ -106,8 +106,9 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             // Hash password via hashing service
             HashingService hashingService = HashingFactory.GetHashingService();
             IHashedUser hashedUser = hashingService.CreateHashedUser(userToCreate.Mail, userToCreate.Password);
+            int identity = 0;
 
-            using (var conn = UserServiceFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnectionCreateUser())
             {
                 conn.Open();
 
@@ -119,10 +120,18 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
                     @Password = hashedUser.Password,
                     @Salt = hashedUser.Salt
                 };
-                var identity = conn.ExecuteScalar<int>(procedure, values, commandType: CommandType.StoredProcedure);
+                identity = conn.ExecuteScalar<int>(procedure, values, commandType: CommandType.StoredProcedure);
+            }
 
-                // Get newly created user.
-                user = conn.Get<User>(identity);
+            if (identity != 0)
+            {
+                using (var conn = UserServiceFactory.GetSqlConnectionBasicReader())
+                {
+                    conn.Open();
+
+                    // Get newly created user.
+                    user = conn.Get<User>(identity);
+                }
             }
 
             if (user == null)
@@ -140,7 +149,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         {
             IUser user = null;
 
-            using (var conn = UserServiceFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnectionBasicReader())
             {
                 conn.Open();
                 user = conn.Get<User>(id);
@@ -162,7 +171,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             IUser user = null;
             string loginNameEncrypted = CommonSettingsFactory.SyncEncrypter.Encrypt(loginName);
 
-            using (var conn = UserServiceFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnectionComplexSelect())
             {
                 conn.Open();
                 user = conn.QuerySingleOrDefault<User>("[SPGetUserByLoginName]", new { @LoginName = loginNameEncrypted }, commandType: CommandType.StoredProcedure);
@@ -183,7 +192,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         {
             IUser user;
 
-            using (var conn = UserServiceFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnectionComplexSelect())
             {
                 conn.Open();
                 var procedure = "[SPGetUserByToken]";
@@ -210,7 +219,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             };
             userCopy = ObjectEncryptor.EncryptIUser(CommonSettingsFactory.SyncEncrypter, userCopy);
 
-            using (var conn = UserServiceFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnectionComplexSelect())
             {
                 conn.Open();
 
@@ -235,7 +244,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             mail = CommonSettingsFactory.SyncEncrypter.Encrypt(mail);
             AuthUsersView authUser = null;
             
-            using (var conn = UserServiceFactory.GetSqlConnection())
+            using (var conn = UserServiceFactory.GetSqlConnectionComplexSelect())
             {
                 conn.Open();
                 authUser = conn.QuerySingleOrDefault<AuthUsersView>("SELECT * FROM AuthUsersView WHERE Mail = @Email", new { @Email = mail });
