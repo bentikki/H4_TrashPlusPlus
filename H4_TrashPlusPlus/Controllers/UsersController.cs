@@ -38,7 +38,7 @@ namespace H4_TrashPlusPlus.Controllers
             }
             catch (ArgumentException e)
             {
-                return BadRequest( ( new { message = "Invalid input. User was not created" }));
+                return BadRequest((new { message = "Invalid input. User was not created" }));
             }
             catch (DuplicateNameException e)
             {
@@ -95,15 +95,22 @@ namespace H4_TrashPlusPlus.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            // Get current logged in user Example
-            IUser currentUser = this.GetCurrentUser();
-            if(currentUser == null)
+            try
+            {
+                // Get current logged in user Example
+                IUser currentUser = this.GetCurrentUser();
+                if (currentUser == null)
+                    return Unauthorized(new { message = "Invalid token" });
+
+                var user = _userService.GetUserById(id);
+                if (user == null) return NotFound();
+
+                return Ok(user);
+            }
+            catch (Exception)
+            {
                 return Unauthorized(new { message = "Invalid token" });
-
-            var user = _userService.GetUserById(id);
-            if (user == null) return NotFound();
-
-            return Ok(user);
+            }
         }
 
         [HttpPost("Logout")]
@@ -122,7 +129,7 @@ namespace H4_TrashPlusPlus.Controllers
                 // Logout via user service.
                 logoutSuccess = _userService.Logout(tokenValue, GetIpAddress());
             }
-            catch(ArgumentException e)
+            catch (ArgumentException e)
             {
                 // Token could not be found.
                 return NotFound(new { message = "Token not found" });
@@ -167,6 +174,6 @@ namespace H4_TrashPlusPlus.Controllers
             else
                 return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
         }
-    
+
     }
 }

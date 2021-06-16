@@ -10,12 +10,12 @@ namespace Library_H4_TrashPlusPlus.Tests
 {
     public class UserServiceApiTests
     {
-        private IUserService userServiceDb;
+        private IUserService userServiceApi;
 
         [SetUp]
         public void Setup()
         {
-            userServiceDb = UserServiceFactory.GetUserServiceApi();
+            userServiceApi = UserServiceFactory.GetUserServiceApi();
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             string password = null;
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => { this.userServiceDb.CreateUser(mail, username, password); });
+            Assert.Throws<ArgumentNullException>(() => { this.userServiceApi.CreateUser(mail, username, password); });
 
         }
 
@@ -48,7 +48,7 @@ namespace Library_H4_TrashPlusPlus.Tests
 
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => { this.userServiceDb.CreateUser(mail, username, password); });
+            Assert.Throws<ArgumentException>(() => { this.userServiceApi.CreateUser(mail, username, password); });
         }
 
         //[TestCase("")]
@@ -65,7 +65,7 @@ namespace Library_H4_TrashPlusPlus.Tests
 
 
         //    // Act & Assert
-        //    Assert.Throws<ArgumentException>(() => { this.userServiceDb.CreateUser(mail, username, password); });
+        //    Assert.Throws<ArgumentException>(() => { this.userServiceApi.CreateUser(mail, username, password); });
         //}
 
         //[TestCase("")]
@@ -81,7 +81,7 @@ namespace Library_H4_TrashPlusPlus.Tests
         //    string username = "testUsername";
 
         //    // Act & Assert
-        //    Assert.Throws<ArgumentException>(() => { this.userServiceDb.CreateUser(mail, username, password); });
+        //    Assert.Throws<ArgumentException>(() => { this.userServiceApi.CreateUser(mail, username, password); });
         //}
 
         [Test]
@@ -92,7 +92,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             long randomNumber = new Random().Next(0, 10000);
 
             // Act
-            createdUser = this.userServiceDb.CreateUser("testmail" + randomNumber + "@mail.com", "testUsername", "12341234!weqwe");
+            createdUser = this.userServiceApi.CreateUser("testmail" + randomNumber + "@mail.com", "testUsername", "12341234!weqwe");
 
             // Assert
             Assert.IsNotNull(createdUser);
@@ -104,123 +104,54 @@ namespace Library_H4_TrashPlusPlus.Tests
         //public void CreateUserDB_InvalidInputEmailAlreadyExists_ShouldThrowArgumentError()
         //{
         //    // Act & Assert
-        //    Assert.Throws<DuplicateNameException>(() => { this.userServiceDb.CreateUser("testmail1@mail.com", "testUsername", "12341234!weqwe"); });
+        //    Assert.Throws<DuplicateNameException>(() => { this.userServiceApi.CreateUser("testmail1@mail.com", "testUsername", "12341234!weqwe"); });
 
         //}
 
-        //[Test]
-        //public void GetUserByIdDB_ValidId_ShouldReturnIUserObject()
-        //{
-        //    // Arrange
-        //    IUser createdUser;
-        //    IUser requestedUser;
-        //    long randomNumber = new Random().Next(0, 10000);
-        //    string email = "testmail" + randomNumber + "@mail.com";
+        [Test]
+        public void GetUserByIdDB_ValidId_ShouldReturnIUserObject()
+        {
+            // Arrange
+            IUser createdUser;
+            IUser requestedUser;
+            AuthenticateResponse authenticateResponse;
+            long randomNumber = new Random().Next(0, 10000);
+            string email = "testmail" + randomNumber + "@mail.com";
+            string password = "testpassword" + randomNumber;
 
-        //    createdUser = this.userServiceDb.CreateUser(email, "testUsername", "12341234!weqwe");
+            createdUser = this.userServiceApi.CreateUser(email, "testUsername", password);
 
-        //    // Act
-        //    requestedUser = this.userServiceDb.GetUserById(createdUser.Id);
+            // Act
+            authenticateResponse = this.userServiceApi.Authenticate(email, password, "0.0.0.0");
 
-        //    // Assert
-        //    Assert.IsNotNull(requestedUser);
-        //    Assert.IsNotNull(requestedUser.Id);
-        //    Assert.AreNotEqual(0, requestedUser.Id);
-        //    Assert.AreEqual(email, requestedUser.Mail);
-        //}
+            requestedUser = this.userServiceApi.GetUserById(createdUser.Id);
 
-        //[TestCase(0)]
-        //[TestCase(-1)]
-        //[TestCase(int.MinValue)]
-        //public void GetUserByIdDB_IllegalValue_ShouldThrowArgumentException(int idVal)
-        //{
-        //    // Act & Assert
-        //    Assert.Throws<ArgumentException>(() => { this.userServiceDb.GetUserById(idVal); });
-        //}
+            // Assert
+            Assert.IsNotNull(requestedUser);
+            Assert.IsNotNull(requestedUser.Id);
+            Assert.AreNotEqual(0, requestedUser.Id);
+        }
 
-        //[Test]
-        //public void GetUserByIdDB_NonExistingId_ShouldReturnNull()
-        //{
-        //    // Arrange
-        //    IUser requestedUser;
+        [Test]
+        public void Authenticate_ValidLogin_ShouldReturnAuthenticateResponseObject()
+        {
+            // Arrange
+            AuthenticateResponse authenticateResponse;
+            long randomNumber = new Random().Next(0, 10000);
+            string email = "testmail" + randomNumber + "@mail.com";
+            string password = "testpassword" + randomNumber;
 
-        //    // Act
-        //    requestedUser = this.userServiceDb.GetUserById(int.MaxValue);
+            this.userServiceApi.CreateUser(email, "testUsername", password);
 
-        //    // Assert
-        //    Assert.IsNull(requestedUser);
-        //}
+            // Act
+            authenticateResponse = this.userServiceApi.Authenticate(email, password, "0.0.0.0");
 
-        //[Test]
-        //public void GetUserByLoginNameDB_ValidId_ShouldReturnIUserObject()
-        //{
-        //    // Arrange
-        //    IUser createdUser;
-        //    IUser requestedUser;
-        //    long randomNumber = new Random().Next(0, 10000);
-        //    string email = "testmail" + randomNumber + "@mail.com";
-
-        //    createdUser = this.userServiceDb.CreateUser(email, "testUsername", "12341234!weqwe");
-
-        //    // Act
-        //    requestedUser = this.userServiceDb.GetUserByLoginName(email);
-
-        //    // Assert
-        //    Assert.IsNotNull(requestedUser);
-        //    Assert.IsNotNull(requestedUser.Id);
-        //    Assert.AreNotEqual(0, requestedUser.Id);
-        //    Assert.AreEqual(email, requestedUser.Mail);
-        //    Assert.AreEqual(createdUser.Id, requestedUser.Id);
-        //}
-
-        //[TestCase("")]
-        //[TestCase("mail test")]
-        //[TestCase("mail")]
-        //[TestCase("mail.com")]
-        //[TestCase(",.--12/()(/(&%&%(/,3-213123.com")]
-        //[TestCase("105 OR 1=1")]
-        //[TestCase("hello123rf@com'")]
-        //public void GetUserByLoginNameDB_IllegalValue_ShouldThrowArgumentException(string loginNameVal)
-        //{
-        //    // Act & Assert
-        //    Assert.Throws<ArgumentException>(() => { this.userServiceDb.GetUserByLoginName(loginNameVal); });
-        //}
-
-        //[Test]
-        //public void GetUserByLoginNameDB_NonExistingLoginName_ShouldReturnNull()
-        //{
-        //    // Arrange
-        //    IUser requestedUser;
-        //    long randomNumber = int.MaxValue;
-        //    string email = "testmail" + randomNumber + "@mail.com";
-
-        //    // Act
-        //    requestedUser = this.userServiceDb.GetUserByLoginName(email);
-
-        //    // Assert
-        //    Assert.IsNull(requestedUser);
-        //}
-
-        //[Test]
-        //public void Authenticate_ValidLogin_ShouldReturnAuthenticateResponseObject()
-        //{
-        //    // Arrange
-        //    AuthenticateResponse authenticateResponse;
-        //    long randomNumber = new Random().Next(0, 10000);
-        //    string email = "testmail" + randomNumber + "@mail.com";
-        //    string password = "testpassword" + randomNumber;
-
-        //    this.userServiceDb.CreateUser(email, "testUsername", password);
-
-        //    // Act
-        //    authenticateResponse = this.userServiceDb.Authenticate(email, password, "0.0.0.0");
-
-        //    // Assert
-        //    Assert.IsNotNull(authenticateResponse);
-        //    Assert.IsNotNull(authenticateResponse.UserObject);
-        //    Assert.IsNotNull(authenticateResponse.JwtToken);
-        //    Assert.IsNotNull(authenticateResponse.RefreshToken);
-        //}
+            // Assert
+            Assert.IsNotNull(authenticateResponse);
+            Assert.IsNotNull(authenticateResponse.UserObject);
+            Assert.IsNotNull(authenticateResponse.JwtToken);
+            Assert.IsNotNull(authenticateResponse.RefreshToken);
+        }
 
         //[Test]
         //public void Authenticate_InvalidLogin_ShouldReturnNull()
@@ -231,10 +162,10 @@ namespace Library_H4_TrashPlusPlus.Tests
         //    string email = "testmail" + randomNumber + "@mail.com";
         //    string password = "testpassword" + randomNumber;
 
-        //    this.userServiceDb.CreateUser(email, "testUsername", password);
+        //    this.userServiceApi.CreateUser(email, "testUsername", password);
 
         //    // Act
-        //    authenticateResponse = this.userServiceDb.Authenticate(email, password+"1", "0.0.0.0");
+        //    authenticateResponse = this.userServiceApi.Authenticate(email, password+"1", "0.0.0.0");
 
         //    // Assert
         //    Assert.IsNull(authenticateResponse);
@@ -249,11 +180,11 @@ namespace Library_H4_TrashPlusPlus.Tests
         //    string email = "testmail" + randomNumber + "@mail.com";
         //    string password = "testpassword" + randomNumber;
 
-        //    this.userServiceDb.CreateUser(email, "testUsername", password);
-        //    authenticateResponse = this.userServiceDb.Authenticate(email, password, "0.0.0.0");
+        //    this.userServiceApi.CreateUser(email, "testUsername", password);
+        //    authenticateResponse = this.userServiceApi.Authenticate(email, password, "0.0.0.0");
 
         //    // Act
-        //    bool logoutSuccess = this.userServiceDb.Logout(authenticateResponse.RefreshToken, "0.0.0.0");
+        //    bool logoutSuccess = this.userServiceApi.Logout(authenticateResponse.RefreshToken, "0.0.0.0");
 
         //    // Assert
         //    Assert.IsNotNull(authenticateResponse);
@@ -268,14 +199,14 @@ namespace Library_H4_TrashPlusPlus.Tests
         //public void Logout_InvalidToken_ShouldThrowArgumentException(string token)
         //{
         //    // Act & Assert
-        //    Assert.Throws<ArgumentException>(() => { this.userServiceDb.Logout(token, "0.0.0.0"); });
+        //    Assert.Throws<ArgumentException>(() => { this.userServiceApi.Logout(token, "0.0.0.0"); });
         //}
 
         //[TestCase(null)]
         //public void Logout_InvalidToken_ShouldThrowArgumentNullException(string token)
         //{
         //    // Act & Assert
-        //    Assert.Throws<ArgumentNullException>(() => { this.userServiceDb.Logout(token, "0.0.0.0"); });
+        //    Assert.Throws<ArgumentNullException>(() => { this.userServiceApi.Logout(token, "0.0.0.0"); });
         //}
 
     }
