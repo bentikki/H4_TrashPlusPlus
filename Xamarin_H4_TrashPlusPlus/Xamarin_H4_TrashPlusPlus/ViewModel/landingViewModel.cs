@@ -15,8 +15,11 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         public ICommand ChangeToLoginCommand { get; set; }
         public ICommand ChangeToHomeCommand { get; set; }
 
-        public landingViewModel()
+        public landingViewModel(IChangePage pageChanger)
         {
+
+            ChangeToLoginCommand = new Command(() => pageChanger.ChangePage(new LoginPage()));
+            ChangeToHomeCommand = new Command(() => pageChanger.ChangePage(new Page()));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

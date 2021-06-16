@@ -9,17 +9,18 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
-    class LoginViewModel : INotifyPropertyChanged
+    class SignUpViewModel : INotifyPropertyChanged
     {
+        private string username;
         private string mail;
         private string password;
-        private bool saveChecked;
+        private string rePassword;
 
-        public bool SaveChecked
+        public string RePassword
         {
-            get { return saveChecked; }
-            set { saveChecked = value;
-                NotifyPropertyChanged("SaveChecked");
+            get { return rePassword; }
+            set { rePassword = value;
+                NotifyPropertyChanged("RePassword");
             }
         }
         public string Password
@@ -36,14 +37,20 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
                 NotifyPropertyChanged("Mail");
             }
         }
-        
-        public ICommand ChangeStateCommand { get; set; }
-        public ICommand ChangeToSignUpCommand { get; set; }
-
-        public LoginViewModel(IChangePage pageChanger)
+        public string Username
         {
-            ChangeStateCommand = new Command(() => SaveChecked = !SaveChecked);
-            ChangeToSignUpCommand = new Command(() => pageChanger.ChangePage(new SignUpPage()));
+            get { return username; }
+            set { username = value;
+                NotifyPropertyChanged("Username");
+            }
+        }
+
+        public ICommand ChangeToLoginCommand { get; set; }
+
+        public SignUpViewModel(IChangePage pageChanger)
+        {
+            ChangeToLoginCommand = new Command(() => pageChanger.ChangePage(new LoginPage()));
+
         }
 
 

@@ -41,6 +41,7 @@
                 Text="Login"
                 Margin="50,5,50,5"
                 CornerRadius="34"
+                Command="{Binding ChangeToLoginCommand}"
                 BackgroundColor="{DynamicResource GreyColor}"
                 TextColor="{DynamicResource LightColor}"
                 ></Button>
@@ -49,6 +50,7 @@
                 Text="Gå i gang"
                 Margin="50,5,50,5"
                 CornerRadius="34"
+                Command="{Binding ChangeToHomeCommand}"
                 BackgroundColor="{DynamicResource AppPrimaryColor}"
                 ></Button>
             

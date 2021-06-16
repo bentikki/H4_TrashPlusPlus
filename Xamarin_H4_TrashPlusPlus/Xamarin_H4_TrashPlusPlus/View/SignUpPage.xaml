@@ -2,9 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Xamarin_H4_TrashPlusPlus" 
-             xmlns:viewmodel="clr-namespace:Xamarin_H4_TrashPlusPlus.ViewModel"
-             x:Class="Xamarin_H4_TrashPlusPlus.View.LoginPage"
-             NavigationPage.HasNavigationBar="False">
+             x:Class="Xamarin_H4_TrashPlusPlus.View.SignUpPage">
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
@@ -13,9 +11,9 @@
                 <RowDefinition Height="0.25*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.05*" />
+                <ColumnDefinition Width="0.1*" />
                 <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="0.05*" />
+                <ColumnDefinition Width="0.1*" />
             </Grid.ColumnDefinitions>
             <Frame
                 Grid.Row="1" 
@@ -27,7 +25,7 @@
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.2*" />
-                        <RowDefinition Height="0.5*" />
+                        <RowDefinition Height="0.7*" />
                         <RowDefinition Height="0.5*" />
                         <RowDefinition Height="1*" />
                         <RowDefinition Height="1*" />
@@ -37,30 +35,41 @@
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.1*" />
+                        <ColumnDefinition Width="0.05*" />
                         <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="0.1*" />
+                        <ColumnDefinition Width="0.05*" />
                     </Grid.ColumnDefinitions>
 
                     <Label
-                        Text="Login"
-                        Grid.Row="2"
+                        Text="Opret"
+                        Grid.Row="1"
                         Grid.Column="1"
                         HorizontalTextAlignment="Center"
                         FontSize="Large"
                         FontAttributes="Bold">
                     </Label>
                     <StackLayout
-                        Grid.Row="3"
+                        Grid.Row="2"
                         Grid.Column="1"
                         Orientation="Horizontal">
-                        <Label Text="Ny bruger?"></Label>
-                        <Label Text="Opret en ny bruger" TextColor="{StaticResource LinkColor}">
+                        <Label Text="allerede en bruger?"></Label>
+                        <Label Text="Log ind" TextColor="{StaticResource LinkColor}">
                             <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ChangeToSignUpCommand}" NumberOfTapsRequired="1"/>
-                            </Label.GestureRecognizers>
-                        </Label>
+                                <TapGestureRecognizer Command="{Binding ChangeToLoginCommand}" NumberOfTapsRequired="1"/>
+                            </Label.GestureRecognizers></Label>
                     </StackLayout>
+                    <Frame
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        BackgroundColor="{StaticResource LightPrimaryColor}"
+                        CornerRadius="12"
+                        Padding="10,0,10,0"
+                        >
+                        <local:CustomEntry
+                            Placeholder="Bruger"
+                            Text="{Binding Username}"
+                            ></local:CustomEntry>
+                    </Frame>
                     <Frame
                         Grid.Row="4"
                         Grid.Column="1"
@@ -86,21 +95,19 @@
                             Text="{Binding Password}"
                             ></local:CustomEntry>
                     </Frame>
-                    <StackLayout
+                    <Frame
                         Grid.Row="6"
                         Grid.Column="1"
-                        Orientation="Horizontal"
+                        BackgroundColor="{StaticResource LightPrimaryColor}"
+                        CornerRadius="12"
+                        Padding="10,0,10,0"
                         >
-
-                        <CheckBox
-                        IsChecked="{Binding SaveChecked}">
-                        </CheckBox>
-                        <Label Text="Hold mig logget ind" VerticalTextAlignment="Center">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ChangeStateCommand}" NumberOfTapsRequired="1"/>
-                            </Label.GestureRecognizers>
-                        </Label>
-                    </StackLayout>
+                        <local:CustomEntry
+                            IsPassword="True"
+                            Placeholder="RePassword"
+                            Text="{Binding RePassword}"
+                            ></local:CustomEntry>
+                    </Frame>
                     <Button 
                         Grid.Row="7"
                         Grid.Column="1"
