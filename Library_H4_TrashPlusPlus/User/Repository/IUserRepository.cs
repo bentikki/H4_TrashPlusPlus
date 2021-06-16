@@ -14,5 +14,6 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         AuthenticateResponse Authenticate(string mail, string password, string ipAddress);
         AuthenticateResponse RefreshToken(string token, string ipAddress);
         IUser GetUserByToken(string token);
+        bool Logout(string token, string ipAddress);
     }
 }

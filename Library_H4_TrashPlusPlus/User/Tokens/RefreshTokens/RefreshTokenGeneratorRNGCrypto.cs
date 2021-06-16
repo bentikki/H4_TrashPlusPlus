@@ -28,7 +28,7 @@ namespace Library_H4_TrashPlusPlus.Users.Tokens.RefreshTokens
             long refreshTokenId = 0;
             RefreshToken createdToken; 
 
-            using (var conn = UserServiceFactory.GetSqlConnectionRefreshTokenCreator())
+            using (var conn = TokenFactory.GetSqlConnectionRefreshTokenCreator())
             {
                 conn.Open();
                 refreshTokenId = conn.Insert(refreshToken);
@@ -37,7 +37,7 @@ namespace Library_H4_TrashPlusPlus.Users.Tokens.RefreshTokens
             if (refreshTokenId == 0)
                 throw new InvalidOperationException("Refresh Token could not be created.");
 
-            using (var conn = UserServiceFactory.GetSqlConnectionRefreshTokenBasicReader())
+            using (var conn = TokenFactory.GetSqlConnectionRefreshTokenBasicReader())
             {
                 conn.Open();
                 createdToken = conn.Get<RefreshToken>(refreshTokenId);
@@ -66,7 +66,7 @@ namespace Library_H4_TrashPlusPlus.Users.Tokens.RefreshTokens
             RefreshToken refreshToken;
             long refreshTokenId = 0;
 
-            using (var conn = UserServiceFactory.GetSqlConnectionRefreshTokenCreator())
+            using (var conn = TokenFactory.GetSqlConnectionRefreshTokenCreator())
             {
                 conn.Open();
 
@@ -83,13 +83,36 @@ namespace Library_H4_TrashPlusPlus.Users.Tokens.RefreshTokens
                 refreshTokenId = conn.Insert(newRefreshToken);
             }
 
-            using (var conn = UserServiceFactory.GetSqlConnectionRefreshTokenBasicReader())
+            using (var conn = TokenFactory.GetSqlConnectionRefreshTokenBasicReader())
             {
                 conn.Open();
                 refreshToken = conn.Get<RefreshToken>(refreshTokenId);
             }
 
             return refreshToken;
+        }
+
+        /// <summary>
+        /// Revokes refresh token by setting as inactive in DB.
+        /// </summary>
+        /// <param name="selectedUser">IUser owner</param>
+        /// <param name="ipAddress">IP Address origin</param>
+        /// <param name="token">original token</param>
+        /// <returns>Bool true if revoke was successfull, false if not.</returns>
+        public bool RevokeRefreshToken(IUser selectedUser, string ipAddress, string token)
+        {
+            bool updatesuccess = false;
+            RefreshToken currentToken = this.GetRefreshTokenByToken(token);
+            currentToken.Revoked = DateTime.UtcNow;
+            currentToken.RevokedByIp = ipAddress;
+
+            using (var conn = TokenFactory.GetSqlConnectionRefreshTokenCreator())
+            {
+                conn.Open();
+                updatesuccess = conn.Update(currentToken);
+            }
+
+            return updatesuccess;
         }
 
         private RefreshToken GenerateRefreshToken(string ipAddress, IUser user)
@@ -111,13 +134,14 @@ namespace Library_H4_TrashPlusPlus.Users.Tokens.RefreshTokens
 
         private RefreshToken GetRefreshTokenByToken(string token)
         {
-            using (var conn = UserServiceFactory.GetSqlConnectionRefreshTokenBasicReader())
+            RefreshToken refreshToken;
+            using (var conn = TokenFactory.GetSqlConnectionRefreshTokenBasicReader())
             {
                 conn.Open();
-                RefreshToken refreshToken = conn.QuerySingleOrDefault<RefreshToken>("Select * from RefreshToken WHERE Token = @refreshToken", new { @refreshToken = token});
-
-                return refreshToken;
+                refreshToken = conn.QuerySingleOrDefault<RefreshToken>("Select * from RefreshToken WHERE Token = @refreshToken", new { @refreshToken = token});
             }
+
+            return refreshToken;
         }
     }
 }

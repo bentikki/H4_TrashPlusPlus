@@ -17,6 +17,9 @@ namespace Library_H4_TrashPlusPlus.Users
         AuthenticateResponse RefreshToken(string token, string ipAddress);
         Task<AuthenticateResponse> RefreshTokenAsync(string token, string ipAddress);
 
+        bool Logout(string token, string ipAddress);
+        Task<bool> LogoutAsync(string token, string ipAddress);
+
         IUser GetUserById(int id);
         Task<IUser> GetUserByIdAsync(int id);
 

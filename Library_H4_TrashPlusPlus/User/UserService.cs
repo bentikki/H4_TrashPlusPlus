@@ -265,6 +265,47 @@ namespace Library_H4_TrashPlusPlus.Users
             return await task;
         }
 
+        /// <summary>
+        /// Logout user by destoying token.
+        /// </summary>
+        /// <param name="token">Current token</param>
+        /// <param name="ipAddress">IP Address origin</param>
+        /// <returns>Bool true if user was successfully logged out, false if not.</returns>
+        public bool Logout(string token, string ipAddress)
+        {
+            // Validate argument input
+            if (token == null) throw new ArgumentException("Token must contain a value.", nameof(token));
+            if (ipAddress == null) throw new ArgumentException("IP Address must contain a value.", nameof(ipAddress));
 
+            if (string.IsNullOrEmpty(token) || string.IsNullOrWhiteSpace(token)) throw new ArgumentException("Token must contain a value.", nameof(token));
+            if (string.IsNullOrEmpty(ipAddress) || string.IsNullOrWhiteSpace(ipAddress)) throw new ArgumentException("IP Address must contain a value.", nameof(ipAddress));
+
+            bool loggedOutSuccessfully = false;
+
+            try
+            {
+                loggedOutSuccessfully = this.userRepository.Logout(token, ipAddress);
+            }
+            catch (Exception e)
+            {
+                // An unexpected error occured.
+                throw e;
+            }
+
+            return loggedOutSuccessfully;
+
+        }
+
+        /// <summary>
+        /// Logout user by destoying token.
+        /// </summary>
+        /// <param name="token">Current token</param>
+        /// <param name="ipAddress">IP Address origin</param>
+        /// <returns>Bool true if user was successfully logged out, false if not.</returns>
+        public async Task<bool> LogoutAsync(string token, string ipAddress)
+        {
+            var task = Task.Run(() => this.Logout(token, ipAddress));
+            return await task;
+        }
     }
 }

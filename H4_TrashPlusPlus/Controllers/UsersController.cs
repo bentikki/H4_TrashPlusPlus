@@ -106,22 +106,36 @@ namespace H4_TrashPlusPlus.Controllers
             return Ok(user);
         }
 
-        //[HttpPost("Logout")]
-        //public IActionResult Logout([FromBody] RevokeTokenRequest model)
-        //{
-        //    // accept token from request body or cookie
-        //    var token = model.Token ?? Request.Cookies["refreshToken"];
+        [HttpPost("Logout")]
+        public IActionResult Logout(string token)
+        {
+            // accept token from request body or cookie
+            var tokenValue = token ?? Request.Cookies["refreshToken"];
 
-        //    if (string.IsNullOrEmpty(token))
-        //        return BadRequest(new { message = "Token is required" });
+            if (string.IsNullOrEmpty(tokenValue))
+                return BadRequest(new { message = "Token is required" });
 
-        //    var response = _userService.RevokeToken(token, ipAddress());
+            bool logoutSuccess = false;
 
-        //    if (!response)
-        //        return NotFound(new { message = "Token not found" });
+            try
+            {
+                // Logout via user service.
+                logoutSuccess = _userService.Logout(tokenValue, GetIpAddress());
+            }
+            catch(ArgumentException e)
+            {
+                // Token could not be found.
+                return NotFound(new { message = "Token not found" });
+            }
+            catch (Exception e)
+            {
+                // An unexpected error occured.
+                return BadRequest(new { message = "An unexpected error occured." });
+            }
 
-        //    return Ok(new { message = "Token revoked" });
-        //}
+            return Ok(new { message = "Token revoked" });
+
+        }
 
         private string GetCurrentUserToken()
         {

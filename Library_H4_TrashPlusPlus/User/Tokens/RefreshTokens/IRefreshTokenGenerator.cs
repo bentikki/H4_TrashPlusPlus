@@ -10,5 +10,6 @@ namespace Library_H4_TrashPlusPlus.Users.Tokens.RefreshTokens
     {
         RefreshToken CreateRefreshToken(IUser selectedUser, string ipAddress);
         RefreshToken ReplaceRefreshToken(IUser selectedUser, string ipAddress, string token);
+        bool RevokeRefreshToken(IUser selectedUser, string ipAddress, string token);
     }
 }

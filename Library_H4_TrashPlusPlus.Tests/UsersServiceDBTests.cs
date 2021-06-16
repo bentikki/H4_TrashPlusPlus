@@ -238,9 +238,39 @@ namespace Library_H4_TrashPlusPlus.Tests
 
             // Assert
             Assert.IsNull(authenticateResponse);
-            //Assert.IsNull(authenticateResponse.UserObject);
-            //Assert.IsNull(authenticateResponse.JwtToken);
-            //Assert.IsNull(authenticateResponse.RefreshToken);
         }
+
+        [Test]
+        public void Logout_Valid_ShouldReturnTrue()
+        {
+            // Arrange
+            AuthenticateResponse authenticateResponse;
+            long randomNumber = new Random().Next(0, 10000);
+            string email = "testmail" + randomNumber + "@mail.com";
+            string password = "testpassword" + randomNumber;
+
+            this.userServiceDb.CreateUser(email, "testUsername", password);
+            authenticateResponse = this.userServiceDb.Authenticate(email, password, "0.0.0.0");
+
+            // Act
+            bool logoutSuccess = this.userServiceDb.Logout(authenticateResponse.RefreshToken, "0.0.0.0");
+
+            // Assert
+            Assert.IsNotNull(authenticateResponse);
+            Assert.IsNotNull(authenticateResponse.UserObject);
+            Assert.IsNotNull(authenticateResponse.JwtToken);
+            Assert.IsNotNull(authenticateResponse.RefreshToken);
+            Assert.IsTrue(logoutSuccess);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("Token with space")]
+        public void Logout_InvalidToken_ShouldThrowArgumentException(string token)
+        {
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => { this.userServiceDb.Logout(token, "0.0.0.0"); });
+        }
+
     }
 }
