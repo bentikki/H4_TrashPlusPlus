@@ -35,6 +35,15 @@ namespace Library_H4_TrashPlusPlus.Validator
                     new NoSqlInjectionRule()
                 };
 
+        static private List<IValidationRule> refreshTokenRules = new List<IValidationRule>()
+                {
+                    new NullRule(),
+                    new NoEmptyStringRule(),
+                    new NoSpacesRule(),
+                    new MinLengthRule(50),
+                    new MaxLengthRule(500)
+                };
+
         /// <summary>
         /// Validates the mail.
         /// Throws exception if an error is reached.
@@ -78,6 +87,23 @@ namespace Library_H4_TrashPlusPlus.Validator
         {
             Validator validator = new Validator("Username", usernameRules);
             if (!validator.Validate(username))
+            {
+                foreach (var exception in validator.GetExceptions())
+                {
+                    throw exception;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Validates the username.
+        /// Throws exception if an error is reached.
+        /// </summary>
+        /// <param name="username">username value to validate.</param>
+        static public void ValidateRefreshTokenException(string token)
+        {
+            Validator validator = new Validator("Refresh Token", refreshTokenRules);
+            if (!validator.Validate(token))
             {
                 foreach (var exception in validator.GetExceptions())
                 {

@@ -263,13 +263,19 @@ namespace Library_H4_TrashPlusPlus.Tests
             Assert.IsTrue(logoutSuccess);
         }
 
-        [TestCase(null)]
         [TestCase("")]
         [TestCase("Token with space")]
         public void Logout_InvalidToken_ShouldThrowArgumentException(string token)
         {
             // Act & Assert
             Assert.Throws<ArgumentException>(() => { this.userServiceDb.Logout(token, "0.0.0.0"); });
+        }
+
+        [TestCase(null)]
+        public void Logout_InvalidToken_ShouldThrowArgumentNullException(string token)
+        {
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => { this.userServiceDb.Logout(token, "0.0.0.0"); });
         }
 
     }

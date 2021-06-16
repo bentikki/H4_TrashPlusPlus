@@ -195,8 +195,7 @@ namespace Library_H4_TrashPlusPlus.Users
         public IUser GetUserByToken(string token)
         {
             // Validate argument input
-            if (token == null) throw new ArgumentNullException(nameof(token), "Token must not be null.");
-            if (string.IsNullOrEmpty(token) || string.IsNullOrWhiteSpace(token)) throw new ArgumentException("Token must contain a value.", nameof(token));
+            DefaultValidators.ValidateRefreshTokenException(token);
 
             // Get requested user from repository.
             IUser requestedUser = this.userRepository.GetUserByToken(token);
@@ -225,11 +224,9 @@ namespace Library_H4_TrashPlusPlus.Users
         public AuthenticateResponse RefreshToken(string token, string ipAddress)
         {
             // Validate argument input
-            if (token == null) throw new ArgumentNullException(nameof(token), "Token must not be null.");
             if (ipAddress == null) throw new ArgumentNullException(nameof(ipAddress), "IP Address must not be null.");
-
-            if (string.IsNullOrEmpty(token) || string.IsNullOrWhiteSpace(token)) throw new ArgumentException("Token must contain a value.", nameof(token));
             if (string.IsNullOrEmpty(ipAddress) || string.IsNullOrWhiteSpace(ipAddress)) throw new ArgumentException("IP Address must contain a value.", nameof(ipAddress));
+            DefaultValidators.ValidateRefreshTokenException(token);
 
             AuthenticateResponse authenticateResponse = null;
 
@@ -274,11 +271,9 @@ namespace Library_H4_TrashPlusPlus.Users
         public bool Logout(string token, string ipAddress)
         {
             // Validate argument input
-            if (token == null) throw new ArgumentException("Token must contain a value.", nameof(token));
             if (ipAddress == null) throw new ArgumentException("IP Address must contain a value.", nameof(ipAddress));
-
-            if (string.IsNullOrEmpty(token) || string.IsNullOrWhiteSpace(token)) throw new ArgumentException("Token must contain a value.", nameof(token));
             if (string.IsNullOrEmpty(ipAddress) || string.IsNullOrWhiteSpace(ipAddress)) throw new ArgumentException("IP Address must contain a value.", nameof(ipAddress));
+            DefaultValidators.ValidateRefreshTokenException(token);
 
             bool loggedOutSuccessfully = false;
 
