@@ -48,7 +48,7 @@ namespace H4_TrashPlusPlus.Controllers
             if (response == null)
                 return BadRequest(new { message = "An unexpected error occured. User could not be created" });
 
-            return Ok(true);
+            return Ok(response);
         }
 
         [AllowAnonymous]
