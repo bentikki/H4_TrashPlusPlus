@@ -11,12 +11,12 @@ using Xamarin_H4_TrashPlusPlus.ViewModel;
 namespace Xamarin_H4_TrashPlusPlus.View
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LoginPage : ContentPage, IChangePage
+    public partial class HomePage : ContentPage, IChangePage
     {
-        public LoginPage()
+        public HomePage()
         {
             InitializeComponent();
-            BindingContext = new LoginViewModel(this);
+            BindingContext = new HomeViewModel(this);
         }
 
         /// <summary>

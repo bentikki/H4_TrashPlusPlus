@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Xamarin_H4_TrashPlusPlus.View.LandingPage"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <Grid BackgroundColor="{DynamicResource LightPrimaryColor}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.5*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1.5*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="0.5*" />
+                <RowDefinition Height="0.5*" />
+                <RowDefinition Height="0.5*" />
+            </Grid.RowDefinitions>
+            <Label
+                Grid.Row="0"
+                Text="Trash plus+"
+                HorizontalTextAlignment="Center"
+                VerticalTextAlignment="Center"
+                FontSize="Large"
+                TextColor="{DynamicResource GreyColor}"></Label>
+            <Label
+                Grid.Row="2"
+                Text="Mockup to empower your creative workflow"
+                HorizontalTextAlignment="Center"
+                VerticalTextAlignment="Center"
+                FontSize="30"
+                Padding="100,0,100,0"
+                TextColor="{DynamicResource DarkColor}"></Label>
+            <Label
+                Grid.Row="3"
+                Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                HorizontalTextAlignment="Center"
+                FontSize="15"
+                Padding="50,0,50,0"
+                TextColor="{DynamicResource DarkColor}"></Label>
+            <Button
+                Grid.Row="4"
+                Text="Login"
+                Margin="50,5,50,5"
+                CornerRadius="34"
+                Command="{Binding ChangeToLoginCommand}"
+                BackgroundColor="{DynamicResource GreyColor}"
+                TextColor="{DynamicResource LightColor}"
+                ></Button>
+            <Button
+                Grid.Row="5"
+                Text="Gå i gang"
+                Margin="50,5,50,5"
+                CornerRadius="34"
+                Command="{Binding ChangeToHomeCommand}"
+                BackgroundColor="{DynamicResource AppPrimaryColor}"
+                ></Button>
+            
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
