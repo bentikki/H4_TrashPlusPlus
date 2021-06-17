@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library_H4_TrashPlusPlus.Users;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,10 +14,10 @@ namespace Xamarin_H4_TrashPlusPlus.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HomePage : ContentPage, IChangePage
     {
-        public HomePage()
+        public HomePage(IUserService userService)
         {
             InitializeComponent();
-            BindingContext = new HomeViewModel(this);
+            BindingContext = new HomeViewModel(this, userService);
         }
 
         /// <summary>

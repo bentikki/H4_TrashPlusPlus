@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library_H4_TrashPlusPlus.Users;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -11,6 +12,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
     class HomeViewModel : INotifyPropertyChanged
     {
+        private IUserService _userService;
         private bool loggedIn;
 
         public bool LoggedIn
@@ -33,12 +35,19 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         public ICommand LogOutCommand { get; set; }
         public ICommand LogInCommand { get; set; }
 
-        public HomeViewModel(IChangePage pageChanger)
+        public HomeViewModel(IChangePage pageChanger, IUserService userService)
         {
             LoggedIn = true;
-            LogOutCommand = new Command(() => LoggedIn = false);
-            LogInCommand = new Command(() => pageChanger.ChangePage(new LoginPage()));
+            LogOutCommand = new Command(LogOut);
+            LogInCommand = new Command(() => pageChanger.ChangePage(new LoginPage(_userService)));
+            _userService = userService;
         }
+
+        public void LogOut()
+        {
+            LoggedIn = false;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
         {

@@ -17,18 +17,17 @@ namespace Library_H4_TrashPlusPlus.Encryption
         /// <returns>Encrypted authenticateResponse</returns>
         public static AuthenticateResponse EncryptAuthenticateResponse(IEncryption encryption, AuthenticateResponse authenticateResponse)
         {
-
             authenticateResponse.UserObject = EncryptUser(encryption, authenticateResponse.UserObject);
 
             return authenticateResponse;
         }
-        internal static IUser EncryptIUser(IEncryption encryption, IUser user)
+        public static IUser EncryptIUser(IEncryption encryption, IUser user)
         {
-            if(user is User userObject)
+            if (user is User userObject)
             {
                 return EncryptUser(encryption, userObject);
             }
-            else if(user is CreateUserRequest createUserRequest)
+            else if (user is CreateUserRequest createUserRequest)
             {
                 return EncryptCreateUserRequest(encryption, createUserRequest);
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library_H4_TrashPlusPlus.Users;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,10 +14,10 @@ namespace Xamarin_H4_TrashPlusPlus.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage, IChangePage
     {
-        public LoginPage()
+        public LoginPage(IUserService userService)
         {
             InitializeComponent();
-            BindingContext = new LoginViewModel(this);
+            BindingContext = new LoginViewModel(this, userService);
         }
 
         /// <summary>
