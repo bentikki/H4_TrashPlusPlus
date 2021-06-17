@@ -1,6 +1,8 @@
 ﻿using Acr.UserDialogs;
+using Library_H4_TrashPlusPlus;
 using Library_H4_TrashPlusPlus.Users;
 using Library_H4_TrashPlusPlus.Users.Models;
+using Library_H4_TrashPlusPlus.Validator;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,9 +39,13 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             set
             {
                 password = value;
-                LoginFailed = false;
+                if (password.Length > 2)
+                {
+                    LoginFailed = false;
+                    NotifyPropertyChanged("LoginEnable");
+                    NotifyPropertyChanged("InputColor");
+                }
                 NotifyPropertyChanged("Password");
-                NotifyPropertyChanged("LoginFailed");
             }
         }
         public string Mail
@@ -48,13 +54,35 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             set
             {
                 mail = value;
-                LoginFailed = false;
+                if (mail.Length > 2)
+                {
+                    LoginFailed = false;
+                    NotifyPropertyChanged("LoginEnable");
+                    NotifyPropertyChanged("InputColor");
+                }
                 NotifyPropertyChanged("Mail");
-                NotifyPropertyChanged("LoginFailed");
             }
         }
 
+
         public bool LoginFailed { get; set; }
+        public bool LoginEnable { get => !LoginFailed; set => LoginFailed = !value; }
+
+        public Color InputColor
+        {
+            get
+            {
+                if (LoginFailed)
+                {
+                    return Color.Red;
+                }
+                else
+                {
+                    return Color.Transparent;
+                }
+            }
+            set { }
+        }
 
         public ICommand ChangeStateCommand { get; set; }
         public ICommand ChangeToSignUpCommand { get; set; }
@@ -66,15 +94,20 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             _pageChanger = pageChanger;
             ChangeStateCommand = new Command(() => SaveChecked = !SaveChecked);
             ChangeToSignUpCommand = new Command(() => _pageChanger.ChangePage(new SignUpPage(_userService)));
-            LoginCommand = new Command(() => LoginAsync());
+            LoginCommand = new Command(LoginAsync);
         }
 
-        public async Task LoginAsync()
+        public async void LoginAsync()
         {
             AuthenticateResponse response = null;
+
+
             using (UserDialogs.Instance.Loading("Logging in..."))
             {
-                response = await _userService.AuthenticateAsync(Mail, Password, "0.0.0.0");
+                if (DefaultValidators.ValidateMail(Mail).Count == 0 && DefaultValidators.ValidatePassword(Password).Count == 0)
+                {
+                    response = await _userService.AuthenticateAsync(Mail, Password, "0.0.0.0");
+                }
             }
             if (response != null)
             {
@@ -83,7 +116,8 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             else
             {
                 LoginFailed = true;
-                NotifyPropertyChanged("LoginFailed");
+                NotifyPropertyChanged("LoginEnable");
+                NotifyPropertyChanged("InputColor");
             }
 
         }
