@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using H4_TrashPlusPlus.Models;
+using Library_H4_TrashPlusPlus.Api;
+using Library_H4_TrashPlusPlus.Encryption;
+using Library_H4_TrashPlusPlus.Users.Entities;
 using Library_H4_TrashPlusPlus.Users.Models;
 
 namespace Library_H4_TrashPlusPlus.Users.Repository
@@ -8,48 +12,54 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
     /// <summary>
     /// User Repository used while dealing with API
     /// </summary>
-    public class ApiUserRepository : IUserRepository
+    public class ApiUserRepository : ApiRepositoryMaster, IUserRepository
     {
-        private string _apiAddress;
+        private IAsyncEncryption asyncEncryption;
+
 
         /// <summary>
         /// User Repository used while dealing with API
         /// Takes the API url as string parameter.
         /// </summary>
         /// <param name="apiAddress">URL of requested API</param>
-        public ApiUserRepository(string apiAddress)
+        public ApiUserRepository(string apiAddress) : base(apiAddress) 
         {
-            _apiAddress = apiAddress;
-        }
-
-        public bool Authenticate(string mail, string password)
-        {
-            throw new NotImplementedException();
+            asyncEncryption = EncryptionFactory.GenerateAsyncEncryption();
         }
 
         public AuthenticateResponse Authenticate(string mail, string password, string ipAddress)
         {
-            throw new NotImplementedException();
-        }
+            string apiPath = "user/Authenticate";
+            AuthenticateRequest authenticateRequest = new AuthenticateRequest() 
+            { 
+                Username = mail, 
+                Password = password, 
+                PublicKey = asyncEncryption.GetPublicKey() 
+            };
+            AuthenticateResponse apiResponseUser = this.apiRequester.PostApi<AuthenticateResponse>(apiPath, authenticateRequest);
 
-        /// <summary>
-        /// Sends a user to be created in the API, based on provided IUser object.
-        /// </summary>
-        /// <param name="userToCreate">IUser object to create user entity from</param>
-        /// <returns>Created user entity as IUser object</returns>
-        public IUser CreateUser(IUser userToCreate)
-        {
-            throw new NotImplementedException();
+            this.apiRequester.jwtToken = apiResponseUser.JwtToken;
+
+            return apiResponseUser;
+
         }
 
         public IUser CreateUser(CreateUserRequest userToCreate)
         {
-            throw new NotImplementedException();
+            string apiPath = "user/createuser";
+
+            IUser apiResponseUser = this.apiRequester.PostApi<User>(apiPath, userToCreate);
+            
+            return apiResponseUser;
         }
 
         public IUser GetUserById(int id)
         {
-            throw new NotImplementedException();
+            string apiPath = "user/"+ id;
+
+            IUser apiResponseUser = this.apiRequester.GetApi<User>(apiPath);
+
+            return apiResponseUser;
         }
 
         public IUser GetUserByLoginName(string loginName)

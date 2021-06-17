@@ -16,6 +16,8 @@ namespace Library_H4_TrashPlusPlus.Users.Models
         [JsonIgnore] // refresh token is returned in http only cookie
         public string RefreshToken { get; set; }
 
+        public AuthenticateResponse() { }
+
         public AuthenticateResponse(IUser user, string jwtToken, string refreshToken)
         {
             this.UserObject = (User)user;
