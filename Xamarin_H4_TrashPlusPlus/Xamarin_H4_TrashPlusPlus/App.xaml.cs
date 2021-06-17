@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library_H4_TrashPlusPlus.Users;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Xamarin_H4_TrashPlusPlus.View;
@@ -12,7 +13,7 @@ namespace Xamarin_H4_TrashPlusPlus
             InitializeComponent();
 
             //MainPage = new NavigationPage(new LoginPage());
-            MainPage = new NavigationPage(new LandingPage());
+            MainPage = new NavigationPage(new LandingPage(UserServiceFactory.GetUserServiceApi()));
         }
 
         protected override void OnStart()

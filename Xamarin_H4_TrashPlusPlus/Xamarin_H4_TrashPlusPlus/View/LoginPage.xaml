@@ -61,13 +61,13 @@
                             </Label.GestureRecognizers>
                         </Label>
                     </StackLayout>
-                    <Frame
+                    <Frame 
                         Grid.Row="4"
                         Grid.Column="1"
+                        BorderColor="{Binding InputColor}"
                         BackgroundColor="{StaticResource LightPrimaryColor}"
                         CornerRadius="12"
-                        Padding="10,0,10,0"
-                        >
+                        Padding="10,0,10,0">
                         <local:CustomEntry
                             Placeholder="Mail"
                             Text="{Binding Mail}"
@@ -76,6 +76,7 @@
                     <Frame
                         Grid.Row="5"
                         Grid.Column="1"
+                        BorderColor="{Binding InputColor}"
                         BackgroundColor="{StaticResource LightPrimaryColor}"
                         CornerRadius="12"
                         Padding="10,0,10,0"
@@ -104,8 +105,10 @@
                     <Button 
                         Grid.Row="7"
                         Grid.Column="1"
+                        IsEnabled="{Binding LoginEnable}"
                         Text="login"
                         CornerRadius="26"
+                        Command="{Binding LoginCommand}"
                         BackgroundColor="{DynamicResource AppPrimaryColor}"></Button>
                 </Grid>
             </Frame>

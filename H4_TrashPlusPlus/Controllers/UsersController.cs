@@ -40,7 +40,7 @@ namespace H4_TrashPlusPlus.Controllers
             {
                 return BadRequest((new { message = "Invalid input. User was not created" }));
             }
-            catch (DuplicateNameException e)
+            catch (DuplicateNameException)
             {
                 return BadRequest((new { message = "A user with these credentials already exists." }));
             }
@@ -61,20 +61,21 @@ namespace H4_TrashPlusPlus.Controllers
             {
                 response = _userService.Authenticate(model.Username, model.Password, GetIpAddress());
 
+                if (response == null)
+                    return Unauthorized(new { message = "Username or password is incorrect" });
+
                 // Encrypt response before send
                 response = ObjectEncryptor.EncryptAuthenticateResponse(EncryptionFactory.GenerateAsyncEncryption(model.PublicKey), response);
+                SetTokenCookie(response.RefreshToken);
+
+                return Ok(response);
+
             }
             catch (Exception)
             {
                 return BadRequest(new { message = "An unexpected error occured. User could not be created" });
             }
 
-            if (response == null)
-                return Unauthorized(new { message = "Username or password is incorrect" });
-
-            SetTokenCookie(response.RefreshToken);
-
-            return Ok(response);
         }
 
         [AllowAnonymous]

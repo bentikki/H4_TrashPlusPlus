@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library_H4_TrashPlusPlus.Users;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,10 +14,10 @@ namespace Xamarin_H4_TrashPlusPlus.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LandingPage : ContentPage, IChangePage
     {
-        public LandingPage()
+        public LandingPage(IUserService userService)
         {
             InitializeComponent();
-            BindingContext = new landingViewModel(this);
+            BindingContext = new landingViewModel(this, userService);
         }
 
         /// <summary>

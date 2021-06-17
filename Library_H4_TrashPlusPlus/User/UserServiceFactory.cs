@@ -51,7 +51,7 @@ namespace Library_H4_TrashPlusPlus.Users
 
         public static IUserService GetUserServiceApi()
         {
-            string apiString = "https://localhost:44356/";
+            string apiString = "https://1b91d0910e43.ngrok.io/";
             return new UserService(new ApiUserRepository(apiString));
         }
 

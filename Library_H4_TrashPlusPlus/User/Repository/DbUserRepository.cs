@@ -40,9 +40,12 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             // Get auth user data from existing entry.
             AuthUsersView authUser = this.GetAuthUserByMail(mail);
 
-            // Validate login
-            HashingService hashingService = HashingFactory.GetHashingService();
-            userAuthenticateSuccess = hashingService.VerifyPassword(password, authUser.Password, authUser.Salt);
+            if (authUser != null)
+            {
+                // Validate login
+                HashingService hashingService = HashingFactory.GetHashingService();
+                userAuthenticateSuccess = hashingService.VerifyPassword(password, authUser.Password, authUser.Salt);
+            }
 
 
             if (userAuthenticateSuccess)

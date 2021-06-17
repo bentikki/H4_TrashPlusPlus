@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -104,12 +105,12 @@ namespace Library_H4_TrashPlusPlus.Users
             catch(SqlException e)
             {
                 // An error occured while saving refresh token to db.
-                throw e;
+                return null;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // An unexpected error occured.
-                throw e;
+                return null;
             }
 
             return authenticateResponse;

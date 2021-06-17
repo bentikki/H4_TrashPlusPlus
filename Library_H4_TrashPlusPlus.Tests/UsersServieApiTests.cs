@@ -153,6 +153,22 @@ namespace Library_H4_TrashPlusPlus.Tests
             Assert.IsNotNull(authenticateResponse.RefreshToken);
         }
 
+        [Test]
+        public void Authenticate_InvalidLogin_ReturnNull()
+        {
+            // Arrange
+            AuthenticateResponse authenticateResponse;
+            long randomNumber = new Random().Next(0, 10000);
+            string email = "testmaildasdasdsa" + randomNumber + "@mail.com";
+            string password = "testxccccccccpassword" + randomNumber;
+
+            // Act
+            authenticateResponse = this.userServiceApi.Authenticate(email, password, "0.0.0.0");
+
+            // Assert
+            Assert.IsNull(authenticateResponse);
+        }
+
         //[Test]
         //public void Authenticate_InvalidLogin_ShouldReturnNull()
         //{

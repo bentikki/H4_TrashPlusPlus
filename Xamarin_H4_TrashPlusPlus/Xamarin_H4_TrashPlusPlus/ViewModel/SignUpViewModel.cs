@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library_H4_TrashPlusPlus.Users;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -11,6 +12,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
     class SignUpViewModel : INotifyPropertyChanged
     {
+        private IUserService _userService;
         private string username;
         private string mail;
         private string password;
@@ -47,10 +49,10 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
 
         public ICommand ChangeToLoginCommand { get; set; }
 
-        public SignUpViewModel(IChangePage pageChanger)
+        public SignUpViewModel(IChangePage pageChanger, IUserService userService)
         {
-            ChangeToLoginCommand = new Command(() => pageChanger.ChangePage(new LoginPage()));
-
+            ChangeToLoginCommand = new Command(() => pageChanger.ChangePage(new LoginPage(_userService)));
+            _userService = userService;
         }
 
 
