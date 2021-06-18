@@ -44,6 +44,15 @@ namespace Library_H4_TrashPlusPlus.Validator
                     new MaxLengthRule(500)
                 };
 
+        static private List<IValidationRule> barcodeRules = new List<IValidationRule>()
+                {
+                    new NullRule(),
+                    new NoEmptyStringRule(),
+                    new NoSpacesRule(),
+                    new MinLengthRule(15),
+                    new MaxLengthRule(50)
+                };
+
         /// <summary>
         /// Validates the mail.
         /// Throws exception if an error is reached.
@@ -120,14 +129,31 @@ namespace Library_H4_TrashPlusPlus.Validator
         }
 
         /// <summary>
-        /// Validates the username.
+        /// Validates the refresh token.
         /// Throws exception if an error is reached.
         /// </summary>
-        /// <param name="username">username value to validate.</param>
+        /// <param name="token">username value to validate.</param>
         static public void ValidateRefreshTokenException(string token)
         {
             Validator validator = new Validator("Refresh Token", refreshTokenRules);
             if (!validator.Validate(token))
+            {
+                foreach (var exception in validator.GetExceptions())
+                {
+                    throw exception;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Validates the Barcode.
+        /// Throws exception if an error is reached.
+        /// </summary>
+        /// <param name="barcode">Barcode to validate.</param>
+        static public void ValidateBarcodeException(string barcode)
+        {
+            Validator validator = new Validator("Barcode", barcodeRules);
+            if (!validator.Validate(barcode))
             {
                 foreach (var exception in validator.GetExceptions())
                 {

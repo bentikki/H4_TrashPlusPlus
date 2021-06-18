@@ -83,6 +83,10 @@ namespace H4_TrashPlusPlus.Controllers
         public IActionResult RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(refreshToken))
+                return Unauthorized(new { message = "Invalid token" });
+
             var response = _userService.RefreshToken(refreshToken, GetIpAddress());
 
             if (response == null)
