@@ -61,18 +61,20 @@
                     <Frame
                         Grid.Row="3"
                         Grid.Column="1"
+                        BorderColor="{Binding UsernameColor}"
                         BackgroundColor="{StaticResource LightPrimaryColor}"
                         CornerRadius="12"
                         Padding="10,0,10,0"
                         >
                         <local:CustomEntry
-                            Placeholder="Bruger"
+                            Placeholder="Brugernavn"
                             Text="{Binding Username}"
                             ></local:CustomEntry>
                     </Frame>
                     <Frame
                         Grid.Row="4"
                         Grid.Column="1"
+                        BorderColor="{Binding MailColor}"
                         BackgroundColor="{StaticResource LightPrimaryColor}"
                         CornerRadius="12"
                         Padding="10,0,10,0"
@@ -85,6 +87,7 @@
                     <Frame
                         Grid.Row="5"
                         Grid.Column="1"
+                        BorderColor="{Binding PasswordColor}"
                         BackgroundColor="{StaticResource LightPrimaryColor}"
                         CornerRadius="12"
                         Padding="10,0,10,0"
@@ -98,10 +101,10 @@
                     <Frame
                         Grid.Row="6"
                         Grid.Column="1"
+                        BorderColor="{Binding RePasswordColor}"
                         BackgroundColor="{StaticResource LightPrimaryColor}"
                         CornerRadius="12"
-                        Padding="10,0,10,0"
-                        >
+                        Padding="10,0,10,0">
                         <local:CustomEntry
                             IsPassword="True"
                             Placeholder="RePassword"
@@ -113,6 +116,7 @@
                         Grid.Column="1"
                         Text="login"
                         CornerRadius="26"
+                        Command="{Binding CreateCommand}"
                         BackgroundColor="{DynamicResource AppPrimaryColor}"></Button>
                 </Grid>
             </Frame>
