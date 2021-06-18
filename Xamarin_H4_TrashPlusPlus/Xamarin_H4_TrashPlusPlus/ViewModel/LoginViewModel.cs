@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin_H4_TrashPlusPlus.LocalStorage;
 using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
@@ -97,6 +98,9 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             LoginCommand = new Command(LoginAsync);
         }
 
+        /// <summary>
+        /// Logs in the user if the input is value
+        /// </summary>
         public async void LoginAsync()
         {
             AuthenticateResponse response = null;
@@ -111,6 +115,11 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             }
             if (response != null)
             {
+                if (SaveChecked)
+                {
+                    // Saves the token as a object
+                    StorageManagerFactory.GetLocalDBManager().SaveToken(StorageManagerFactory.CreateToken(response.RefreshToken));
+                }
                 _pageChanger.ChangePage(new HomePage(_userService));
             }
             else

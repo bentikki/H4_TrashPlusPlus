@@ -4,6 +4,7 @@ using System.Text;
 using H4_TrashPlusPlus.Models;
 using Library_H4_TrashPlusPlus.Api;
 using Library_H4_TrashPlusPlus.Encryption;
+using Library_H4_TrashPlusPlus.Users.Models;
 using Library_H4_TrashPlusPlus.Users.Entities;
 using Library_H4_TrashPlusPlus.Users.Models;
 
@@ -22,7 +23,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         /// Takes the API url as string parameter.
         /// </summary>
         /// <param name="apiAddress">URL of requested API</param>
-        public ApiUserRepository(string apiAddress) : base(apiAddress) 
+        public ApiUserRepository(string apiAddress) : base(apiAddress)
         {
             asyncEncryption = EncryptionFactory.GenerateAsyncEncryption();
         }
@@ -30,11 +31,11 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         public AuthenticateResponse Authenticate(string mail, string password, string ipAddress)
         {
             string apiPath = "user/Authenticate";
-            AuthenticateRequest authenticateRequest = new AuthenticateRequest() 
-            { 
-                Username = mail, 
-                Password = password, 
-                PublicKey = asyncEncryption.GetPublicKey() 
+            AuthenticateRequest authenticateRequest = new AuthenticateRequest()
+            {
+                Username = mail,
+                Password = password,
+                PublicKey = asyncEncryption.GetPublicKey()
             };
             AuthenticateResponse apiResponseUser = this.apiRequester.PostApi<AuthenticateResponse>(apiPath, authenticateRequest);
 
@@ -46,16 +47,21 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
 
         public IUser CreateUser(CreateUserRequest userToCreate)
         {
-            string apiPath = "user/createuser";
-
-            IUser apiResponseUser = this.apiRequester.PostApi<User>(apiPath, userToCreate);
-            
-            return apiResponseUser;
+            try
+            {
+                string apiPath = "user/createuser";
+                IUser apiResponseUser = this.apiRequester.PostApi<User>(apiPath, userToCreate);
+                return apiResponseUser;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public IUser GetUserById(int id)
         {
-            string apiPath = "user/"+ id;
+            string apiPath = "user/" + id;
 
             IUser apiResponseUser = this.apiRequester.GetApi<User>(apiPath);
 
@@ -74,12 +80,27 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
 
         public bool Logout(string token, string ipAddress)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string apiPath = "user/Logout";
+                string message = this.apiRequester.PostApi<ReworkResponse>(apiPath, token).Message;
+                return message.Length > 0;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public AuthenticateResponse RefreshToken(string token, string ipAddress)
         {
-            throw new NotImplementedException();
+            string apiPath = "user/RefreshToken";
+            this.apiRequester.SetCookie("refreshToken", token);
+            AuthenticateResponse apiResponseUser = this.apiRequester.PostApi<AuthenticateResponse>(apiPath, null);
+
+            this.apiRequester.jwtToken = apiResponseUser.JwtToken;
+
+            return apiResponseUser;
         }
     }
 }
