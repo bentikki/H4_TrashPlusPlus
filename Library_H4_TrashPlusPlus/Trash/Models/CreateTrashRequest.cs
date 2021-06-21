@@ -25,6 +25,13 @@ namespace Library_H4_TrashPlusPlus.Trash.Models
             UserID = userID;
         }
 
+        public CreateTrashRequest(string barcode, int binTypeID)
+        {
+            Barcode = barcode;
+            BinTypeID = binTypeID;
+            UserID = 0;
+        }
+
         public CreateTrashRequest()
         {
 
