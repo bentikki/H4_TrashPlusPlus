@@ -16,11 +16,11 @@ namespace Library_H4_TrashPlusPlus.Api
 {
     public class ApiRequester
     {
-        private Cookie cookie;
+        private static Cookie cookie;
         private readonly string API_PATH;
         private readonly int TIMEOUT_WAIT = 10000;
         private readonly HttpClient client = new HttpClient();
-        public string jwtToken { get; set; }
+        public static string jwtToken { get; set; }
 
         public ApiRequester(string api_path)
         {

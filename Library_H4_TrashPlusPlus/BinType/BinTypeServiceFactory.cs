@@ -16,6 +16,14 @@ namespace Library_H4_TrashPlusPlus.BinType
         {
             return new BinTypeService(new DbBinTypeRepository());
         }
+        /// <summary>
+        /// ITrashService used for Api interaction
+        /// </summary>
+        /// <returns>ITrashService used for database interaction</returns>
+        public static IBinTypeService GetBinTypeServiceApi()
+        {
+            return new BinTypeService(new ApiBinTypeRepository(CommonSettingsFactory.GetApiPath));
+        }
 
         /// <summary>
         /// SqlConnection with permission to create new user via SPCreateNewUser

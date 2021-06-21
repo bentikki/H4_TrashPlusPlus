@@ -13,7 +13,7 @@ using System.Data.SqlClient;
 
 namespace Library_H4_TrashPlusPlus.Tests
 {
-    public class BinTypeServiceTests
+    public class BinTypeServiceDbTests
     {
         private IBinTypeService binTypeServiceDB;
 

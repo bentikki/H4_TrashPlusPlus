@@ -10,14 +10,17 @@ using Library_H4_TrashPlusPlus.Trash.Models;
 
 namespace Library_H4_TrashPlusPlus.Tests
 {
-    public class TrashServiceTests
+    public class TrashServiceApiTests
     {
-        private ITrashService trashServiceDB;
+        private ITrashService trashServiceApi;
+        private IUserService userServiceApi;
 
         [SetUp]
         public void Setup()
         {
-            trashServiceDB = TrashServiceFactory.GetTrashServiceDb();
+            trashServiceApi = TrashServiceFactory.GetTrashServiceApi();
+            userServiceApi = UserServiceFactory.GetUserServiceApi();
+            userServiceApi.Authenticate("casper@this.thing", "casper12", "0.0.0.0");
         }
 
         [Test]
@@ -27,7 +30,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             string barcode = null;
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => { this.trashServiceDB.GetTrashByBarcode(barcode); });
+            Assert.Throws<ArgumentNullException>(() => { this.trashServiceApi.GetTrashByBarcode(barcode); });
         }
 
         [TestCase("")]
@@ -38,7 +41,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             string barcode = barcodeValue;
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => { this.trashServiceDB.GetTrashByBarcode(barcode); });
+            Assert.Throws<ArgumentException>(() => { this.trashServiceApi.GetTrashByBarcode(barcode); });
         }
 
         [Test]
@@ -49,7 +52,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             string barcode = new Random().Next(10000, int.MaxValue).ToString();
 
             // Act
-            returnedTrash = this.trashServiceDB.GetTrashByBarcode(barcode);
+            returnedTrash = this.trashServiceApi.GetTrashByBarcode(barcode);
 
             // Assert
             Assert.IsNull(returnedTrash);
@@ -63,11 +66,12 @@ namespace Library_H4_TrashPlusPlus.Tests
             string barcode = new Random().Next(10000, int.MaxValue).ToString();
             int binTypeID = new Random().Next(2, 11);
 
+
             CreateTrashRequest request = new CreateTrashRequest(barcode, binTypeID, 235);
-            ITrash createdTrash = this.trashServiceDB.CreateTrash(request);
+            ITrash createdTrash = this.trashServiceApi.CreateTrash(request);
 
             // Act
-            returnedTrash = this.trashServiceDB.GetTrashByBarcode(barcode);
+            returnedTrash = this.trashServiceApi.GetTrashByBarcode(barcode);
 
             // Assert
             Assert.IsNotNull(returnedTrash);
@@ -85,7 +89,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             CreateTrashRequest request = new CreateTrashRequest(barcode, binTypeID);
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => { this.trashServiceDB.CreateTrash(request); });
+            Assert.Throws<ArgumentException>(() => { this.trashServiceApi.CreateTrash(request); });
         }
 
         [TestCase(0)]
@@ -99,7 +103,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             CreateTrashRequest request = new CreateTrashRequest(barcode, binTypeID);
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => { this.trashServiceDB.CreateTrash(request); });
+            Assert.Throws<ArgumentException>(() => { this.trashServiceApi.CreateTrash(request); });
         }
 
         [Test]
@@ -112,7 +116,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             CreateTrashRequest request = new CreateTrashRequest(barcode, binTypeID);
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => { this.trashServiceDB.CreateTrash(request); });
+            Assert.Throws<ArgumentNullException>(() => { this.trashServiceApi.CreateTrash(request); });
         }
 
         [Test]
@@ -125,7 +129,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             CreateTrashRequest request = new CreateTrashRequest(barcode, binTypeID, 235);
 
             // Act
-            ITrash trash = this.trashServiceDB.CreateTrash(request);
+            ITrash trash = this.trashServiceApi.CreateTrash(request);
 
             // Assert
             Assert.IsNotNull(trash);
