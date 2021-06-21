@@ -1,5 +1,4 @@
-﻿using Library_H4_TrashPlusPlus.Users;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,19 +6,17 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Xamarin_H4_TrashPlusPlus.ViewModel;
 
 namespace Xamarin_H4_TrashPlusPlus.View
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LoginPage : ContentPage, IChangePage
+    public partial class ScanningPage : ContentPage, IChangePage
     {
-        public LoginPage()
+        public ScanningPage()
         {
             InitializeComponent();
-            BindingContext = new LoginViewModel(this, UserServiceFactory.GetUserServiceApi());
+            
         }
-
 
         /// <summary>
         /// Changes the page to the given page

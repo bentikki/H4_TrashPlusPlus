@@ -199,7 +199,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             passwordErrors = new List<string>();
             _userService = userService;
             _pageChanger = pageChanger;
-            ChangeToLoginCommand = new Command(() => _pageChanger.ChangePage(new LoginPage(_userService)));
+            ChangeToLoginCommand = new Command(() => _pageChanger.PushPage(new LoginPage()));
             CreateCommand = new Command(CreateUserAsync);
         }
 
@@ -219,7 +219,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             if (user != null)
             {
                 UserDialogs.Instance.Toast("Success",TimeSpan.FromSeconds(1));
-                _pageChanger.ChangePage(new LoginPage(_userService));
+                _pageChanger.PushPage(new LoginPage());
             }
             else
             {

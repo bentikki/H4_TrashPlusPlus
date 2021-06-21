@@ -14,20 +14,30 @@ namespace Xamarin_H4_TrashPlusPlus.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HomePage : ContentPage, IChangePage
     {
-        public HomePage(IUserService userService)
+        public HomePage()
         {
             InitializeComponent();
-            BindingContext = new HomeViewModel(this, userService);
+            BindingContext = new HomeViewModel(this, UserServiceFactory.GetUserServiceApi());
         }
 
         /// <summary>
         /// Changes the page to the given page
         /// </summary>
         /// <param name="page">the new page</param>
-        public void ChangePage(Page page)
+        public void PushPage(Page page)
         {
             Device.BeginInvokeOnMainThread(() =>
             Navigation.PushAsync(page)
+            );
+        }
+
+        /// <summary>
+        /// Changes to the last page
+        /// </summary>
+        public void PopPage()
+        {
+            Device.BeginInvokeOnMainThread(() =>
+                Navigation.PopModalAsync()
             );
         }
     }

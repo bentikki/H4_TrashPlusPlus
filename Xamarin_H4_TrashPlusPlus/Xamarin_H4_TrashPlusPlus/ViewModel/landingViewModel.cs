@@ -27,8 +27,8 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
 
             _userService = userService;
             _pageChanger = pageChanger;
-            ChangeToLoginCommand = new Command(() => pageChanger.ChangePage(new LoginPage(_userService)));
-            ChangeToHomeCommand = new Command(() => pageChanger.ChangePage(new HomePage(_userService)));
+            ChangeToLoginCommand = new Command(() => pageChanger.PushPage(new LoginPage()));
+            ChangeToHomeCommand = new Command(() => pageChanger.PushPage(new HomePage()));
             Task.Run(Login);
         }
 
@@ -44,7 +44,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
                         UserDialogs.Instance.Toast("Success", TimeSpan.FromSeconds(1));
                         StorageManagerFactory.GetLocalDBManager().DeleteToken();
                         StorageManagerFactory.GetLocalDBManager().SaveToken(StorageManagerFactory.CreateToken(response.RefreshToken));
-                        _pageChanger.ChangePage(new HomePage(_userService));
+                        _pageChanger.PushPage(new HomePage());
                     }
                     else
                     {

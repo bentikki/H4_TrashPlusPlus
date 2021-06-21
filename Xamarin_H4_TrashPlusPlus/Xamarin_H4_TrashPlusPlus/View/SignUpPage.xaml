@@ -2,24 +2,26 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Xamarin_H4_TrashPlusPlus" 
-             x:Class="Xamarin_H4_TrashPlusPlus.View.SignUpPage">
+             xmlns:Custom="clr-namespace:Xamarin_H4_TrashPlusPlus.CustomItem"
+             x:Class="Xamarin_H4_TrashPlusPlus.View.SignUpPage"
+             NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.25*" />
+                <RowDefinition Height="0.2*" />
                 <RowDefinition Height="1*" />
-                <RowDefinition Height="0.25*" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="0.1*" />
-            </Grid.ColumnDefinitions>
-            <Frame
+            <Label
+                Grid.Row="0"
+                Text="Trash plus+"
+                VerticalTextAlignment="Center"
+                HorizontalTextAlignment="Center"
+                FontSize="25"
+                ></Label>
+            <Custom:CustomFrame
+                CornerRadius="40,40,0,0"
                 Grid.Row="1" 
-                Grid.Column="1"
                 BackgroundColor="{StaticResource LightColor}"
-                CornerRadius="35"
                 >
                 <Grid>
 
@@ -119,7 +121,7 @@
                         Command="{Binding CreateCommand}"
                         BackgroundColor="{DynamicResource AppPrimaryColor}"></Button>
                 </Grid>
-            </Frame>
+            </Custom:CustomFrame>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

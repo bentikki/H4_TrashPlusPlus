@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Xamarin_H4_TrashPlusPlus.View.ScanningPage"
+             xmlns:Custom="clr-namespace:Xamarin_H4_TrashPlusPlus.CustomItem"
+             xmlns:zxcm="clr-namespace:System.Security.Claims;assembly=System.Security.Claims"
+             xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <Custom:CustomFrame
+                CornerRadius="40,40,0,0"
+                Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="3*" />
+                        <RowDefinition Height="3*" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="0.5*" />
+                    </Grid.RowDefinitions>
+
+                    <zxing:ZXingScannerView
+                        Grid.Row="1"
+                        IsScanning="True"
+                        x:Name="Scanner"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        ></zxing:ZXingScannerView>
+                    <Label
+                Grid.Row="3"
+                Text="Kan stregkoden ikke skannes eller er der ikke nogen"
+                HorizontalTextAlignment="Center"
+                FontSize="15"
+                Padding="50,0,50,0"
+                TextColor="{DynamicResource DarkColor}"></Label>
+
+                    <Button
+                        Grid.Row="4"
+                        CornerRadius="25"
+                        Margin="40,0,40,0"
+                        BackgroundColor="{StaticResource AppPrimaryColor}"
+                        Text="klik her"></Button>
+                </Grid>
+            </Custom:CustomFrame>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

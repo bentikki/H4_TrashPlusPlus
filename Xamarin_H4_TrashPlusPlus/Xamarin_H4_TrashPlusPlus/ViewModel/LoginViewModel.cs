@@ -94,7 +94,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             _userService = userService;
             _pageChanger = pageChanger;
             ChangeStateCommand = new Command(() => SaveChecked = !SaveChecked);
-            ChangeToSignUpCommand = new Command(() => _pageChanger.ChangePage(new SignUpPage(_userService)));
+            ChangeToSignUpCommand = new Command(() => _pageChanger.PushPage(new SignUpPage()));
             LoginCommand = new Command(LoginAsync);
         }
 
@@ -120,7 +120,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
                     // Saves the token as a object
                     StorageManagerFactory.GetLocalDBManager().SaveToken(StorageManagerFactory.CreateToken(response.RefreshToken));
                 }
-                _pageChanger.ChangePage(new HomePage(_userService));
+                _pageChanger.PushPage(new HomePage());
             }
             else
             {

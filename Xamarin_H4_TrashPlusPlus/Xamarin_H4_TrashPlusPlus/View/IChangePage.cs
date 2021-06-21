@@ -7,6 +7,7 @@ namespace Xamarin_H4_TrashPlusPlus.View
 {
     interface IChangePage
     {
-        void ChangePage(Page page);
+        void PushPage(Page page);
+        void PopPage();
     }
 }
