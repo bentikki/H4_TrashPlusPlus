@@ -20,7 +20,7 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage
         /// </summary>
         public void DeleteToken()
         {
-            database.DeleteGroupAsync().Wait();
+            database.DeleteTokenAsync().Wait();
         }
 
         /// <summary>

@@ -40,7 +40,7 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage.Database
         /// Deletes all the Tokens from the database
         /// </summary>s
         /// <returns>The number of rows</returns>
-        public Task<int> DeleteGroupAsync()
+        public Task<int> DeleteTokenAsync()
         {
             return _database.DeleteAllAsync<Token>();
         }
