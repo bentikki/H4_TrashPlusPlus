@@ -1,4 +1,6 @@
 using H4_TrashPlusPlus.Helpers;
+using Library_H4_TrashPlusPlus.BinType;
+using Library_H4_TrashPlusPlus.Trash;
 using Library_H4_TrashPlusPlus.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -62,6 +64,8 @@ namespace H4_TrashPlusPlus
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>(x => (UserService)UserServiceFactory.GetUserServiceDB());
+            services.AddScoped<IBinTypeService, BinTypeService>(x => (BinTypeService)BinTypeServiceFactory.GetBinTypeServiceDb());
+            services.AddScoped<ITrashService, TrashService>(x => (TrashService)TrashServiceFactory.GetTrashServiceDb());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

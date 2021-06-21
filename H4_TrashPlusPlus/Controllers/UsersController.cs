@@ -17,7 +17,7 @@ namespace H4_TrashPlusPlus.Controllers
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class UserController : ControllerBase
+    public class UserController : BaseController
     {
         private IUserService _userService;
 
@@ -83,6 +83,10 @@ namespace H4_TrashPlusPlus.Controllers
         public IActionResult RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(refreshToken))
+                return Unauthorized(new { message = "Invalid token" });
+
             var response = _userService.RefreshToken(refreshToken, GetIpAddress());
 
             if (response == null)
@@ -99,7 +103,7 @@ namespace H4_TrashPlusPlus.Controllers
             try
             {
                 // Get current logged in user Example
-                IUser currentUser = this.GetCurrentUser();
+                IUser currentUser = this.GetCurrentUser(this._userService);
                 if (currentUser == null)
                     return Unauthorized(new { message = "Invalid token" });
 
@@ -145,19 +149,6 @@ namespace H4_TrashPlusPlus.Controllers
 
         }
 
-        private string GetCurrentUserToken()
-        {
-            var accessToken = Request.Cookies["refreshToken"];
-            return accessToken;
-        }
-
-        private IUser GetCurrentUser()
-        {
-            IUser currentUser = this._userService.GetUserByToken(this.GetCurrentUserToken());
-            return currentUser;
-        }
-
-        // helper methods
         private void SetTokenCookie(string token)
         {
             var cookieOptions = new CookieOptions
