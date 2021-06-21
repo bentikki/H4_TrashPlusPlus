@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Library_H4_TrashPlusPlus.Trash
 {
@@ -49,6 +50,18 @@ namespace Library_H4_TrashPlusPlus.Trash
         }
 
         /// <summary>
+        /// Returns ITrash object based on given barcode.
+        /// Returns NULL if no such barcode exists.
+        /// </summary>
+        /// <param name="barcode">Barcode of requested trash</param>
+        /// <returns>ITrash object matching the given barcode.</returns>
+        public async Task<ITrash> GetTrashByBarcodeAsync(string barcode)
+        {
+            var task = Task.Run(() => this.GetTrashByBarcode(barcode));
+            return await task;
+        }
+
+        /// <summary>
         /// Register barcode to be a trash item matching the given IBinType sorting method.
         /// </summary>
         /// <param name="barcode">Barcode of trash</param>
@@ -81,6 +94,18 @@ namespace Library_H4_TrashPlusPlus.Trash
 
             // Return created object
             return createdTrash;
+        }
+
+        /// <summary>
+        /// Register barcode to be a trash item matching the given IBinType sorting method.
+        /// </summary>
+        /// <param name="barcode">Barcode of trash</param>
+        /// <param name="bin">IBinType object to be registered as correct sorting method.</param>
+        /// <returns>Newly created trash item.</returns>
+        public async Task<ITrash> CreateTrashAsync(CreateTrashRequest createTrashRequest)
+        {
+            var task = Task.Run(() => this.CreateTrash(createTrashRequest));
+            return await task;
         }
     }
 }

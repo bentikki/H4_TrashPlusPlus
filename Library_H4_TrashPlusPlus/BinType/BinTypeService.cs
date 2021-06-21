@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Library_H4_TrashPlusPlus.BinType
 {
@@ -44,7 +45,22 @@ namespace Library_H4_TrashPlusPlus.BinType
             return allCurrentBinTypes;
         }
 
+        /// <summary>
+        /// Returns all currently existing Bin Types as List
+        /// </summary>
+        /// <returns>List of all current Bin Types</returns>
+        public async Task<List<IBinType>> GetAllBinTypesAsync()
+        {
+            var task = Task.Run(() => this.GetAllBinTypes());
+            return await task;
+        }
+
         public IBinType GetBinTypeById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IBinType> GetBinTypeByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
