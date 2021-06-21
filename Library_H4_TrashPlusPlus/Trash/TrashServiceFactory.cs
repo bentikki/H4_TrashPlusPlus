@@ -18,6 +18,15 @@ namespace Library_H4_TrashPlusPlus.Trash
         }
 
         /// <summary>
+        /// ITrashService used for API interaction
+        /// </summary>
+        /// <returns>ITrashService used for database interaction</returns>
+        public static ITrashService GetTrashServiceApi()
+        {
+            return new TrashService(new ApiTrashRepository(CommonSettingsFactory.GetApiPath));
+        }
+
+        /// <summary>
         /// SqlConnection with permission to create new trash via SPCreateTrash
         /// </summary>
         /// <returns>SqlConnection with specific permission</returns>

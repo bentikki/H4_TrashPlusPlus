@@ -51,8 +51,7 @@ namespace Library_H4_TrashPlusPlus.Users
 
         public static IUserService GetUserServiceApi()
         {
-            string apiString = "https://81f62e52865d.ngrok.io/";
-            return new UserService(new ApiUserRepository(apiString));
+            return new UserService(new ApiUserRepository(CommonSettingsFactory.GetApiPath));
         }
 
     }

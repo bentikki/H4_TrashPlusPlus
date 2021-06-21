@@ -39,7 +39,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             };
             AuthenticateResponse apiResponseUser = this.apiRequester.PostApi<AuthenticateResponse>(apiPath, authenticateRequest);
 
-            this.apiRequester.jwtToken = apiResponseUser.JwtToken;
+            ApiRequester.jwtToken = apiResponseUser.JwtToken;
 
             return apiResponseUser;
 
@@ -94,13 +94,9 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
 
         public AuthenticateResponse RefreshToken(string token, string ipAddress)
         {
-            string apiPath = "user/RefreshToken";
             this.apiRequester.SetCookie("refreshToken", token);
-            AuthenticateResponse apiResponseUser = this.apiRequester.PostApi<AuthenticateResponse>(apiPath, null);
 
-            this.apiRequester.jwtToken = apiResponseUser.JwtToken;
-
-            return apiResponseUser;
+            return RefreshToken();
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Library_H4_TrashPlusPlus.Trash.Models
         public int FK_BinId { get; set; }
         public int FK_UserId { get; set; }
 
+        public TrashEntity() { }
         public TrashEntity(int id, string barcode, int BinId, int UserId)
         {
             Id = id;
