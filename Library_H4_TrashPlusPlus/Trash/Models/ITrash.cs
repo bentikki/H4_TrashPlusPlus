@@ -8,11 +8,9 @@ namespace Library_H4_TrashPlusPlus.Trash.Models
 {
     public interface ITrash
     {
-        int Id { get; set; }
-        string Barcode { get; set; }
-        string FK_BinId  { get; set; }
-        string FK_UserId { get; set; }
-        IBinType BinType { get; set; }
-        IUser CreatedBy{ get; set; }
+        int Id { get;}
+        string Barcode { get;}
+        int FK_BinId  { get; }
+        int FK_UserId { get;}
     }
 }

@@ -49,7 +49,7 @@ namespace Library_H4_TrashPlusPlus.Validator
                     new NullRule(),
                     new NoEmptyStringRule(),
                     new NoSpacesRule(),
-                    new MinLengthRule(15),
+                    new MinLengthRule(5),
                     new MaxLengthRule(50)
                 };
 

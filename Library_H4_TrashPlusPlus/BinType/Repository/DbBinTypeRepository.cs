@@ -18,7 +18,8 @@ namespace Library_H4_TrashPlusPlus.Trash.Repository
         /// <returns>List of available Bin Types</returns>
         public List<IBinType> GetAllBins()
         {
-            List<IBinType> availableBinTypes;
+            IEnumerable<BinTypeEntity> availableBinTypes;
+            List<IBinType> availableBinTypeInterfaces = new List<IBinType>();
 
             using (var conn = BinTypeServiceFactory.GetSqlConnectionAllSelect())
             {
@@ -26,10 +27,15 @@ namespace Library_H4_TrashPlusPlus.Trash.Repository
 
                 // Execute stored procedure to create new user with hashed password.
                 var procedure = "[SPGetAllBinTypes]";
-                //availableBinTypes = conn.Query<BinTypeEntity>(procedure, commandType: CommandType.StoredProcedure).AsList();
+                availableBinTypes = conn.Query<BinTypeEntity>(procedure, commandType: CommandType.StoredProcedure);
             }
 
-            return availableBinTypes;
+            //if(availableBinTypes != null)
+            //{
+            //    availableBinTypeInterfaces = availableBinTypes.AsList<IBinType>();
+            //}
+
+            return availableBinTypes.AsList<IBinType>();
         }
 
         public IBinType GetBinById(int id)

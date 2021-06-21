@@ -1,15 +1,39 @@
-﻿using Library_H4_TrashPlusPlus.Trash.Models;
+﻿using Dapper;
+using Library_H4_TrashPlusPlus.Trash.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace Library_H4_TrashPlusPlus.Trash.Repository
 {
     class DbTrashRepository : ITrashRepository
     {
-        public ITrash CreateTrash(ITrash trash)
+        /// <summary>
+        /// Creates trash in the database, based on given object.
+        /// </summary>
+        /// <param name="trash">Trash to create.</param>
+        /// <returns>Created trash entity.</returns>
+        public ITrash CreateTrash(CreateTrashRequest createTrashRequest)
         {
-            throw new NotImplementedException();
+            ITrash createdTrash;
+
+            using (var conn = TrashServiceFactory.GetSqlConnectionCreateTrash())
+            {
+                conn.Open();
+
+                // Execute stored procedure to create new user with hashed password.
+                var procedure = "[SPCreateTrash]";
+                var values = new
+                {
+                    @Barcode = createTrashRequest.Barcode,
+                    @BinTypeID = createTrashRequest.BinTypeID,
+                    @UserID = createTrashRequest.UserID
+                };
+                createdTrash = conn.QuerySingle<TrashEntity>(procedure, values, commandType: CommandType.StoredProcedure);
+            }
+
+            return createdTrash;
         }
 
         /// <summary>
@@ -22,21 +46,18 @@ namespace Library_H4_TrashPlusPlus.Trash.Repository
         {
             ITrash selectedTrash = null;
 
-            //using (var conn = UserServiceFactory.GetSqlConnectionCreateUser())
-            //{
-            //    conn.Open();
+            using (var conn = TrashServiceFactory.GetSqlConnectionGetTrash())
+            {
+                conn.Open();
 
-            //    // Execute stored procedure to create new user with hashed password.
-            //    var procedure = "[SPCreateNewUser]";
-            //    var values = new
-            //    {
-            //        @Username = CommonSettingsFactory.SyncEncrypter.Encrypt(userToCreate.Username),
-            //        @Email = CommonSettingsFactory.SyncEncrypter.Encrypt(userToCreate.Mail),
-            //        @Password = hashedUser.Password,
-            //        @Salt = hashedUser.Salt
-            //    };
-            //    identity = conn.ExecuteScalar<int>(procedure, values, commandType: CommandType.StoredProcedure);
-            //}
+                // Execute stored procedure to create new user with hashed password.
+                var procedure = "[SPGetTrashByBarcode]";
+                var values = new
+                {
+                    @Barcode = barcode,
+                };
+                selectedTrash = conn.QuerySingleOrDefault<TrashEntity>(procedure, values, commandType: CommandType.StoredProcedure);
+            }
             return selectedTrash;
 
         }

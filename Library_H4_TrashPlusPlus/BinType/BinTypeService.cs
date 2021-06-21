@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Library_H4_TrashPlusPlus.BinType
 {
-    internal class BinTypeService : IBinTypeService
+    public class BinTypeService : IBinTypeService
     {
         private IBinTypeRepository _binTypeRepository;
 

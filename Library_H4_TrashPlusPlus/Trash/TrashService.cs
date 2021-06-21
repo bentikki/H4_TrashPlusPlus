@@ -1,9 +1,11 @@
 ﻿using Library_H4_TrashPlusPlus.BinType.Models;
 using Library_H4_TrashPlusPlus.Trash.Models;
 using Library_H4_TrashPlusPlus.Trash.Repository;
+using Library_H4_TrashPlusPlus.Users.Repository;
 using Library_H4_TrashPlusPlus.Validator;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Text;
 
 namespace Library_H4_TrashPlusPlus.Trash
@@ -52,9 +54,33 @@ namespace Library_H4_TrashPlusPlus.Trash
         /// <param name="barcode">Barcode of trash</param>
         /// <param name="bin">IBinType object to be registered as correct sorting method.</param>
         /// <returns>Newly created trash item.</returns>
-        public ITrash RegisterTrashSorting(string barcode, IBinType bin)
+        public ITrash CreateTrash(CreateTrashRequest createTrashRequest)
         {
-            throw new NotImplementedException();
+            // Check for errors in input - Throw Exception
+            if (createTrashRequest.BinTypeID < 1) throw new ArgumentException("BinTypeID must not be below 1", nameof(createTrashRequest.BinTypeID));
+            DefaultValidators.ValidateBarcodeException(createTrashRequest.Barcode);
+
+            // Set trash to null initially, so null will be returned if the barcode does not exist.
+            ITrash createdTrash = null;
+
+            try
+            {
+                // Call repository 
+                createdTrash = this.trashRepository.CreateTrash(createTrashRequest);
+            }
+            catch (SqlException e)
+            {
+                // An error occured while creating via Database.
+                throw e;
+            }
+            catch (Exception e)
+            {
+                // An unexpected error occured.
+                throw e;
+            }
+
+            // Return created object
+            return createdTrash;
         }
     }
 }

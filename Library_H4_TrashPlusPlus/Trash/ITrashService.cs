@@ -9,6 +9,6 @@ namespace Library_H4_TrashPlusPlus.Trash
     public interface ITrashService
     {
         ITrash GetTrashByBarcode(string barcode);
-        ITrash RegisterTrashSorting(string barcode, IBinType bin);
+        ITrash CreateTrash(CreateTrashRequest createTrashRequest);
     }
 }

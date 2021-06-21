@@ -8,6 +8,6 @@ namespace Library_H4_TrashPlusPlus.Trash.Repository
     public interface ITrashRepository
     {
         ITrash GetTrashByBarcode(string barcode);
-        ITrash CreateTrash(ITrash trash);
+        ITrash CreateTrash(CreateTrashRequest createTrashRequest);
     }
 }

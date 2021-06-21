@@ -6,7 +6,7 @@ namespace Library_H4_TrashPlusPlus.BinType.Models
 {
     public interface IBinType
     {
-        int Id { get; set; }
-        int Name { get; set; }
+        int Id { get; }
+        string Name { get;  }
     }
 }
