@@ -17,7 +17,8 @@ namespace Xamarin_H4_TrashPlusPlus.View
         public SignUpPage(IUserService userService)
         {
             InitializeComponent();
-            BindingContext = new SignUpViewModel(this, userService);
+            SignUpViewModel signUp = new SignUpViewModel(this, userService);
+            BindingContext = signUp;
         }
 
         /// <summary>
@@ -26,7 +27,9 @@ namespace Xamarin_H4_TrashPlusPlus.View
         /// <param name="page">the new page</param>
         public void ChangePage(Page page)
         {
-            Navigation.PushAsync(page);
+            Device.BeginInvokeOnMainThread(() =>
+            Navigation.PushAsync(page)
+            );
         }
     }
 }

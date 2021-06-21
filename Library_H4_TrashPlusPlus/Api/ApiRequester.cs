@@ -16,7 +16,7 @@ namespace Library_H4_TrashPlusPlus.Api
 {
     public class ApiRequester
     {
-        private readonly List<Cookie> cookies;
+        private Cookie cookie;
         private readonly string API_PATH;
         private readonly int TIMEOUT_WAIT = 10000;
         private readonly HttpClient client = new HttpClient();
@@ -25,7 +25,11 @@ namespace Library_H4_TrashPlusPlus.Api
         public ApiRequester(string api_path)
         {
             this.API_PATH = api_path;
-            cookies = new List<Cookie>();
+        }
+
+        public void SetCookie(string name, string value)
+        {
+            cookie = new Cookie(name, value, "/", "ngrok.io");
         }
 
         public T GetApi<T>(string apiUrlParam)
@@ -62,7 +66,7 @@ namespace Library_H4_TrashPlusPlus.Api
             if (httpResponse.Headers.AllKeys.Contains("Set-Cookie"))
             {
                 string[] token = httpResponse.Headers["Set-Cookie"].Split('=');
-                cookies.Add(new Cookie(token[0], token[1].Split(';')[0], "/", "localhost"));
+                cookie = new Cookie(token[0], token[1].Split(';')[0], "/", "ngrok.io");
             }
 
             string result;
@@ -80,7 +84,7 @@ namespace Library_H4_TrashPlusPlus.Api
         private void AddCookies(ref HttpWebRequest httpWebRequest)
         {
             httpWebRequest.CookieContainer = new CookieContainer();
-            foreach (Cookie cookie in cookies)
+            if (cookie != null)
             {
                 httpWebRequest.CookieContainer.Add(cookie);
             }
@@ -91,7 +95,7 @@ namespace Library_H4_TrashPlusPlus.Api
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(this.API_PATH + urlParams);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
-            if (!(jwtToken != "" || jwtToken != null))
+            if (!(jwtToken == "" || jwtToken == null))
             {
                 httpWebRequest.PreAuthenticate = true;
                 httpWebRequest.Headers.Add("Authorization", "Bearer " + jwtToken);
@@ -111,7 +115,7 @@ namespace Library_H4_TrashPlusPlus.Api
             if (httpResponse.Headers.AllKeys.Contains("Set-Cookie"))
             {
                 string[] token = httpResponse.Headers["Set-Cookie"].Split('=');
-                cookies.Add(new Cookie(token[0], token[1].Split(';')[0], "/", "localhost"));
+                cookie = new Cookie(token[0], token[1].Split(';')[0], "/", "ngrok.io");
             }
 
             string result;
