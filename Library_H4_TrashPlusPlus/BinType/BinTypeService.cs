@@ -55,14 +55,36 @@ namespace Library_H4_TrashPlusPlus.BinType
             return await task;
         }
 
+        /// <summary>
+        /// Returns the Bin Type for that id
+        /// </summary>
+        /// <param name="id">The id of the bin type</param>
+        /// <returns>The bin type</returns>
         public IBinType GetBinTypeById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return this._binTypeRepository.GetBinById(id);
+            }
+            catch (SqlException)
+            {
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
-        public Task<IBinType> GetBinTypeByIdAsync(int id)
+        /// <summary>
+        /// Returns the Bin Type for that id
+        /// </summary>
+        /// <param name="id">The id of the bin type</param>
+        /// <returns>The bin type</returns>
+        public async Task<IBinType> GetBinTypeByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var task = Task.Run(() => this.GetBinTypeById(id));
+            return await task;
         }
     }
 }

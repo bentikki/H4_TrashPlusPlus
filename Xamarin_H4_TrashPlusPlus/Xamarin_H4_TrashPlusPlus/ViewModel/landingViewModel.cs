@@ -14,19 +14,17 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
-    class landingViewModel : INotifyPropertyChanged
+    class landingViewModel : BaseViewModel
     {
         private IUserService _userService;
-        private IChangePage _pageChanger;
 
         public ICommand ChangeToLoginCommand { get; set; }
         public ICommand ChangeToHomeCommand { get; set; }
 
-        public landingViewModel(IChangePage pageChanger, IUserService userService)
+        public landingViewModel(IChangePage pageChanger, IUserService userService) : base(pageChanger)
         {
 
             _userService = userService;
-            _pageChanger = pageChanger;
             ChangeToLoginCommand = new Command(() => pageChanger.PushPage(new LoginPage()));
             ChangeToHomeCommand = new Command(() => pageChanger.PushPage(new HomePage()));
             Task.Run(Login);
@@ -53,12 +51,6 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
                     }
                 }
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

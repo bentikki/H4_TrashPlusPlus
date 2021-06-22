@@ -124,6 +124,7 @@ namespace Library_H4_TrashPlusPlus.Tests
         {
             // Arrange
             string barcode = new Random().Next(10000, int.MaxValue).ToString();
+            //barcode = "5703896237028";
             int binTypeID = new Random().Next(2, 11);
 
             CreateTrashRequest request = new CreateTrashRequest(barcode, binTypeID, 235);

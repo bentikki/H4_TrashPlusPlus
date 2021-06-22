@@ -13,10 +13,9 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
-    class HomeViewModel : INotifyPropertyChanged
+    class HomeViewModel : BaseViewModel
     {
         private IUserService _userService;
-        private IChangePage _pageChanger;
         private bool loggedIn;
 
         public bool LoggedIn
@@ -40,9 +39,8 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         public ICommand LogInCommand { get; set; }
         public ICommand SkanCommand { get; set; }
 
-        public HomeViewModel(IChangePage pageChanger, IUserService userService)
+        public HomeViewModel(IChangePage pageChanger, IUserService userService) : base(pageChanger)
         {
-            _pageChanger = pageChanger;
             _userService = userService;
             LoggedIn = StorageManagerFactory.GetLocalDBManager().GetToken() != null;
             LogInCommand = new Command(() => _pageChanger.PushPage(new LoginPage()));
@@ -68,12 +66,6 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
                     UserDialogs.Instance.Alert("fejled med at logge ud");
                 }
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

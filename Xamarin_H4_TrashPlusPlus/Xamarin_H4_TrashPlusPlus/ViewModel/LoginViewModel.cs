@@ -16,10 +16,9 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
-    class LoginViewModel : INotifyPropertyChanged
+    class LoginViewModel : BaseViewModel
     {
         private IUserService _userService;
-        private IChangePage _pageChanger;
 
         private string mail;
         private string password;
@@ -89,10 +88,9 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         public ICommand ChangeToSignUpCommand { get; set; }
         public ICommand LoginCommand { get; set; }
 
-        public LoginViewModel(IChangePage pageChanger, IUserService userService)
+        public LoginViewModel(IChangePage pageChanger, IUserService userService) : base(pageChanger)
         {
             _userService = userService;
-            _pageChanger = pageChanger;
             ChangeStateCommand = new Command(() => SaveChecked = !SaveChecked);
             ChangeToSignUpCommand = new Command(() => _pageChanger.PushPage(new SignUpPage()));
             LoginCommand = new Command(LoginAsync);
@@ -131,11 +129,5 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
 
         }
 
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

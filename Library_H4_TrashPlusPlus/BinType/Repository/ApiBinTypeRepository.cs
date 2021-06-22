@@ -31,9 +31,16 @@ namespace Library_H4_TrashPlusPlus.Trash.Repository
             return availableBinTypeInterfaces.AsList<IBinType>();
         }
 
+        /// <summary>
+        /// Gets the bintype for the bintype id
+        /// </summary>
+        /// <param name="id">The bintype id</param>
+        /// <returns>the bintype</returns>
         public IBinType GetBinById(int id)
         {
-            throw new NotImplementedException();
+            string apiPath = "bintype/get/" + id;
+            //return new BinTypeEntity() { Name = "duck", Id = id };
+            return apiRequester.GetApi<BinTypeEntity>(apiPath);
         }
     }
 }

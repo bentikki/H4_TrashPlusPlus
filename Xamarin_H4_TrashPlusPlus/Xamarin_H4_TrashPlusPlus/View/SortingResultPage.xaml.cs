@@ -1,4 +1,5 @@
-﻿using Library_H4_TrashPlusPlus.Trash;
+﻿using Library_H4_TrashPlusPlus.BinType;
+using Library_H4_TrashPlusPlus.Trash.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,12 @@ using Xamarin_H4_TrashPlusPlus.ViewModel;
 namespace Xamarin_H4_TrashPlusPlus.View
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ScanningPage : ContentPage, IChangePage
+    public partial class SortingResultPage : ContentPage, IChangePage
     {
-        public ScanningPage()
+        public SortingResultPage(ITrash trash)
         {
             InitializeComponent();
-            BindingContext = new ScanningViewModel(this, TrashServiceFactory.GetTrashServiceApi());
-
+            BindingContext = new SortingResultViewModel(this, trash, BinTypeServiceFactory.GetBinTypeServiceApi());
         }
 
         /// <summary>
