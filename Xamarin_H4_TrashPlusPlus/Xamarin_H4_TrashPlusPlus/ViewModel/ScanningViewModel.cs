@@ -17,6 +17,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
     class ScanningViewModel : BaseViewModel
     {
+        private bool _Lookupcode;
         private ITrashService _trashService;
         public ICommand BackCommand { get; set; }
         public ICommand ScanningCompletedCommand { get; set; }
@@ -27,46 +28,40 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             _trashService = trashService;
             BackCommand = new Command(() => _pageChanger.PushPage(new LoginPage()));
             ScanningCompletedCommand = new Command(LookupCodeAsync);
-            NotAbleToScanCommand = new Command(() => _pageChanger.PushPage(new ScanningPage()));
+            NotAbleToScanCommand = new Command(() => _pageChanger.PopPushPage(new HomePage()));
         }
 
         /// <summary>
         /// 
         /// </summary>
+
         public async void LookupCodeAsync(object obj)
         {
-            string barcode = obj.ToString();
-            using (UserDialogs.Instance.Loading("Finder sortering..."))
+            if (!_Lookupcode)
             {
-                List<string> errors = DefaultValidators.ValidateBarcode(barcode);
-                // Validation on barcode
 
-                //If success
-                if (errors.Count == 0)
+                string barcode = obj.ToString();
+                using (UserDialogs.Instance.Loading("Finder sortering..."))
                 {
-                    // Call service by barcode
-                    ITrash trash = await _trashService.GetTrashByBarcodeAsync(barcode);
-                    // If exist
-                    if (trash != null)
+                    List<string> errors = DefaultValidators.ValidateBarcode(barcode);
+                    // Validation on barcode
+
+                    //If success
+                    if (errors.Count == 0)
                     {
-                        // Redirect with answer to SortingResult
-                        this._pageChanger.PushPage(new SortingResultPage(trash));
+                        // Call service by barcode
+                        ITrash trash = await _trashService.GetTrashByBarcodeAsync(barcode);
+
+                        this._pageChanger.PopPushPage(new SortingResultPage(trash,barcode));
                     }
                     else
                     {
-                        //If no method exist in DB 
-                        // show notfoundpage
-                        await UserDialogs.Instance.ConfirmAsync(new ConfirmConfig() { Message = "Stregkode ikke fundet", Title = "fejl"});
-
+                        //If Fail
+                        // Display error message on popup
+                        await UserDialogs.Instance.ConfirmAsync(new ConfirmConfig() { Message = "stregkode er ikke vadlid", Title = "fejl" });
                     }
                 }
-                else
-                {
-                    //If Fail
-                    // Display error message on popup
-                    await UserDialogs.Instance.ConfirmAsync(new ConfirmConfig() { Message = "stregkode er ikke vadlid", Title = "fejl" });
-                }
             }
-        } 
+        }
     }
 }
