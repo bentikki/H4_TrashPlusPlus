@@ -30,17 +30,26 @@ namespace Library_H4_TrashPlusPlus.Trash.Repository
                 availableBinTypes = conn.Query<BinTypeEntity>(procedure, commandType: CommandType.StoredProcedure);
             }
 
-            //if(availableBinTypes != null)
-            //{
-            //    availableBinTypeInterfaces = availableBinTypes.AsList<IBinType>();
-            //}
-
             return availableBinTypes.AsList<IBinType>();
         }
 
         public IBinType GetBinById(int id)
         {
-            throw new NotImplementedException();
+            BinTypeEntity binTypeFromDb = null;
+            using (var conn = BinTypeServiceFactory.GetSqlConnectionComplexReader())
+            {
+                conn.Open();
+
+                // Execute stored procedure to create new user with hashed password.
+                var procedure = "[SPGetBinTypeById]";
+                var values = new
+                {
+                    @Id = id
+                };
+                binTypeFromDb = conn.QuerySingleOrDefault<BinTypeEntity>(procedure, values, commandType: CommandType.StoredProcedure);
+            }
+
+            return binTypeFromDb;
         }
     }
 }

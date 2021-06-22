@@ -62,18 +62,28 @@ namespace Library_H4_TrashPlusPlus.BinType
         /// <returns>The bin type</returns>
         public IBinType GetBinTypeById(int id)
         {
+            // Check for errors
+            if (id < 1) throw new ArgumentException("Id must be above 0.", nameof(id));
+
+            IBinType bintype = null;
+
             try
             {
-                return this._binTypeRepository.GetBinById(id);
+                bintype = this._binTypeRepository.GetBinById(id);
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
-                return null;
+                // The database call was not successfull.
+                // Return null;
+                bintype = null;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return null;
+                // An unexpected error occured.
+                bintype = null;
             }
+
+            return bintype;
         }
 
         /// <summary>
