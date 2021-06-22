@@ -10,7 +10,7 @@ namespace Library_H4_TrashPlusPlus.Trash.Models
     {
         int Id { get;}
         string Barcode { get;}
-        int FK_BinId  { get; }
-        int FK_UserId { get;}
+        int BinId { get; }
+        int UserId { get;}
     }
 }
