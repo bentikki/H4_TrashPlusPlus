@@ -37,6 +37,32 @@ namespace Library_H4_TrashPlusPlus.Tests
             Assert.IsNotEmpty(binTypeReturned);
         }
 
+        [TestCase(0)]
+        [TestCase(int.MinValue)]
+        [TestCase(-123)]
+        public void GetBinTypeById_InvalidIdValue_ShouldThrowAgumentExeption(int idValue)
+        {
+            // Arrange
+            int id = idValue;
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => { this.binTypeServiceDB.GetBinTypeById(id); });
+        }
+
+        [Test]
+        public void GetBinTypeById_ValidId_ShouldReturnIBinType()
+        {
+            // Arrange
+            IBinType binType;
+            int id = 3;
+
+            // Act
+            binType = this.binTypeServiceDB.GetBinTypeById(id);
+
+            // Assert
+            Assert.IsNotNull(binType);
+            Assert.IsNotNull(binType.Id);
+        }
 
     }
 }
