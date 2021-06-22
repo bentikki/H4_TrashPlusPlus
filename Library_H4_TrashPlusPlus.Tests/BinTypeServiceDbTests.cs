@@ -62,6 +62,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             // Assert
             Assert.IsNotNull(binType);
             Assert.IsNotNull(binType.Id);
+            Assert.IsNotNull(binType.Name);
         }
 
     }
