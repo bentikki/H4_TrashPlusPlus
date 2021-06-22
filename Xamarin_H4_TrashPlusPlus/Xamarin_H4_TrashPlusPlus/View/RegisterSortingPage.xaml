@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:Custom="clr-namespace:Xamarin_H4_TrashPlusPlus.CustomItem"
-             x:Class="Xamarin_H4_TrashPlusPlus.View.SortingResultPage"
+             x:Class="Xamarin_H4_TrashPlusPlus.View.RegisterSortingPage"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <Grid>
@@ -16,10 +16,8 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*" />
-                        <RowDefinition Height="1*" />
-                        <RowDefinition Height="2*" />
-                        <RowDefinition Height="1*" />
-                        <RowDefinition Height="0.6*" />
+                        <RowDefinition Height="0.5*" />
+                        <RowDefinition Height="5*" />
                         <RowDefinition Height="0.6*" />
                         <RowDefinition Height="0.6*" />
                         <RowDefinition Height="0.5*" />
@@ -27,54 +25,49 @@
                     <Label
                         Grid.Row="0"
                         TextColor="{StaticResource DarkColor}"
-                        Text="{Binding ResultHeader}"
+                        Text="Registrering af Sorteringsmetode"
+                        HorizontalTextAlignment="Center"
                         FontSize="25"
                         HorizontalOptions="Center"
                         VerticalOptions="End">
                     </Label>
                     <Label
                         Grid.Row="1"
-                        TextColor="{StaticResource GreyColor}"
-                        Text="{Binding Barcode}"
-                        FontSize="15"
+                        TextColor="{StaticResource DarkColor}"
+                        Text="{Binding TrashRequest.Barcode}"
+                        FontSize="10"
                         HorizontalOptions="Center"
                         VerticalOptions="Start">
                     </Label>
-                    <Label
-                        Grid.Row="2"
-                        TextColor="{StaticResource AppPrimaryColor}"
-                        FontAttributes="Bold"
-                        Text="{Binding BinType.Name}"
-                        FontSize="40"
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center">
-                    </Label>
-                    
+                    <CollectionView
+                        x:Name="Collection"
+                        ItemsSource="{Binding BinTypes}"
+                        SelectedItem="{Binding SelectedItem}"
+                        Grid.Row="2">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Label Text="{Binding Name}" FontSize="20" TextColor="{StaticResource DarkColor}" HorizontalTextAlignment="Center" Padding="0,5,0,5">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.SelectCommand, Source={x:Reference Name=Collection}}" CommandParameter="{Binding .}"></TapGestureRecognizer>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                     <Button
                         Grid.Row="3"
                         CornerRadius="25"
                         Margin="40,0,40,0"
-                        IsEnabled="{Binding RegisterOption}"
-                        IsVisible="{Binding RegisterOption}"
                         TextColor="{StaticResource DarkColor}"
                         BackgroundColor="{StaticResource AppPrimaryColor}"
-                        Command="{Binding RegisterCommand}"
+                        Command="{Binding CreateCommand}"
                         Text="Register"></Button>
                     <Button
-                        Grid.Row="5"
-                        CornerRadius="25"
-                        Margin="40,0,40,0"
-                        TextColor="{StaticResource DarkColor}"
-                        BackgroundColor="{StaticResource DarkPrimaryColor}"
-                        Command="{Binding ScanAgainCommand}"
-                        Text="skan igen"></Button>
-                    <Button
-                        Grid.Row="6"
+                        Grid.Row="4"
                         CornerRadius="25"
                         Margin="40,0,40,0"
                         TextColor="{StaticResource LightColor}"
                         BackgroundColor="{StaticResource GreyColor}"
-                        Command="{Binding HomeCommand}"
                         Text="hjem"></Button>
                 </Grid>
             </Custom:CustomFrame>

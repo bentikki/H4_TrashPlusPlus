@@ -22,6 +22,7 @@ namespace Xamarin_H4_TrashPlusPlus.View
         }
 
 
+
         /// <summary>
         /// Changes the page to the given page
         /// </summary>
@@ -39,7 +40,21 @@ namespace Xamarin_H4_TrashPlusPlus.View
         public void PopPage()
         {
             Device.BeginInvokeOnMainThread(() =>
-                Navigation.PopModalAsync()
+                Navigation.PopAsync()
+            );
+        }
+
+        /// <summary>
+        /// Pops the last page and pushes a new page
+        /// </summary>
+        /// <param name="page">The new page to push</param>
+        public void PopPushPage(Page page)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                Navigation.PopAsync(false);
+                Navigation.PushAsync(page, false);
+            }
             );
         }
     }
