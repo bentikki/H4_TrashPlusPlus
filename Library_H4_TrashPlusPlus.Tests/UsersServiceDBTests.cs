@@ -227,7 +227,7 @@ namespace Library_H4_TrashPlusPlus.Tests
         {
             // Arrange
             AuthenticateResponse authenticateResponse;
-            long randomNumber = new Random().Next(0, 10000);
+            long randomNumber = new Random().Next(0, 100000);
             string email = "testmail" + randomNumber + "@mail.com";
             string password = "testpassword" + randomNumber;
 
