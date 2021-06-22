@@ -36,5 +36,17 @@ namespace Library_H4_TrashPlusPlus.BinType
 
             return CommonSettingsFactory.GetDBConnectionString(username, password);
         }
+
+        /// <summary>
+        /// SqlConnection with permission to select bintype via stored procedures.
+        /// </summary>
+        /// <returns>SqlConnection with specific permission</returns>
+        internal static SqlConnection GetSqlConnectionComplexReader()
+        {
+            string username = "BinTypeComplexReader";
+            string password = "Passw0rd";
+
+            return CommonSettingsFactory.GetDBConnectionString(username, password);
+        }
     }
 }

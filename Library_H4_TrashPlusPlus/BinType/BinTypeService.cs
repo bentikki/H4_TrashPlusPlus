@@ -57,12 +57,34 @@ namespace Library_H4_TrashPlusPlus.BinType
 
         public IBinType GetBinTypeById(int id)
         {
-            throw new NotImplementedException();
+            // Check for errors
+            if (id < 1) throw new ArgumentException("Id must be above 0.", nameof(id));
+
+            IBinType bintype = null;
+
+            try
+            {
+                bintype = this._binTypeRepository.GetBinById(id);
+            }
+            catch (SqlException e)
+            {
+                // The database call was not successfull.
+                // Return null;
+                bintype = null;
+            }
+            catch (Exception e)
+            {
+                // An unexpected error occured.
+                bintype = null;
+            }
+
+            return bintype;
         }
 
-        public Task<IBinType> GetBinTypeByIdAsync(int id)
+        public async Task<IBinType> GetBinTypeByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var task = Task.Run(() => this.GetBinTypeById(id));
+            return await task;
         }
     }
 }

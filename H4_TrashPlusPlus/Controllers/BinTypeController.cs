@@ -38,5 +38,13 @@ namespace H4_TrashPlusPlus.Controllers
             return Ok(binTypes);
         }
 
+        [AllowAnonymous]
+        [HttpGet("Get/{id}")]
+        public IActionResult Get(int id)
+        {
+            IBinType binType = _binTypeService.GetBinTypeById(id);
+            return Ok(binType);
+        }
+
     }
 }
