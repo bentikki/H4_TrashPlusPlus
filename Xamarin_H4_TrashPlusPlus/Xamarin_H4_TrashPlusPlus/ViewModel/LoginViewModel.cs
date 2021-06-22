@@ -16,10 +16,9 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
-    class LoginViewModel : INotifyPropertyChanged
+    class LoginViewModel : BaseViewModel
     {
         private IUserService _userService;
-        private IChangePage _pageChanger;
 
         private string mail;
         private string password;
@@ -89,12 +88,11 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         public ICommand ChangeToSignUpCommand { get; set; }
         public ICommand LoginCommand { get; set; }
 
-        public LoginViewModel(IChangePage pageChanger, IUserService userService)
+        public LoginViewModel(IChangePage pageChanger, IUserService userService) : base(pageChanger)
         {
             _userService = userService;
-            _pageChanger = pageChanger;
             ChangeStateCommand = new Command(() => SaveChecked = !SaveChecked);
-            ChangeToSignUpCommand = new Command(() => _pageChanger.ChangePage(new SignUpPage(_userService)));
+            ChangeToSignUpCommand = new Command(() => _pageChanger.PushPage(new SignUpPage()));
             LoginCommand = new Command(LoginAsync);
         }
 
@@ -120,7 +118,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
                     // Saves the token as a object
                     StorageManagerFactory.GetLocalDBManager().SaveToken(StorageManagerFactory.CreateToken(response.RefreshToken));
                 }
-                _pageChanger.ChangePage(new HomePage(_userService));
+                _pageChanger.PushPage(new HomePage());
             }
             else
             {
@@ -131,11 +129,5 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
 
         }
 
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

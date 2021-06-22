@@ -14,10 +14,9 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
-    class SignUpViewModel : INotifyPropertyChanged
+    class SignUpViewModel : BaseViewModel
     {
         private IUserService _userService;
-        private IChangePage _pageChanger;
         private string username;
         private string mail;
         private string password;
@@ -192,14 +191,13 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         public ICommand ChangeToLoginCommand { get; set; }
         public ICommand CreateCommand { get; set; }
 
-        public SignUpViewModel(IChangePage pageChanger, IUserService userService)
+        public SignUpViewModel(IChangePage pageChanger, IUserService userService) : base(pageChanger)
         {
             mailErrors = new List<string>();
             usernameErrors = new List<string>();
             passwordErrors = new List<string>();
             _userService = userService;
-            _pageChanger = pageChanger;
-            ChangeToLoginCommand = new Command(() => _pageChanger.ChangePage(new LoginPage(_userService)));
+            ChangeToLoginCommand = new Command(() => _pageChanger.PushPage(new LoginPage()));
             CreateCommand = new Command(CreateUserAsync);
         }
 
@@ -219,7 +217,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             if (user != null)
             {
                 UserDialogs.Instance.Toast("Success",TimeSpan.FromSeconds(1));
-                _pageChanger.ChangePage(new LoginPage(_userService));
+                _pageChanger.PushPage(new LoginPage());
             }
             else
             {
@@ -243,10 +241,5 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             UsernameErrors = DefaultValidators.ValidateUsername(username);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

@@ -14,20 +14,31 @@ namespace Xamarin_H4_TrashPlusPlus.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LandingPage : ContentPage, IChangePage
     {
-        public LandingPage(IUserService userService)
+        public LandingPage()
         {
             InitializeComponent();
-            BindingContext = new landingViewModel(this, userService);
+            BindingContext = new landingViewModel(this, UserServiceFactory.GetUserServiceApi());
         }
+
 
         /// <summary>
         /// Changes the page to the given page
         /// </summary>
         /// <param name="page">the new page</param>
-        public void ChangePage(Page page)
+        public void PushPage(Page page)
         {
             Device.BeginInvokeOnMainThread(() =>
             Navigation.PushAsync(page)
+            );
+        }
+
+        /// <summary>
+        /// Changes to the last page
+        /// </summary>
+        public void PopPage()
+        {
+            Device.BeginInvokeOnMainThread(() =>
+                Navigation.PopModalAsync()
             );
         }
     }

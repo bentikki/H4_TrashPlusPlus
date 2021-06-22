@@ -55,6 +55,11 @@ namespace Library_H4_TrashPlusPlus.BinType
             return await task;
         }
 
+        /// <summary>
+        /// Returns the Bin Type for that id
+        /// </summary>
+        /// <param name="id">The id of the bin type</param>
+        /// <returns>The bin type</returns>
         public IBinType GetBinTypeById(int id)
         {
             // Check for errors
@@ -81,6 +86,11 @@ namespace Library_H4_TrashPlusPlus.BinType
             return bintype;
         }
 
+        /// <summary>
+        /// Returns the Bin Type for that id
+        /// </summary>
+        /// <param name="id">The id of the bin type</param>
+        /// <returns>The bin type</returns>
         public async Task<IBinType> GetBinTypeByIdAsync(int id)
         {
             var task = Task.Run(() => this.GetBinTypeById(id));

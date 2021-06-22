@@ -1,4 +1,5 @@
 ﻿using Acr.UserDialogs;
+using Library_H4_TrashPlusPlus.Trash;
 using Library_H4_TrashPlusPlus.Users;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,9 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
-    class HomeViewModel : INotifyPropertyChanged
+    class HomeViewModel : BaseViewModel
     {
         private IUserService _userService;
-        private IChangePage _pageChanger;
         private bool loggedIn;
 
         public bool LoggedIn
@@ -37,14 +37,15 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
 
         public ICommand LogOutCommand { get; set; }
         public ICommand LogInCommand { get; set; }
+        public ICommand SkanCommand { get; set; }
 
-        public HomeViewModel(IChangePage pageChanger, IUserService userService)
+        public HomeViewModel(IChangePage pageChanger, IUserService userService) : base(pageChanger)
         {
-            _pageChanger = pageChanger;
             _userService = userService;
             LoggedIn = StorageManagerFactory.GetLocalDBManager().GetToken() != null;
-            LogInCommand = new Command(() => _pageChanger.ChangePage(new LoginPage(_userService)));
+            LogInCommand = new Command(() => _pageChanger.PushPage(new LoginPage()));
             LogOutCommand = new Command(LogOutAsync);
+            SkanCommand = new Command(() => _pageChanger.PushPage(new ScanningPage()));
         }
 
         /// <summary>
@@ -52,7 +53,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         /// </summary>
         public async void LogOutAsync()
         {
-            using (UserDialogs.Instance.Loading("Creating account..."))
+            using (UserDialogs.Instance.Loading("Loggger ud..."))
             {
                 if (await _userService.LogoutAsync(StorageManagerFactory.GetLocalDBManager().GetToken().token, "0.0.0.0"))
                 {
@@ -65,12 +66,6 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
                     UserDialogs.Instance.Alert("fejled med at logge ud");
                 }
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

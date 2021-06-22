@@ -18,7 +18,7 @@
                 FontSize="25"
                 ></Label>
             <Custom:CustomFrame
-                CornerRadius="50,50,0,0"
+                CornerRadius="40,40,0,0"
                 Grid.Row="1">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -34,7 +34,9 @@
                     <Button
                         Grid.Row="0"
                         Grid.ColumnSpan="2"
-                        CornerRadius="40">
+                        CornerRadius="40"
+                        Text="Skan"
+                        Command="{Binding SkanCommand}">
                     </Button>
                     <Button
                         Grid.Row="1"

@@ -13,7 +13,7 @@ namespace Xamarin_H4_TrashPlusPlus
             InitializeComponent();
 
             //MainPage = new NavigationPage(new LoginPage());
-            MainPage = new NavigationPage(new LandingPage(UserServiceFactory.GetUserServiceApi()));
+            MainPage = new NavigationPage(new LandingPage());
         }
 
         protected override void OnStart()

@@ -14,21 +14,32 @@ namespace Xamarin_H4_TrashPlusPlus.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SignUpPage : ContentPage, IChangePage
     {
-        public SignUpPage(IUserService userService)
+        public SignUpPage()
         {
             InitializeComponent();
-            SignUpViewModel signUp = new SignUpViewModel(this, userService);
+            SignUpViewModel signUp = new SignUpViewModel(this, UserServiceFactory.GetUserServiceApi());
             BindingContext = signUp;
         }
+
 
         /// <summary>
         /// Changes the page to the given page
         /// </summary>
         /// <param name="page">the new page</param>
-        public void ChangePage(Page page)
+        public void PushPage(Page page)
         {
             Device.BeginInvokeOnMainThread(() =>
             Navigation.PushAsync(page)
+            );
+        }
+
+        /// <summary>
+        /// Changes to the last page
+        /// </summary>
+        public void PopPage()
+        {
+            Device.BeginInvokeOnMainThread(() =>
+                Navigation.PopModalAsync()
             );
         }
     }

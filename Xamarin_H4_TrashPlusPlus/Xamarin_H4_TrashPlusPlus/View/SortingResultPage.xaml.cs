@@ -1,4 +1,5 @@
-﻿using Library_H4_TrashPlusPlus.Users;
+﻿using Library_H4_TrashPlusPlus.BinType;
+using Library_H4_TrashPlusPlus.Trash.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +13,13 @@ using Xamarin_H4_TrashPlusPlus.ViewModel;
 namespace Xamarin_H4_TrashPlusPlus.View
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LoginPage : ContentPage, IChangePage
+    public partial class SortingResultPage : ContentPage, IChangePage
     {
-        public LoginPage()
+        public SortingResultPage(ITrash trash)
         {
             InitializeComponent();
-            BindingContext = new LoginViewModel(this, UserServiceFactory.GetUserServiceApi());
+            BindingContext = new SortingResultViewModel(this, trash, BinTypeServiceFactory.GetBinTypeServiceApi());
         }
-
 
         /// <summary>
         /// Changes the page to the given page

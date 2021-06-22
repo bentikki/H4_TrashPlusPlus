@@ -121,6 +121,22 @@ namespace Library_H4_TrashPlusPlus.Validator
             }
         }
 
+        /// <summary>
+        /// Validates the Barcode.
+        /// Throws exception if an error is reached.
+        /// </summary>
+        /// <param name="barcode">Barcode to validate.</param>
+        static public void ValidateBarcodeException(string barcode)
+        {
+            Validator validator = new Validator("Barcode", barcodeRules);
+            if (!validator.Validate(barcode))
+            {
+                foreach (var exception in validator.GetExceptions())
+                {
+                    throw exception;
+                }
+            }
+        }
 
         /// <summary>
         /// Validates the mail.
@@ -160,19 +176,13 @@ namespace Library_H4_TrashPlusPlus.Validator
 
         /// <summary>
         /// Validates the Barcode.
-        /// Throws exception if an error is reached.
         /// </summary>
         /// <param name="barcode">Barcode to validate.</param>
-        static public void ValidateBarcodeException(string barcode)
+        static public List<string> ValidateBarcode(string barcode)
         {
             Validator validator = new Validator("Barcode", barcodeRules);
-            if (!validator.Validate(barcode))
-            {
-                foreach (var exception in validator.GetExceptions())
-                {
-                    throw exception;
-                }
-            }
+            validator.Validate(barcode);
+            return validator.GetErrors();
         }
     }
 }
