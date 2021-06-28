@@ -19,6 +19,9 @@ namespace Library_H4_TrashPlusPlus.Users.Models
         [Required]
         public string Password { get; set; }
 
+        [Required]
+        public string PublicKey { get; set; }
+
         public CreateUserRequest() { }
 
         public CreateUserRequest(string email, string username, string password)

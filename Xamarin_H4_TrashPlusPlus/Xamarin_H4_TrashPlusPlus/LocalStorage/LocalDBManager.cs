@@ -40,7 +40,7 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage
         /// <returns>The first token</returns>
         public Token GetToken()
         {
-            if(_token == null)
+            if (_token == null)
             {
                 List<Token> tokens = _database.GetTokenAsync().Result;
                 if (tokens.Count > 0)
@@ -66,10 +66,7 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage
             {
                 _database.SaveTokenAsync(token).Wait();
             }
-            else
-            {
-                this._token = token;
-            }
+            this._token = token;
         }
     }
 }

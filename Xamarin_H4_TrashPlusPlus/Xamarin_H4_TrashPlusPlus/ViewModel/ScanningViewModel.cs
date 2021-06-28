@@ -39,6 +39,8 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         {
             if (!_Lookupcode)
             {
+                try
+                {
 
                 string barcode = obj.ToString();
                 using (UserDialogs.Instance.Loading("Finder sortering..."))
@@ -60,6 +62,12 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
                         // Display error message on popup
                         await UserDialogs.Instance.ConfirmAsync(new ConfirmConfig() { Message = "stregkode er ikke vadlid", Title = "fejl" });
                     }
+                }
+                }
+                catch ( Exception e)
+                {
+                    // Display error message on popup
+                    await UserDialogs.Instance.ConfirmAsync(new ConfirmConfig() { Message = "stregkode er ikke vadlid", Title = "fejl" });
                 }
             }
         }

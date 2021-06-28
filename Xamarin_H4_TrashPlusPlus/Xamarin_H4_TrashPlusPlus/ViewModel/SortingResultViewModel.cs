@@ -40,7 +40,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         public SortingResultViewModel (IChangePage pageChanger, ITrash trash, string barcode, IBinTypeService binTypeService) : base(pageChanger)
         {
             Registered = trash != null;
-            Barcode = trash.Barcode;
+            Barcode = barcode;
             RegisterOption = (Registered == false && StorageManagerFactory.GetLocalDBManager().GetToken() != null);
 
             RegisterCommand = new Command(() => _pageChanger.PopPushPage(new RegisterSortingPage(barcode)));
