@@ -26,8 +26,8 @@ namespace Library_H4_TrashPlusPlus.Logging.LoggingMethods
                     var values = new
                     {
                         @ErrorMessage = message,
-                        @ExceptionType = exception.GetType().Name,
-                        @ExceptionMessage = exception.Message
+                        @ExceptionType = exception != null ? exception.GetType().Name : "",
+                        @ExceptionMessage = exception != null ? exception.Message : ""
                     };
                     await conn.ExecuteAsync(procedure, values, commandType: CommandType.StoredProcedure);
                 }

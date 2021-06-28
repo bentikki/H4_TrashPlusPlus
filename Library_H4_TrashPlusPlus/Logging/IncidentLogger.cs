@@ -12,7 +12,7 @@ namespace Library_H4_TrashPlusPlus.Logging
     /// Error logging class.
     /// Uses Chain of Responsibility pattern.
     /// </summary>
-    internal static class IncidentLogger
+    public static class IncidentLogger
     {
         private static LoggingMaster loggerChain;
 
@@ -35,15 +35,15 @@ namespace Library_H4_TrashPlusPlus.Logging
         /// <returns>LoggingMaster object containing the chain.</returns>
         private static void GetLoggerChain()
         {
-            LoggingMaster dbLogger = new DbLogger(IncidentLevel.MINOR);
-            LoggingMaster fileLogger = new LocalFileLogger(IncidentLevel.MAJOR);
+            LoggingMaster fileLogger = new LocalFileLogger(IncidentLevel.MINOR);
+            LoggingMaster dbLogger = new DbLogger(IncidentLevel.MAJOR);
             LoggingMaster mailLogger = new MailLogger(IncidentLevel.CRITICAL);
 
-            dbLogger
-                .Next(fileLogger)
+            fileLogger
+                .Next(dbLogger)
                 .Next(mailLogger);
 
-            loggerChain = dbLogger;
+            loggerChain = fileLogger;
         }
 
         /// <summary>

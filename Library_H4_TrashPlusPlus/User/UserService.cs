@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -38,6 +39,17 @@ namespace Library_H4_TrashPlusPlus.Users
         /// <returns>the created user</returns>
         public IUser CreateUser(string mail, string username, string password)   
         {
+            return this.CreateUserAsync(mail,username,password).Result;
+        }
+
+        /// <summary>
+        /// Creates a user with the repository async.
+        /// </summary>
+        /// <param name="mail">the users mail</param>
+        /// <param name="password">the users password</param>
+        /// <returns>the created user</returns>
+        public async Task<IUser> CreateUserAsync(string mail, string username, string password)
+        {
             try
             {
                 // Run validation
@@ -50,46 +62,35 @@ namespace Library_H4_TrashPlusPlus.Users
                 CreateUserRequest createUserRequest = new CreateUserRequest(mail, username, password);
 
                 // Create use via repository.
-                user = this.userRepository.CreateUser(createUserRequest);
+                user = await this.userRepository.CreateUserAsync(createUserRequest);
 
                 return user;
+            }
+            catch (DuplicateNameException e)
+            {
+                // An error occured while creating via Database.
+                throw e;
             }
             catch (ArgumentNullException e)
             {
                 // An error occured while created via Database.
-                IncidentLogger.GetLogger.LogMessageAsync(IncidentLevel.MINOR, "The inputted value can not be null.", e).Wait();
                 throw e;
             }
             catch (ArgumentException e)
             {
                 // An error occured while created via Database.
-                IncidentLogger.GetLogger.LogMessageAsync(IncidentLevel.MINOR, "An inputted value was incorrect.", e).Wait();
                 throw e;
             }
             catch (SqlException e)
             {
                 // An error occured while creating via Database.
-                IncidentLogger.GetLogger.LogMessageAsync(IncidentLevel.CRITICAL, "An error occured while contacting the database.", e).Wait();
                 throw e;
             }
             catch (Exception e)
             {
                 // An unkown error occured.
-                IncidentLogger.GetLogger.LogMessageAsync(IncidentLevel.CRITICAL, "An unkown error occured.", e).Wait();
                 throw e;
             }
-        }
-
-        /// <summary>
-        /// Creates a user with the repository async.
-        /// </summary>
-        /// <param name="mail">the users mail</param>
-        /// <param name="password">the users password</param>
-        /// <returns>the created user</returns>
-        public async Task<IUser> CreateUserAsync(string mail, string username, string password)
-        {
-            var task = Task.Run(() => this.CreateUser(mail, username, password));
-            return await task;
         }
 
 
@@ -102,28 +103,7 @@ namespace Library_H4_TrashPlusPlus.Users
         /// <returns>AuthenticateResponse Object, Null if IUser could not be authenticated.</returns>
         public AuthenticateResponse Authenticate(string mail, string password, string ipAddress)
         {
-            // Run validation
-            DefaultValidators.ValidateMailException(mail);
-            DefaultValidators.ValidatePasswordException(password);
-
-            AuthenticateResponse authenticateResponse = null;
-
-            try
-            {
-                authenticateResponse = this.userRepository.Authenticate(mail, password, ipAddress);
-            }
-            catch(SqlException e)
-            {
-                // An error occured while saving refresh token to db.
-                return null;
-            }
-            catch (Exception)
-            {
-                // An unexpected error occured.
-                return null;
-            }
-
-            return authenticateResponse;
+            return this.AuthenticateAsync(mail, password, ipAddress).Result;
         }
 
         /// <summary>
@@ -135,8 +115,28 @@ namespace Library_H4_TrashPlusPlus.Users
         /// <returns>AuthenticateResponse Object, Null if IUser could not be authenticated.</returns>
         public async Task<AuthenticateResponse> AuthenticateAsync(string mail, string password, string ipAddress)
         {
-            var task = Task.Run(() => this.Authenticate(mail, password, ipAddress));
-            return await task;
+            // Run validation
+            DefaultValidators.ValidateMailException(mail);
+            DefaultValidators.ValidatePasswordException(password);
+
+            AuthenticateResponse authenticateResponse = null;
+
+            try
+            {
+                authenticateResponse = await this.userRepository.AuthenticateAsync(mail, password, ipAddress);
+            }
+            catch (SqlException e)
+            {
+                // An error occured while saving refresh token to db.
+                throw e;
+            }
+            catch (Exception e)
+            {
+                // An unexpected error occured.
+                throw e;
+            }
+
+            return authenticateResponse;
         }
 
         /// <summary>
@@ -147,13 +147,7 @@ namespace Library_H4_TrashPlusPlus.Users
         /// <returns>IUser object matching the requested id, or null.</returns>
         public IUser GetUserById(int id)
         {
-            // Id validation
-            if (id < 1) throw new ArgumentException("Id must be above 0", nameof(id));
-
-            // Get requested user from repository.
-            IUser requestedUser = this.userRepository.GetUserById(id);
-
-            return requestedUser;
+            return this.GetUserByIdAsync(id).Result;
         }
 
         /// <summary>
@@ -164,8 +158,13 @@ namespace Library_H4_TrashPlusPlus.Users
         /// <returns>IUser object matching the requested id, or null.</returns>
         public async Task<IUser> GetUserByIdAsync(int id)
         {
-            var task = Task.Run(() => this.GetUserById(id));
-            return await task;
+            // Id validation
+            if (id < 1) throw new ArgumentException("Id must be above 0", nameof(id));
+
+            // Get requested user from repository.
+            IUser requestedUser = await this.userRepository.GetUserByIdAsync(id);
+
+            return requestedUser;
         }
 
         /// <summary>
@@ -176,13 +175,7 @@ namespace Library_H4_TrashPlusPlus.Users
         /// <returns>IUser object matching the requested email, or null.</returns>
         public IUser GetUserByLoginName(string loginName)
         {
-            // Login name validation
-            DefaultValidators.ValidateMailException(loginName);
-
-            // Get requested user from repository.
-            IUser requestedUser = this.userRepository.GetUserByLoginName(loginName);
-
-            return requestedUser;
+            return this.GetUserByLoginNameAsync(loginName).Result;
         }
 
         /// <summary>
@@ -193,23 +186,11 @@ namespace Library_H4_TrashPlusPlus.Users
         /// <returns>IUser object matching the requested email, or null.</returns>
         public async Task<IUser> GetUserByLoginNameAsync(string loginName)
         {
-            var task = Task.Run(() => this.GetUserByLoginName(loginName));
-            return await task;
-        }
-
-        /// <summary>
-        /// Return IUser object with requested token.
-        /// Returns null if no such token exists.
-        /// </summary>
-        /// <param name="token">Token of requested user</param>
-        /// <returns>IUser object matching the requested token, or null.</returns>
-        public IUser GetUserByToken(string token)
-        {
-            // Validate argument input
-            DefaultValidators.ValidateRefreshTokenException(token);
+            // Login name validation
+            DefaultValidators.ValidateMailException(loginName);
 
             // Get requested user from repository.
-            IUser requestedUser = this.userRepository.GetUserByToken(token);
+            IUser requestedUser = await this.userRepository.GetUserByLoginNameAsync(loginName);
 
             return requestedUser;
         }
@@ -220,10 +201,26 @@ namespace Library_H4_TrashPlusPlus.Users
         /// </summary>
         /// <param name="token">Token of requested user</param>
         /// <returns>IUser object matching the requested token, or null.</returns>
+        public IUser GetUserByToken(string token)
+        {
+            return this.GetUserByTokenAsync(token).Result;
+        }
+
+        /// <summary>
+        /// Return IUser object with requested token.
+        /// Returns null if no such token exists.
+        /// </summary>
+        /// <param name="token">Token of requested user</param>
+        /// <returns>IUser object matching the requested token, or null.</returns>
         public async Task<IUser> GetUserByTokenAsync(string token)
         {
-            var task = Task.Run(() => this.GetUserByTokenAsync(token));
-            return await task;
+            // Validate argument input
+            DefaultValidators.ValidateRefreshTokenException(token);
+
+            // Get requested user from repository.
+            IUser requestedUser = await this.userRepository.GetUserByTokenAsync(token);
+
+            return requestedUser;
         }
 
         /// <summary>
@@ -233,6 +230,18 @@ namespace Library_H4_TrashPlusPlus.Users
         /// <param name="ipAddress">IP Address origin</param>
         /// <returns>AuthenticateResponse</returns>
         public AuthenticateResponse RefreshToken(string token, string ipAddress)
+        {
+            return this.RefreshTokenAsync(token, ipAddress).Result;
+        }
+
+
+        /// <summary>
+        /// Refreshes JWT Token based on current token and IP address.
+        /// </summary>
+        /// <param name="token">Current token to refresh.</param>
+        /// <param name="ipAddress">IP Address origin</param>
+        /// <returns>AuthenticateResponse</returns>
+        public async Task<AuthenticateResponse> RefreshTokenAsync(string token, string ipAddress)
         {
             // Validate argument input
             if (ipAddress == null) throw new ArgumentNullException(nameof(ipAddress), "IP Address must not be null.");
@@ -244,7 +253,7 @@ namespace Library_H4_TrashPlusPlus.Users
             try
             {
                 // Refrsh token via repository.
-                authenticateResponse = this.userRepository.RefreshToken(token, ipAddress);
+                authenticateResponse = await this.userRepository.RefreshTokenAsync(token, ipAddress);
             }
             catch (ArgumentException e)
             {
@@ -260,19 +269,6 @@ namespace Library_H4_TrashPlusPlus.Users
             return authenticateResponse;
         }
 
-
-        /// <summary>
-        /// Refreshes JWT Token based on current token and IP address.
-        /// </summary>
-        /// <param name="token">Current token to refresh.</param>
-        /// <param name="ipAddress">IP Address origin</param>
-        /// <returns>AuthenticateResponse</returns>
-        public async Task<AuthenticateResponse> RefreshTokenAsync(string token, string ipAddress)
-        {
-            var task = Task.Run(() => this.RefreshToken(token, ipAddress));
-            return await task;
-        }
-
         /// <summary>
         /// Logout user by destoying token.
         /// </summary>
@@ -281,25 +277,7 @@ namespace Library_H4_TrashPlusPlus.Users
         /// <returns>Bool true if user was successfully logged out, false if not.</returns>
         public bool Logout(string token, string ipAddress)
         {
-            // Validate argument input
-            if (ipAddress == null) throw new ArgumentException("IP Address must contain a value.", nameof(ipAddress));
-            if (string.IsNullOrEmpty(ipAddress) || string.IsNullOrWhiteSpace(ipAddress)) throw new ArgumentException("IP Address must contain a value.", nameof(ipAddress));
-            DefaultValidators.ValidateRefreshTokenException(token);
-
-            bool loggedOutSuccessfully = false;
-
-            try
-            {
-                loggedOutSuccessfully = this.userRepository.Logout(token, ipAddress);
-            }
-            catch (Exception e)
-            {
-                // An unexpected error occured.
-                throw e;
-            }
-
-            return loggedOutSuccessfully;
-
+            return this.LogoutAsync(token, ipAddress).Result;
         }
 
         /// <summary>
@@ -310,8 +288,24 @@ namespace Library_H4_TrashPlusPlus.Users
         /// <returns>Bool true if user was successfully logged out, false if not.</returns>
         public async Task<bool> LogoutAsync(string token, string ipAddress)
         {
-            var task = Task.Run(() => this.Logout(token, ipAddress));
-            return await task;
+            // Validate argument input
+            if (ipAddress == null) throw new ArgumentException("IP Address must contain a value.", nameof(ipAddress));
+            if (string.IsNullOrEmpty(ipAddress) || string.IsNullOrWhiteSpace(ipAddress)) throw new ArgumentException("IP Address must contain a value.", nameof(ipAddress));
+            DefaultValidators.ValidateRefreshTokenException(token);
+
+            bool loggedOutSuccessfully = false;
+
+            try
+            {
+                loggedOutSuccessfully = await this.userRepository.LogoutAsync(token, ipAddress);
+            }
+            catch (Exception e)
+            {
+                // An unexpected error occured.
+                throw e;
+            }
+
+            return loggedOutSuccessfully;
         }
     }
 }

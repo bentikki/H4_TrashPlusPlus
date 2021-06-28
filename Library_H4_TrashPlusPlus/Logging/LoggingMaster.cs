@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace Library_H4_TrashPlusPlus.Logging
 {
-    internal enum IncidentLevel
+    public enum IncidentLevel
     {
         MINOR = 1,
         MAJOR = 2,
         CRITICAL = 3
     }
 
-    internal abstract class LoggingMaster
+    public abstract class LoggingMaster
     {
         protected IncidentLevel level;
         protected LoggingMaster nextLogger;
@@ -38,6 +38,11 @@ namespace Library_H4_TrashPlusPlus.Logging
             {
                 await nextLogger.LogMessageAsync(level, message, exception);
             }
+        }
+
+        public async Task LogMessageAsync(IncidentLevel level, string message)
+        {
+            await this.LogMessageAsync(level, message, null);
         }
 
         protected abstract Task WriteAsync(string message, Exception exception);

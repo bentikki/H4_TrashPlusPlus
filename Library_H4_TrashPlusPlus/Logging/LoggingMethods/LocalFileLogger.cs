@@ -16,7 +16,7 @@ namespace Library_H4_TrashPlusPlus.Logging.LoggingMethods
 
         protected override async Task WriteAsync(string message, Exception exception)
         {
-            string filePath = @"LogFile.txt";
+            string filePath = @"ErrorLog/LogFile.txt";
             lock_.EnterWriteLock();
 
             try
@@ -33,12 +33,18 @@ namespace Library_H4_TrashPlusPlus.Logging.LoggingMethods
                 }
                 stringBuilder.Append(Environment.NewLine);
 
+                FileInfo fi = new FileInfo(filePath);
+                if (!fi.Directory.Exists)
+                {
+                    Directory.CreateDirectory(fi.DirectoryName);
+                }
+
                 using (StreamWriter outputFile = new StreamWriter(filePath, true))
                 {
                     await outputFile.WriteAsync(stringBuilder.ToString());
                 }
             }
-            catch (Exception) { }
+            catch (Exception e) { }
             finally
             {
                 lock_.ExitWriteLock();

@@ -5,6 +5,7 @@ using Library_H4_TrashPlusPlus.Users;
 using Library_H4_TrashPlusPlus.Users.Repository;
 using Library_H4_TrashPlusPlus.Users.Models;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace Library_H4_TrashPlusPlus.Tests
 {
@@ -19,7 +20,7 @@ namespace Library_H4_TrashPlusPlus.Tests
         }
 
         [Test]
-        public void CreateUser_NullInput_ShouldThrowAgumentNullExeption()
+        public void CreateUserAsync_NullInput_ShouldThrowAgumentNullExeption()
         {
             // Arrange
             string mail = null;
@@ -27,8 +28,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             string password = null;
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => { this.userServiceDb.CreateUser(mail, username, password); });
-
+            Assert.ThrowsAsync<ArgumentNullException>(async () => { await this.userServiceDb.CreateUserAsync(mail, username, password); });
         }
 
         [TestCase("")]
@@ -38,24 +38,22 @@ namespace Library_H4_TrashPlusPlus.Tests
         [TestCase(",.--12/()(/(&%&%(/,3-213123.com")]
         [TestCase("105 OR 1=1")]
         [TestCase("hello123rf@com'")]
-        public void CreateUser_InvalidMailInput_ShouldThrowAgumenExeption(string mailInput)
+        public void CreateUserAsync_InvalidMailInput_ShouldThrowArgumenExeption(string mailInput)
         {
-
             // Arrange
             string mail = mailInput;
             string password = "12341231414143qwemkqwnelkqwe";
             string username = "Testusername";
 
-
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => { this.userServiceDb.CreateUser(mail, username, password); });
+            Assert.ThrowsAsync<ArgumentException>(async () => { await this.userServiceDb.CreateUserAsync(mail, username, password); });
         }
 
         [TestCase("")]
         [TestCase("mail test")]
         [TestCase(",.--12/()(/(&%&%(/,3-213123.com")]
         [TestCase("105 OR 1=1")]
-        public void CreateUser_InvalidUsernameInput_ShouldThrowAgumenExeption(string invalidInput)
+        public void CreateUserAsync_InvalidUsernameInput_ShouldThrowAgumenExeption(string invalidInput)
         {
 
             // Arrange
@@ -63,9 +61,8 @@ namespace Library_H4_TrashPlusPlus.Tests
             string password = "12341231414143qwemkqwnelkqwe";
             string username = invalidInput;
 
-
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => { this.userServiceDb.CreateUser(mail, username, password); });
+            Assert.ThrowsAsync<ArgumentException>(async () => { await this.userServiceDb.CreateUserAsync(mail, username, password); });
         }
 
         [TestCase("")]
@@ -73,7 +70,7 @@ namespace Library_H4_TrashPlusPlus.Tests
         [TestCase("password")]
         [TestCase("Password")]
         [TestCase("1234")]
-        public void CreateUser_InvalidPasswordInput_ShouldThrowAgumenExeption(string passwordInput)
+        public void CreateUserAsync_InvalidPasswordInput_ShouldThrowAgumenExeption(string passwordInput)
         {
             // Arrange
             string mail = "test@mail.com";
@@ -81,18 +78,18 @@ namespace Library_H4_TrashPlusPlus.Tests
             string username = "testUsername";
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => { this.userServiceDb.CreateUser(mail, username, password); });
+            Assert.ThrowsAsync<ArgumentException>(async () => { await this.userServiceDb.CreateUserAsync(mail, username, password); });
         }
 
         [Test]
-        public void CreateUserDB_ValidInput_ShouldReturnUser()
+        public async Task CreateUserAsyncDB_ValidInput_ShouldReturnUser()
         {
             // Arrange
             IUser createdUser;
             long randomNumber = new Random().Next(0, 10000);
 
             // Act
-            createdUser = this.userServiceDb.CreateUser("testmail" + randomNumber + "@mail.com", "testUsername", "12341234!weqwe");
+            createdUser = await this.userServiceDb.CreateUserAsync("testmail" + randomNumber + "@mail.com", "testUsername", "12341234!weqwe");
 
             // Assert
             Assert.IsNotNull(createdUser);
@@ -101,26 +98,26 @@ namespace Library_H4_TrashPlusPlus.Tests
         }
 
         [Test]
-        public void CreateUserDB_InvalidInputEmailAlreadyExists_ShouldThrowArgumentError()
+        public void CreateUserAsyncDB_InvalidInputEmailAlreadyExists_ShouldThrowArgumentError()
         {
             // Act & Assert
-            Assert.Throws<DuplicateNameException>(() => { this.userServiceDb.CreateUser("testmail1@mail.com", "testUsername", "12341234!weqwe"); });
+            Assert.ThrowsAsync<DuplicateNameException>(async () => { await this.userServiceDb.CreateUserAsync("testmail1@mail.com", "testUsername", "12341234!weqwe"); });
 
         }
-    
+
         [Test]
-        public void GetUserByIdDB_ValidId_ShouldReturnIUserObject()
+        public async Task GetUserByIdDB_ValidId_ShouldReturnIUserObject()
         {
             // Arrange
             IUser createdUser;
             IUser requestedUser;
-            long randomNumber = new Random().Next(0, 10000);
+            long randomNumber = new Random().Next(0, 100000);
             string email = "testmail" + randomNumber + "@mail.com";
 
-            createdUser = this.userServiceDb.CreateUser(email, "testUsername", "12341234!weqwe");
+            createdUser = await this.userServiceDb.CreateUserAsync(email, "testUsername", "12341234!weqwe");
 
             // Act
-            requestedUser = this.userServiceDb.GetUserById(createdUser.Id);
+            requestedUser = await this.userServiceDb.GetUserByIdAsync(createdUser.Id);
 
             // Assert
             Assert.IsNotNull(requestedUser);
@@ -129,30 +126,21 @@ namespace Library_H4_TrashPlusPlus.Tests
             Assert.AreEqual(email, requestedUser.Mail);
         }
 
-        [TestCase(0)]
-        [TestCase(-1)]
-        [TestCase(int.MinValue)]
-        public void GetUserByIdDB_IllegalValue_ShouldThrowArgumentException(int idVal)
-        {
-            // Act & Assert
-            Assert.Throws<ArgumentException>(() => { this.userServiceDb.GetUserById(idVal); });
-        }
-
         [Test]
-        public void GetUserByIdDB_NonExistingId_ShouldReturnNull()
+        public async Task GetUserByIdDB_NonExistingId_ShouldReturnNull()
         {
             // Arrange
             IUser requestedUser;
 
             // Act
-            requestedUser = this.userServiceDb.GetUserById(int.MaxValue);
+            requestedUser = await this.userServiceDb.GetUserByIdAsync(int.MaxValue);
 
             // Assert
             Assert.IsNull(requestedUser);
         }
 
         [Test]
-        public void GetUserByLoginNameDB_ValidId_ShouldReturnIUserObject()
+        public async Task GetUserByLoginNameDB_ValidId_ShouldReturnIUserObject()
         {
             // Arrange
             IUser createdUser;
@@ -160,10 +148,10 @@ namespace Library_H4_TrashPlusPlus.Tests
             long randomNumber = new Random().Next(0, 10000);
             string email = "testmail" + randomNumber + "@mail.com";
 
-            createdUser = this.userServiceDb.CreateUser(email, "testUsername", "12341234!weqwe");
+            createdUser = await this.userServiceDb.CreateUserAsync(email, "testUsername", "12341234!weqwe");
 
             // Act
-            requestedUser = this.userServiceDb.GetUserByLoginName(email);
+            requestedUser = await this.userServiceDb.GetUserByLoginNameAsync(email);
 
             // Assert
             Assert.IsNotNull(requestedUser);
@@ -183,11 +171,11 @@ namespace Library_H4_TrashPlusPlus.Tests
         public void GetUserByLoginNameDB_IllegalValue_ShouldThrowArgumentException(string loginNameVal)
         {
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => { this.userServiceDb.GetUserByLoginName(loginNameVal); });
+            Assert.ThrowsAsync<ArgumentException>(async () => { await this.userServiceDb.GetUserByLoginNameAsync(loginNameVal); });
         }
 
         [Test]
-        public void GetUserByLoginNameDB_NonExistingLoginName_ShouldReturnNull()
+        public async Task GetUserByLoginNameDB_NonExistingLoginName_ShouldReturnNull()
         {
             // Arrange
             IUser requestedUser;
@@ -195,14 +183,14 @@ namespace Library_H4_TrashPlusPlus.Tests
             string email = "testmail" + randomNumber + "@mail.com";
 
             // Act
-            requestedUser = this.userServiceDb.GetUserByLoginName(email);
+            requestedUser = await this.userServiceDb.GetUserByLoginNameAsync(email);
 
             // Assert
             Assert.IsNull(requestedUser);
         }
 
         [Test]
-        public void Authenticate_ValidLogin_ShouldReturnAuthenticateResponseObject()
+        public async Task Authenticate_ValidLogin_ShouldReturnAuthenticateResponseObject()
         {
             // Arrange
             AuthenticateResponse authenticateResponse;
@@ -210,10 +198,10 @@ namespace Library_H4_TrashPlusPlus.Tests
             string email = "testmail" + randomNumber + "@mail.com";
             string password = "testpassword" + randomNumber;
 
-            this.userServiceDb.CreateUser(email, "testUsername", password);
+            await this.userServiceDb.CreateUserAsync(email, "testUsername", password);
 
             // Act
-            authenticateResponse = this.userServiceDb.Authenticate(email, password, "0.0.0.0");
+            authenticateResponse = await this.userServiceDb.AuthenticateAsync(email, password, "0.0.0.0");
 
             // Assert
             Assert.IsNotNull(authenticateResponse);
@@ -223,7 +211,7 @@ namespace Library_H4_TrashPlusPlus.Tests
         }
 
         [Test]
-        public void Authenticate_InvalidLogin_ShouldReturnNull()
+        public async Task Authenticate_InvalidLogin_ShouldReturnNull()
         {
             // Arrange
             AuthenticateResponse authenticateResponse;
@@ -231,17 +219,17 @@ namespace Library_H4_TrashPlusPlus.Tests
             string email = "testmail" + randomNumber + "@mail.com";
             string password = "testpassword" + randomNumber;
 
-            this.userServiceDb.CreateUser(email, "testUsername", password);
+            await this.userServiceDb.CreateUserAsync(email, "testUsername", password);
 
             // Act
-            authenticateResponse = this.userServiceDb.Authenticate(email, password+"1", "0.0.0.0");
+            authenticateResponse = await this.userServiceDb.AuthenticateAsync(email, password+"1", "0.0.0.0");
 
             // Assert
             Assert.IsNull(authenticateResponse);
         }
 
         [Test]
-        public void Logout_Valid_ShouldReturnTrue()
+        public async Task Logout_Valid_ShouldReturnTrue()
         {
             // Arrange
             AuthenticateResponse authenticateResponse;
@@ -249,11 +237,11 @@ namespace Library_H4_TrashPlusPlus.Tests
             string email = "testmail" + randomNumber + "@mail.com";
             string password = "testpassword" + randomNumber;
 
-            this.userServiceDb.CreateUser(email, "testUsername", password);
-            authenticateResponse = this.userServiceDb.Authenticate(email, password, "0.0.0.0");
+            await this .userServiceDb.CreateUserAsync(email, "testUsername", password);
+            authenticateResponse = await this.userServiceDb.AuthenticateAsync(email, password, "0.0.0.0");
 
             // Act
-            bool logoutSuccess = this.userServiceDb.Logout(authenticateResponse.RefreshToken, "0.0.0.0");
+            bool logoutSuccess = await this.userServiceDb.LogoutAsync(authenticateResponse.RefreshToken, "0.0.0.0");
 
             // Assert
             Assert.IsNotNull(authenticateResponse);
@@ -268,14 +256,15 @@ namespace Library_H4_TrashPlusPlus.Tests
         public void Logout_InvalidToken_ShouldThrowArgumentException(string token)
         {
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => { this.userServiceDb.Logout(token, "0.0.0.0"); });
+            Assert.ThrowsAsync<ArgumentException>(async () => { await this.userServiceDb.LogoutAsync(token, "0.0.0.0"); });
+
         }
 
         [TestCase(null)]
         public void Logout_InvalidToken_ShouldThrowArgumentNullException(string token)
         {
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => { this.userServiceDb.Logout(token, "0.0.0.0"); });
+            Assert.ThrowsAsync<ArgumentNullException>(async () => { await this.userServiceDb.LogoutAsync(token, "0.0.0.0"); });
         }
 
     }
