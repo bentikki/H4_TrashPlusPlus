@@ -19,7 +19,7 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage
         /// looks if there is a token saved
         /// </summary>
         /// <returns>if there is a token</returns>
-        public bool ConaintsLocalToken()
+        public bool ContainsLocalToken()
         {
             return _token != null;
         }
