@@ -109,7 +109,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
 
                 userToCreate.PublicKey = _asyncEncryption.GetPublicKey();
 
-                userToCreate = ObjectEncryptor.EncryptCreateUserRequest(PublicAsyncEncryption, userToCreate);
+                userToCreate = ObjectEncryptor.EcryptCreateUserRequest(PublicAsyncEncryption, userToCreate);
 
                 IUser apiResponseUser = this.apiRequester.PostApi<User>(apiPath, userToCreate);
 
