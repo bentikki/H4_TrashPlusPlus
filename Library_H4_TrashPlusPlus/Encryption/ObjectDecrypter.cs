@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Library_H4_TrashPlusPlus.Encryption
 {
+    /// <summary>
+    /// Help to decrypt objectes
+    /// </summary>
     public static class ObjectDecrypter
     {
         /// <summary>

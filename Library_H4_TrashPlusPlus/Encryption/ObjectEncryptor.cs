@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Library_H4_TrashPlusPlus.Encryption
 {
+    /// <summary>
+    /// Help to encrypt objectes
+    /// </summary>
     public class ObjectEncryptor
     {
         /// <summary>
@@ -29,7 +32,7 @@ namespace Library_H4_TrashPlusPlus.Encryption
             }
             else if (user is CreateUserRequest createUserRequest)
             {
-                return EncryptCreateUserRequest(encryption, createUserRequest);
+                return EcryptCreateUserRequest(encryption, createUserRequest);
             }
             else
             {
@@ -41,15 +44,6 @@ namespace Library_H4_TrashPlusPlus.Encryption
             User encryptedUser = user;
             encryptedUser.Mail = encryption.Encrypt(user.Mail);
             encryptedUser.Username = encryption.Encrypt(user.Username);
-            return encryptedUser;
-        }
-
-        public static CreateUserRequest EncryptCreateUserRequest(IEncryption encryption, CreateUserRequest createUserRequest)
-        {
-            CreateUserRequest encryptedUser = createUserRequest;
-            encryptedUser.Mail = encryption.Encrypt(createUserRequest.Mail);
-            encryptedUser.Username = encryption.Encrypt(createUserRequest.Username);
-            encryptedUser.Password = encryption.Encrypt(createUserRequest.Password);
             return encryptedUser;
         }
 
