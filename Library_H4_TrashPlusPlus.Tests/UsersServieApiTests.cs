@@ -5,6 +5,7 @@ using Library_H4_TrashPlusPlus.Users;
 using Library_H4_TrashPlusPlus.Users.Repository;
 using Library_H4_TrashPlusPlus.Users.Models;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace Library_H4_TrashPlusPlus.Tests
 {
@@ -27,7 +28,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             string password = null;
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => { this.userServiceApi.CreateUser(mail, username, password); });
+            Assert.ThrowsAsync<ArgumentNullException>(async () => { await this.userServiceApi.CreateUserAsync(mail, username, password); });
 
         }
 
@@ -48,18 +49,19 @@ namespace Library_H4_TrashPlusPlus.Tests
 
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => { this.userServiceApi.CreateUser(mail, username, password); });
+            Assert.ThrowsAsync<ArgumentException>(async () => { await this.userServiceApi.CreateUserAsync(mail, username, password); });
+
         }
 
         [Test]
-        public void CreateUserDB_ValidInput_ShouldReturnUser()
+        public async Task CreateUserDB_ValidInput_ShouldReturnUser()
         {
             // Arrange
             IUser createdUser;
             long randomNumber = new Random().Next(0, 10000);
 
             // Act
-            createdUser = this.userServiceApi.CreateUser("testmail" + randomNumber + "@mail.com", "testUsername", "12341234!weqwe");
+            createdUser = await this.userServiceApi.CreateUserAsync("testmail" + randomNumber + "@mail.com", "testUsername", "12341234!weqwe");
 
             // Assert
             Assert.IsNotNull(createdUser);
@@ -68,7 +70,7 @@ namespace Library_H4_TrashPlusPlus.Tests
         }
 
         [Test]
-        public void Authenticate_ValidLogin_ShouldReturnAuthenticateResponseObject()
+        public async Task Authenticate_ValidLogin_ShouldReturnAuthenticateResponseObject()
         {
             // Arrange
             AuthenticateResponse authenticateResponse;
@@ -76,10 +78,10 @@ namespace Library_H4_TrashPlusPlus.Tests
             string email = "testmail" + randomNumber + "@mail.com";
             string password = "testpassword" + randomNumber;
 
-            this.userServiceApi.CreateUser(email, "testUsername", password);
+            IUser createdUser = await this.userServiceApi.CreateUserAsync(email, "testUsername", password);
 
             // Act
-            authenticateResponse = this.userServiceApi.Authenticate(email, password, "0.0.0.0");
+            authenticateResponse = await this.userServiceApi.AuthenticateAsync(email, password, "0.0.0.0");
 
             // Assert
             Assert.IsNotNull(authenticateResponse);
@@ -89,7 +91,7 @@ namespace Library_H4_TrashPlusPlus.Tests
         }
 
         [Test]
-        public void Authenticate_InvalidLogin_ReturnNull()
+        public async Task Authenticate_InvalidLogin_ReturnNull()
         {
             // Arrange
             AuthenticateResponse authenticateResponse;
@@ -98,7 +100,7 @@ namespace Library_H4_TrashPlusPlus.Tests
             string password = "testxccccccccpassword" + randomNumber;
 
             // Act
-            authenticateResponse = this.userServiceApi.Authenticate(email, password, "0.0.0.0");
+            authenticateResponse = await this.userServiceApi.AuthenticateAsync(email, password, "0.0.0.0");
 
             // Assert
             Assert.IsNull(authenticateResponse);

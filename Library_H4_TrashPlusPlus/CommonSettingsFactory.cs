@@ -10,7 +10,7 @@ namespace Library_H4_TrashPlusPlus
     public static class CommonSettingsFactory
     {
 
-        internal static string GetApiPath { get => "https://db92d6754088.ngrok.io/"; }
+        internal static string GetApiPath { get => "https://40e745966a75.ngrok.io/"; }
         internal static SqlConnection GetDBConnectionString(string username, string password)
         {
             //string connectionString = @"Server=172.16.21.93;Database=TrashPlusPlus;User Id=User;Password=Pa$$w0rd;";

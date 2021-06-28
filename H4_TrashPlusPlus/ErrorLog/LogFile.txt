@@ -1,0 +1,3 @@
+06-28-2021 16:25:46 : The inputted value can not be null.
+See Exception below:
+06-28-2021 16:25:46 : ArgumentNullException - Mail must not be null. (Parameter 'Mail')

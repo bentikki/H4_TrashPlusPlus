@@ -7,6 +7,7 @@ using Library_H4_TrashPlusPlus.Encryption;
 using Library_H4_TrashPlusPlus.Users.Models;
 using Library_H4_TrashPlusPlus.Users.Entities;
 using Library_H4_TrashPlusPlus.Users.Models;
+using System.Threading.Tasks;
 
 namespace Library_H4_TrashPlusPlus.Users.Repository
 {
@@ -50,6 +51,18 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         /// <returns>The validated user</returns>
         public AuthenticateResponse Authenticate(string mail, string password, string ipAddress)
         {
+            return this.AuthenticateAsync(mail,password,ipAddress).Result;
+        }
+
+        /// <summary>
+        /// Sends a encryped post request to the api to authenticate
+        /// </summary>
+        /// <param name="mail">The mail for the user</param>
+        /// <param name="password">The password for the user</param>
+        /// <param name="ipAddress">Not used</param>
+        /// <returns>The validated user</returns>
+        public async Task<AuthenticateResponse> AuthenticateAsync(string mail, string password, string ipAddress)
+        {
             try
             {
                 string apiPath = "user/Authenticate";
@@ -71,7 +84,6 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
                 _publicAsyncEncryption = null;
                 return null;
             }
-
         }
 
         /// <summary>
@@ -80,6 +92,16 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         /// <param name="userToCreate">The user to create</param>
         /// <returns>The created user</returns>
         public IUser CreateUser(CreateUserRequest userToCreate)
+        {
+            return this.CreateUserAsync(userToCreate).Result;
+        }
+
+        /// <summary>
+        /// Sends a encryped post request to the api
+        /// </summary>
+        /// <param name="userToCreate">The user to create</param>
+        /// <returns>The created user</returns>
+        public async Task<IUser> CreateUserAsync(CreateUserRequest userToCreate)
         {
             try
             {
@@ -99,6 +121,37 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             {
                 _publicAsyncEncryption = null;
                 return null;
+            }
+        }
+
+        public AuthenticateResponse RefreshToken(string token, string ipAddress)
+        {
+            return this.RefreshTokenAsync(token, ipAddress).Result;
+        }
+
+        public async Task<AuthenticateResponse> RefreshTokenAsync(string token, string ipAddress)
+        {
+            this.apiRequester.SetCookie("refreshToken", token);
+
+            return RefreshToken();
+        }
+
+        public bool Logout(string token, string ipAddress)
+        {
+            return this.LogoutAsync(token, ipAddress).Result;
+        }
+
+        public async Task<bool> LogoutAsync(string token, string ipAddress)
+        {
+            try
+            {
+                string apiPath = "user/Logout";
+                string message = this.apiRequester.PostApi<ReworkResponse>(apiPath, token).Message;
+                return message.Length > 0;
+            }
+            catch
+            {
+                return false;
             }
         }
 
@@ -122,11 +175,11 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
         public IUser GetUserById(int id)
         {
             throw new NotImplementedException();
-            //string apiPath = "user/" + id;
+        }
 
-            //IUser apiResponseUser = this.apiRequester.GetApi<User>(apiPath);
-
-            //return apiResponseUser;
+        public Task<IUser> GetUserByIdAsync(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public IUser GetUserByLoginName(string loginName)
@@ -139,25 +192,17 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             throw new NotImplementedException();
         }
 
-        public bool Logout(string token, string ipAddress)
+        public Task<IUser> GetUserByLoginNameAsync(string loginName)
         {
-            try
-            {
-                string apiPath = "user/Logout";
-                string message = this.apiRequester.PostApi<ReworkResponse>(apiPath, token).Message;
-                return message.Length > 0;
-            }
-            catch
-            {
-                return false;
-            }
+            throw new NotImplementedException();
         }
 
-        public AuthenticateResponse RefreshToken(string token, string ipAddress)
+        public Task<IUser> GetUserByTokenAsync(string token)
         {
-            this.apiRequester.SetCookie("refreshToken", token);
-
-            return RefreshToken();
+            throw new NotImplementedException();
         }
+
+
+
     }
 }
