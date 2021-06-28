@@ -12,7 +12,6 @@ namespace Xamarin_H4_TrashPlusPlus
         {
             InitializeComponent();
 
-            //MainPage = new NavigationPage(new LoginPage());
             MainPage = new NavigationPage(new LandingPage());
         }
 
@@ -27,5 +26,6 @@ namespace Xamarin_H4_TrashPlusPlus
         protected override void OnResume()
         {
         }
+
     }
 }

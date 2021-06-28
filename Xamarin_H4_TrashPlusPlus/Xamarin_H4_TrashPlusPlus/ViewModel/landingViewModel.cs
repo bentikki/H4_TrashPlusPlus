@@ -20,6 +20,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
 
         public ICommand ChangeToLoginCommand { get; set; }
         public ICommand ChangeToHomeCommand { get; set; }
+        public ICommand LoginCommand { get; set; }
 
         public landingViewModel(IChangePage pageChanger, IUserService userService) : base(pageChanger)
         {
@@ -27,12 +28,16 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             _userService = userService;
             ChangeToLoginCommand = new Command(() => pageChanger.PushPage(new LoginPage()));
             ChangeToHomeCommand = new Command(() => pageChanger.PushPage(new HomePage()));
-            Task.Run(Login);
+            LoginCommand = new Command(() => Task.Run(Login));
         }
 
         private async Task Login()
         {
-            if (StorageManagerFactory.GetLocalDBManager().GetToken() != null)
+            if (StorageManagerFactory.GetLocalDBManager().ConaintsLocalToken())
+            {
+                _pageChanger.PushPage(new HomePage());
+            }
+            else if (StorageManagerFactory.GetLocalDBManager().GetToken() != null)
             {
                 using (UserDialogs.Instance.Loading("Logging in..."))
                 {

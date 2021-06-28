@@ -9,5 +9,6 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage.Database
     {
         [PrimaryKey]
         public string token { get; set; }
+        public bool save { get; set; }
     }
 }

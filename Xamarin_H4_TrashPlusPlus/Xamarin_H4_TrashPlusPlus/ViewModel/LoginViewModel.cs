@@ -113,12 +113,9 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             }
             if (response != null)
             {
-                if (SaveChecked)
-                {
-                    // Saves the token as a object
-                    StorageManagerFactory.GetLocalDBManager().SaveToken(StorageManagerFactory.CreateToken(response.RefreshToken));
-                }
-                _pageChanger.PushPage(new HomePage());
+                // Saves the token as a object
+                StorageManagerFactory.GetLocalDBManager().SaveToken(StorageManagerFactory.CreateToken(response.RefreshToken, SaveChecked));
+                _pageChanger.PopPushPage(new HomePage());
             }
             else
             {

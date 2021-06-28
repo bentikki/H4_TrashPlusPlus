@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin_H4_TrashPlusPlus.LocalStorage;
@@ -55,6 +56,8 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         {
             using (UserDialogs.Instance.Loading("Loggger ud..."))
             {
+                // Gives user the feeling of it is working
+                await Task.Delay(100);
                 if (await _userService.LogoutAsync(StorageManagerFactory.GetLocalDBManager().GetToken().token, "0.0.0.0"))
                 {
                     StorageManagerFactory.GetLocalDBManager().DeleteToken();
