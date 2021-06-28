@@ -37,6 +37,8 @@
                 Padding="50,0,50,0"
                 TextColor="{DynamicResource DarkColor}"></Label>
             <Button
+                IsEnabled="{Binding InvLoggedIn}"
+                IsVisible="{Binding InvLoggedIn}"
                 Grid.Row="4"
                 Text="Login"
                 Margin="50,5,50,5"

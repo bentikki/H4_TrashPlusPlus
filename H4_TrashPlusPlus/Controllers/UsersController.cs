@@ -33,7 +33,8 @@ namespace H4_TrashPlusPlus.Controllers
             User response = null;
             try
             {
-                response = (User)_userService.CreateUser(model.Mail, model.Username, model.Password);
+                model = ObjectDecrypter.DecryptCreateUserRequest(CommonSettingsFactory.AsyncEncrypter, model);
+                response = (User)ObjectEncryptor.EncryptIUser(EncryptionFactory.GenerateAsyncEncryption(model.PublicKey), _userService.CreateUser(model.Mail, model.Username, model.Password)) ;
 
             }
             catch (ArgumentException e)
@@ -59,6 +60,7 @@ namespace H4_TrashPlusPlus.Controllers
 
             try
             {
+                model = ObjectDecrypter.DecryptAuthenticateRequest(CommonSettingsFactory.AsyncEncrypter, model);
                 response = _userService.Authenticate(model.Username, model.Password, GetIpAddress());
 
                 if (response == null)
@@ -73,7 +75,7 @@ namespace H4_TrashPlusPlus.Controllers
             }
             catch (Exception)
             {
-                return BadRequest(new { message = "An unexpected error occured. User could not be created" });
+                return BadRequest(new { message = "An unexpected error occured. User could not be validated" });
             }
 
         }
@@ -97,26 +99,26 @@ namespace H4_TrashPlusPlus.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
-        {
-            try
-            {
-                // Get current logged in user Example
-                IUser currentUser = this.GetCurrentUser(this._userService);
-                if (currentUser == null)
-                    return Unauthorized(new { message = "Invalid token" });
+        //[HttpGet("{id}")]
+        //public IActionResult GetById(int id)
+        //{
+        //    try
+        //    {
+        //        // Get current logged in user Example
+        //        IUser currentUser = this.GetCurrentUser(this._userService);
+        //        if (currentUser == null)
+        //            return Unauthorized(new { message = "Invalid token" });
 
-                var user = _userService.GetUserById(id);
-                if (user == null) return NotFound();
+        //        var user = _userService.GetUserById(id);
+        //        if (user == null) return NotFound();
 
-                return Ok(user);
-            }
-            catch (Exception)
-            {
-                return Unauthorized(new { message = "Invalid token" });
-            }
-        }
+        //        return Ok(user);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return Unauthorized(new { message = "Invalid token" });
+        //    }
+        //}
 
         [HttpPost("Logout")]
         public IActionResult Logout(string token)
