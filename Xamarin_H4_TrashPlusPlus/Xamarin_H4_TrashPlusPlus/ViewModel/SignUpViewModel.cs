@@ -14,6 +14,9 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
+    /// <summary>
+    /// the view model for the sign up page
+    /// </summary>
     class SignUpViewModel : BaseViewModel
     {
         private IUserService _userService;
@@ -191,6 +194,11 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         public ICommand ChangeToLoginCommand { get; set; }
         public ICommand CreateCommand { get; set; }
 
+        /// <summary>
+        /// the view model for the sign up page
+        /// </summary>
+        /// <param name="pageChanger">The object to change page</param>
+        /// <param name="userService">The service for users</param>
         public SignUpViewModel(IChangePage pageChanger, IUserService userService) : base(pageChanger)
         {
             mailErrors = new List<string>();
@@ -200,6 +208,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             ChangeToLoginCommand = new Command(() => _pageChanger.PushPage(new LoginPage()));
             CreateCommand = new Command(CreateUserAsync);
         }
+
 
         /// <summary>
         /// Creates a user if the inputs is valid

@@ -13,6 +13,9 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
+    /// <summary>
+    /// The view model for the Sorting result page
+    /// </summary>
     class SortingResultViewModel : BaseViewModel
     {
         private IBinTypeService _binTypeService;
@@ -37,6 +40,13 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             }
         }
 
+        /// <summary>
+        /// The view model for the Sorting result page
+        /// </summary>
+        /// <param name="pageChanger">The object to change page</param>
+        /// <param name="trash">The trash to show</param>
+        /// <param name="barcode">The barcode for the trash</param>
+        /// <param name="binTypeService">The Service For binTypes</param>
         public SortingResultViewModel (IChangePage pageChanger, ITrash trash, string barcode, IBinTypeService binTypeService) : base(pageChanger)
         {
             Registered = trash != null;
@@ -51,7 +61,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             {
                 ResultHeader = "Sorteringsmetode fundet!";
                 this._binTypeService = binTypeService;
-                Task.Run(() => this.GetBinType(trash));
+                Task.Run(() => this.GetBinTypeAsync(trash));
             }
             else
             {
@@ -59,7 +69,11 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             }
         }
 
-        public async Task GetBinType(ITrash trash)
+        /// <summary>
+        /// Gets the bin type for the trash
+        /// </summary>
+        /// <param name="trash">The trash</param>
+        public async Task GetBinTypeAsync(ITrash trash)
         {
             using (UserDialogs.Instance.Loading("Viser sortering..."))
             {

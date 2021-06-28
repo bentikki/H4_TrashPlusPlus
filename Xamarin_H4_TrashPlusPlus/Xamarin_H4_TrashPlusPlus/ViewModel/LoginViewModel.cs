@@ -1,14 +1,7 @@
 ﻿using Acr.UserDialogs;
-using Library_H4_TrashPlusPlus;
 using Library_H4_TrashPlusPlus.Users;
 using Library_H4_TrashPlusPlus.Users.Models;
 using Library_H4_TrashPlusPlus.Validator;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin_H4_TrashPlusPlus.LocalStorage;
@@ -16,6 +9,9 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
+    /// <summary>
+    /// The view model for login page
+    /// </summary>
     class LoginViewModel : BaseViewModel
     {
         private IUserService _userService;
@@ -88,6 +84,11 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         public ICommand ChangeToSignUpCommand { get; set; }
         public ICommand LoginCommand { get; set; }
 
+        /// <summary>
+        /// The view model for login page
+        /// </summary>
+        /// <param name="pageChanger">The object that can Change page</param>
+        /// <param name="userService">The service for users</param>
         public LoginViewModel(IChangePage pageChanger, IUserService userService) : base(pageChanger)
         {
             _userService = userService;

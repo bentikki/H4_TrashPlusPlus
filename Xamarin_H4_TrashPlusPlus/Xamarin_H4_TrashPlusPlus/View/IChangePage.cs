@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace Xamarin_H4_TrashPlusPlus.View
 {
+    /// <summary>
+    /// Can Change the page
+    /// </summary>
     interface IChangePage
     {
         void PushPage(Page page);

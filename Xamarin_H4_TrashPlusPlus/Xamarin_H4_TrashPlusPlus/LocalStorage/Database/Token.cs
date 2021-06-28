@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Xamarin_H4_TrashPlusPlus.LocalStorage.Database
 {
+    /// <summary>
+    /// Token Class for the database
+    /// </summary>
     class Token
     {
         [PrimaryKey]

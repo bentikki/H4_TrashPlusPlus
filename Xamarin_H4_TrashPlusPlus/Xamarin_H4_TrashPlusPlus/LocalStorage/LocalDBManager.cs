@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Xamarin_H4_TrashPlusPlus.LocalStorage.Database;
 
 namespace Xamarin_H4_TrashPlusPlus.LocalStorage
 {
+    /// <summary>
+    /// Manager for the local database
+    /// </summary>
     class LocalDBManager : IStorageManager
     {
         private Token _token;
         private Database.Database _database;
+
+        /// <summary>
+        /// Manager for the local database
+        /// </summary>
         public LocalDBManager()
         {
             _database = new Database.Database(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TrashToken.db3"));

@@ -6,15 +6,21 @@ using System.Threading.Tasks;
 
 namespace Xamarin_H4_TrashPlusPlus.LocalStorage.Database
 {
+    /// <summary>
+    /// The sqlite database class
+    /// </summary>
     class Database
     {
         readonly SQLiteAsyncConnection _database;
 
+        /// <summary>
+        /// The sqlite database
+        /// </summary>
+        /// <param name="dbPath">The path for the database</param>
         public Database(string dbPath)
         {
             _database = new SQLiteAsyncConnection(dbPath);
             _database.CreateTableAsync<Token>().Wait();
-            // _database.DeleteAllAsync<Group>().Wait();
         }
 
         /// <summary>
@@ -38,7 +44,7 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage.Database
 
         /// <summary>
         /// Deletes all the Tokens from the database
-        /// </summary>s
+        /// </summary>
         /// <returns>The number of rows</returns>
         public Task<int> DeleteTokenAsync()
         {

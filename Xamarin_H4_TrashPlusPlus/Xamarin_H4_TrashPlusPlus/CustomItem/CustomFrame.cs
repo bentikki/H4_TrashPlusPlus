@@ -5,6 +5,9 @@ using Xamarin.Forms;
 
 namespace Xamarin_H4_TrashPlusPlus.CustomItem
 {
+    /// <summary>
+    /// Custom frame that enables corner radius diffent foreach corner
+    /// </summary>
     public class CustomFrame : Frame
     {
         public static new readonly BindableProperty CornerRadiusProperty = BindableProperty.Create(nameof(CustomFrame), typeof(CornerRadius), typeof(CustomFrame));
