@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using H4_TrashPlusPlus.Entities;
+using Library_H4_TrashPlusPlus.Logging;
 using Library_H4_TrashPlusPlus.Users.Entities;
 using Library_H4_TrashPlusPlus.Users.Models;
 using Library_H4_TrashPlusPlus.Users.Repository;
@@ -37,37 +38,46 @@ namespace Library_H4_TrashPlusPlus.Users
         /// <returns>the created user</returns>
         public IUser CreateUser(string mail, string username, string password)   
         {
-            // Run validation
-            DefaultValidators.ValidateMailException(mail);
-            DefaultValidators.ValidatePasswordException(password);
-            DefaultValidators.ValidateUsernameException(username);
-
-            // Create user object
-            IUser user;
-            CreateUserRequest createUserRequest = new CreateUserRequest(mail, username, password);
-
             try
             {
+                // Run validation
+                DefaultValidators.ValidateMailException(mail);
+                DefaultValidators.ValidatePasswordException(password);
+                DefaultValidators.ValidateUsernameException(username);
+
+                // Create user object
+                IUser user;
+                CreateUserRequest createUserRequest = new CreateUserRequest(mail, username, password);
+
                 // Create use via repository.
                 user = this.userRepository.CreateUser(createUserRequest);
+
+                return user;
             }
-            catch(SqlException e)
-            {
-                // An error occured while creating via Database.
-                throw e;
-            }
-            catch(ArgumentException e)
+            catch (ArgumentNullException e)
             {
                 // An error occured while created via Database.
+                IncidentLogger.GetLogger.LogMessageAsync(IncidentLevel.MINOR, "The inputted value can not be null.", e).Wait();
+                throw e;
+            }
+            catch (ArgumentException e)
+            {
+                // An error occured while created via Database.
+                IncidentLogger.GetLogger.LogMessageAsync(IncidentLevel.MINOR, "An inputted value was incorrect.", e).Wait();
+                throw e;
+            }
+            catch (SqlException e)
+            {
+                // An error occured while creating via Database.
+                IncidentLogger.GetLogger.LogMessageAsync(IncidentLevel.CRITICAL, "An error occured while contacting the database.", e).Wait();
                 throw e;
             }
             catch (Exception e)
             {
                 // An unkown error occured.
+                IncidentLogger.GetLogger.LogMessageAsync(IncidentLevel.CRITICAL, "An unkown error occured.", e).Wait();
                 throw e;
             }
-
-            return user;
         }
 
         /// <summary>
