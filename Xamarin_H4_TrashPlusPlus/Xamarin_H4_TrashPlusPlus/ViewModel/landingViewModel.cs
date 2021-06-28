@@ -2,10 +2,6 @@
 using Library_H4_TrashPlusPlus.Users;
 using Library_H4_TrashPlusPlus.Users.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -14,6 +10,9 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
+    /// <summary>
+    /// The view model for the Landing page
+    /// </summary>
     class landingViewModel : BaseViewModel
     {
         private IUserService _userService;
@@ -34,18 +33,27 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         }
 
 
+        /// <summary>
+        /// The view model for the Landing page
+        /// </summary>
+        /// <param name="pageChanger">The object to change page</param>
+        /// <param name="userService">The service for users</param>
         public landingViewModel(IChangePage pageChanger, IUserService userService) : base(pageChanger)
         {
             InvLoggedIn = true;
             _userService = userService;
             ChangeToLoginCommand = new Command(() => pageChanger.PushPage(new LoginPage()));
             ChangeToHomeCommand = new Command(() => pageChanger.PushPage(new HomePage()));
-            LoginCommand = new Command(() => Task.Run(Login));
+            LoginCommand = new Command(() => Task.Run(LoginAsync));
         }
 
-        private async Task Login()
+        /// <summary>
+        /// Looks if the user is logged ind
+        /// if it gets the login from db then login with the api
+        /// </summary>
+        private async Task LoginAsync()
         {
-            if (StorageManagerFactory.GetLocalDBManager().ConaintsLocalToken())
+            if (StorageManagerFactory.GetLocalDBManager().ContainsLocalToken())
             {
                 InvLoggedIn = false;
             }

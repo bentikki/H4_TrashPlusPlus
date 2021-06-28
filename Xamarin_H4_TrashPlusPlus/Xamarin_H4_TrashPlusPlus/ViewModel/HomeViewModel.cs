@@ -1,11 +1,5 @@
 ﻿using Acr.UserDialogs;
-using Library_H4_TrashPlusPlus.Trash;
 using Library_H4_TrashPlusPlus.Users;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -14,6 +8,9 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
+    /// <summary>
+    /// The View model for the home page
+    /// </summary>
     class HomeViewModel : BaseViewModel
     {
         private IUserService _userService;
@@ -40,6 +37,11 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         public ICommand LogInCommand { get; set; }
         public ICommand SkanCommand { get; set; }
 
+        /// <summary>
+        /// The View model for the home page
+        /// </summary>
+        /// <param name="pageChanger">The object to change page</param>
+        /// <param name="userService">The service for users</param>
         public HomeViewModel(IChangePage pageChanger, IUserService userService) : base(pageChanger)
         {
             _userService = userService;

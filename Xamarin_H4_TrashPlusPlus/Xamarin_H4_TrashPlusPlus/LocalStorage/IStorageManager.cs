@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xamarin_H4_TrashPlusPlus.LocalStorage.Database;
+﻿using Xamarin_H4_TrashPlusPlus.LocalStorage.Database;
 
 namespace Xamarin_H4_TrashPlusPlus.LocalStorage
 {
+    /// <summary>
+    /// Manager for storage
+    /// </summary>
     interface IStorageManager
     {
         void SaveToken(Token token);
         void DeleteToken();
-        bool ConaintsLocalToken();
+        bool ContainsLocalToken();
         Token GetToken();
     }
 }

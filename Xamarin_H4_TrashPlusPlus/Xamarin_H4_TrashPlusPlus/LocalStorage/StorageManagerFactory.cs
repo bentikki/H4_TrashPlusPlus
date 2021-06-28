@@ -5,6 +5,9 @@ using Xamarin_H4_TrashPlusPlus.LocalStorage.Database;
 
 namespace Xamarin_H4_TrashPlusPlus.LocalStorage
 {
+    /// <summary>
+    /// Factory for the storageManager
+    /// </summary>
     class StorageManagerFactory
     {
 
@@ -23,6 +26,12 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage
             return _localDBStorageManager;
         }
 
+        /// <summary>
+        /// Creates a token
+        /// </summary>
+        /// <param name="tokenValue">The value of the token</param>
+        /// <param name="localSave">If it should be saved in localdb</param>
+        /// <returns></returns>
         internal static Token CreateToken(string tokenValue, bool localSave = false)
         {
             return new Token() { token = tokenValue, save = localSave };

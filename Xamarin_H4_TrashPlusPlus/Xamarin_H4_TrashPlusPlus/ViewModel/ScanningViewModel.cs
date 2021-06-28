@@ -15,6 +15,9 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
+    /// <summary>
+    /// The view model for the scanning page
+    /// </summary>
     class ScanningViewModel : BaseViewModel
     {
         private bool _Lookupcode;
@@ -23,6 +26,11 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         public ICommand ScanningCompletedCommand { get; set; }
         public ICommand NotAbleToScanCommand { get; set; }
 
+        /// <summary>
+        /// The view model for the scanning page
+        /// </summary>
+        /// <param name="pageChanger">The object that can Change page</param>
+        /// <param name="trashService">The service for Trashs</param>
         public ScanningViewModel(IChangePage pageChanger, ITrashService trashService) : base(pageChanger)
         {
             _trashService = trashService;
@@ -32,39 +40,37 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         }
 
         /// <summary>
-        /// 
+        /// Looks up the barcode
         /// </summary>
-
         public async void LookupCodeAsync(object obj)
         {
             if (!_Lookupcode)
             {
                 try
                 {
-
-                string barcode = obj.ToString();
-                using (UserDialogs.Instance.Loading("Finder sortering..."))
-                {
-                    List<string> errors = DefaultValidators.ValidateBarcode(barcode);
-                    // Validation on barcode
-
-                    //If success
-                    if (errors.Count == 0)
+                    string barcode = obj.ToString();
+                    using (UserDialogs.Instance.Loading("Finder sortering..."))
                     {
-                        // Call service by barcode
-                        ITrash trash = await _trashService.GetTrashByBarcodeAsync(barcode);
+                        List<string> errors = DefaultValidators.ValidateBarcode(barcode);
+                        // Validation on barcode
 
-                        this._pageChanger.PopPushPage(new SortingResultPage(trash,barcode));
-                    }
-                    else
-                    {
-                        //If Fail
-                        // Display error message on popup
-                        await UserDialogs.Instance.ConfirmAsync(new ConfirmConfig() { Message = "stregkode er ikke vadlid", Title = "fejl" });
+                        //If success
+                        if (errors.Count == 0)
+                        {
+                            // Call service by barcode
+                            ITrash trash = await _trashService.GetTrashByBarcodeAsync(barcode);
+
+                            this._pageChanger.PopPushPage(new SortingResultPage(trash, barcode));
+                        }
+                        else
+                        {
+                            //If Fail
+                            // Display error message on popup
+                            await UserDialogs.Instance.ConfirmAsync(new ConfirmConfig() { Message = "stregkode er ikke vadlid", Title = "fejl" });
+                        }
                     }
                 }
-                }
-                catch ( Exception e)
+                catch (Exception e)
                 {
                     // Display error message on popup
                     await UserDialogs.Instance.ConfirmAsync(new ConfirmConfig() { Message = "stregkode er ikke vadlid", Title = "fejl" });

@@ -14,6 +14,9 @@ using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
 {
+    /// <summary>
+    /// The view model for the Registertion sorting page
+    /// </summary>
     class RegisterSortingViewModel : BaseViewModel
     {
         private ITrashService _trashService;
@@ -67,6 +70,13 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         public ICommand CreateCommand { get; set; }
         public ICommand SelectCommand { get; set; }
 
+        /// <summary>
+        /// The view model for the Registertion sorting page
+        /// </summary>
+        /// <param name="pageChanger">The object that can Change page</param>
+        /// <param name="trashService">The service for Trashs</param>
+        /// <param name="binTypeService">The service for BinTypes</param>
+        /// <param name="barcode">the barcode</param>
         public RegisterSortingViewModel(IChangePage pageChanger, ITrashService trashService, IBinTypeService binTypeService, string barcode) : base(pageChanger)
         {
             _binTypeService = binTypeService;
@@ -74,16 +84,23 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             TrashRequest = new CreateTrashRequest();
             BinTypes = new ObservableCollection<IBinType>();
             TrashRequest.Barcode = barcode;
-            CreateCommand = new Command(() => CreateTrashAsync());
+            CreateCommand = new Command(() => Task.Run(CreateTrashAsync));
             SelectCommand = new Command((BinType) => SelectItem(BinType));
             Task.Run(GetBinTypeAsync);
         }
 
+        /// <summary>
+        /// Sets the selected item
+        /// </summary>
+        /// <param name="binTypes">The selected bin type</param>
         public void SelectItem(object binTypes)
         {
             SelectedItem = (IBinType)binTypes;
         }
 
+        /// <summary>
+        /// Creates the Trash and sends it to the api
+        /// </summary>
         public async Task CreateTrashAsync()
         {
             using (UserDialogs.Instance.Loading("Registere affaldssortering..."))
@@ -105,6 +122,10 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
                 UserDialogs.Instance.Alert("fejled med at registere ");
             }
         }
+
+        /// <summary>
+        /// Gets the possible bin types
+        /// </summary>
         public async Task GetBinTypeAsync()
         {
             List<IBinType> binTypes = await _binTypeService.GetAllBinTypesAsync();
