@@ -1,3 +1,15 @@
 06-28-2021 16:25:46 : The inputted value can not be null.
 See Exception below:
 06-28-2021 16:25:46 : ArgumentNullException - Mail must not be null. (Parameter 'Mail')
+06-28-2021 17:04:56 : An error occured while contacting the database.
+See Exception below:
+06-28-2021 17:04:56 : SqlException - A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: Named Pipes Provider, error: 40 - Could not open a connection to SQL Server)
+06-28-2021 17:08:40 : An error occured while contacting the database.
+See Exception below:
+06-28-2021 17:08:40 : SqlException - A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: Named Pipes Provider, error: 40 - Could not open a connection to SQL Server)
+06-28-2021 17:08:40 : An error occured while contacting the database.
+See Exception below:
+06-28-2021 17:08:40 : SqlException - A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: Named Pipes Provider, error: 40 - Could not open a connection to SQL Server)
+06-28-2021 17:30:39 : An unexpected error occured. User could not be validated.
+See Exception below:
+06-28-2021 17:30:39 : CryptographicException - The provided XML could not be read.

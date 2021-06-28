@@ -2,6 +2,7 @@
 using Library_H4_TrashPlusPlus.Users;
 using Library_H4_TrashPlusPlus.Users.Models;
 using Library_H4_TrashPlusPlus.Validator;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin_H4_TrashPlusPlus.LocalStorage;
@@ -104,26 +105,29 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         {
             AuthenticateResponse response = null;
 
+            Device.BeginInvokeOnMainThread(async () => {
 
-            using (UserDialogs.Instance.Loading("Logging in..."))
-            {
-                if (DefaultValidators.ValidateMail(Mail).Count == 0 && DefaultValidators.ValidatePassword(Password).Count == 0)
+                using (UserDialogs.Instance.Loading("Logger ind..."))
                 {
-                    response = await _userService.AuthenticateAsync(Mail, Password, "0.0.0.0");
+                    if (DefaultValidators.ValidateMail(Mail).Count == 0 && DefaultValidators.ValidatePassword(Password).Count == 0)
+                    {
+                        await Task.Delay(300);
+                        response = await _userService.AuthenticateAsync(Mail, Password, "0.0.0.0");
+                    }
                 }
-            }
-            if (response != null)
-            {
-                // Saves the token as a object
-                StorageManagerFactory.GetLocalDBManager().SaveToken(StorageManagerFactory.CreateToken(response.RefreshToken, SaveChecked));
-                _pageChanger.PopPushPage(new HomePage());
-            }
-            else
-            {
-                LoginFailed = true;
-                NotifyPropertyChanged("LoginEnable");
-                NotifyPropertyChanged("InputColor");
-            }
+                if (response != null)
+                {
+                    // Saves the token as a object
+                    StorageManagerFactory.GetLocalDBManager().SaveToken(StorageManagerFactory.CreateToken(response.RefreshToken, SaveChecked));
+                    _pageChanger.PopPushPage(new HomePage());
+                }
+                else
+                {
+                    LoginFailed = true;
+                    NotifyPropertyChanged("LoginEnable");
+                    NotifyPropertyChanged("InputColor");
+                }
+            });
 
         }
 

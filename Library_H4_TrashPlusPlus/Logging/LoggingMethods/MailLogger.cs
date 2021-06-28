@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Library_H4_TrashPlusPlus.Logging.LoggingMethods
 {
+    /// <summary>
+    /// Error logging via Email
+    /// </summary>
     internal class MailLogger : LoggingMaster
     {
         public MailLogger(IncidentLevel level) : base(level) { }
@@ -34,7 +37,7 @@ namespace Library_H4_TrashPlusPlus.Logging.LoggingMethods
                 }
                 stringBuilder.Append(Environment.NewLine);
 
-                client.Send("BTOsignUpAPI@gmail.com", IncidentLogger.GetErrorToMail(), mailSubject, stringBuilder.ToString());
+                client.Send(IncidentLogger.GetErrorToMail(), IncidentLogger.GetErrorToMail(), mailSubject, stringBuilder.ToString());
             }
             catch (Exception) { }
         }

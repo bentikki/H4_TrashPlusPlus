@@ -63,6 +63,7 @@
                         </Label>
                     </StackLayout>
                     <Frame 
+                        AutomationId="automationMailInput"
                         Grid.Row="4"
                         Grid.Column="1"
                         BorderColor="{Binding InputColor}"
@@ -76,6 +77,7 @@
                             ></local:CustomEntry>
                     </Frame>
                     <Frame
+                        AutomationId="automationPasswordInput"
                         Grid.Row="5"
                         Grid.Column="1"
                         BorderColor="{Binding InputColor}"
@@ -99,13 +101,14 @@
                         <CheckBox
                         IsChecked="{Binding SaveChecked}">
                         </CheckBox>
-                        <Label Text="Hold mig logget ind" VerticalTextAlignment="Center">
+                        <Label Text="Hold mig logget ind" VerticalTextAlignment="Center" AutomationId="automationRememberLogin">
                             <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ChangeStateCommand}" NumberOfTapsRequired="1"/>
+                                <TapGestureRecognizer Command="{Binding ChangeStateCommand}" NumberOfTapsRequired="1"  />
                             </Label.GestureRecognizers>
                         </Label>
                     </StackLayout>
                     <Button 
+                        AutomationId="automationLoginButton"
                         Grid.Row="7"
                         Grid.Column="1"
                         IsEnabled="{Binding LoginEnable}"

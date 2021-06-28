@@ -48,6 +48,7 @@
                 TextColor="{DynamicResource LightColor}"
                 ></Button>
             <Button
+                AutomationId="automationGoToHome"
                 Grid.Row="5"
                 Text="Gå i gang"
                 Margin="50,5,50,5"

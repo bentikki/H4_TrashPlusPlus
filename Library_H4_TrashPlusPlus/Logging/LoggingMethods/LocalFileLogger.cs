@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Library_H4_TrashPlusPlus.Logging.LoggingMethods
 {
+    /// <summary>
+    /// Error logging via Local file
+    /// </summary>
     internal class LocalFileLogger : LoggingMaster
     {
         private static ReaderWriterLockSlim lock_ = new ReaderWriterLockSlim();

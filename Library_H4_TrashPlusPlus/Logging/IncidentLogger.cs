@@ -24,7 +24,7 @@ namespace Library_H4_TrashPlusPlus.Logging
             get
             {
                 if (loggerChain == null)
-                    IncidentLogger.GetLoggerChain();
+                    IncidentLogger.SetLoggerChain();
 
                 return IncidentLogger.loggerChain;
             }
@@ -33,7 +33,7 @@ namespace Library_H4_TrashPlusPlus.Logging
         /// Sets the chain of loggers used in the error logging.
         /// </summary>
         /// <returns>LoggingMaster object containing the chain.</returns>
-        private static void GetLoggerChain()
+        private static void SetLoggerChain()
         {
             LoggingMaster fileLogger = new LocalFileLogger(IncidentLevel.MINOR);
             LoggingMaster dbLogger = new DbLogger(IncidentLevel.MAJOR);
