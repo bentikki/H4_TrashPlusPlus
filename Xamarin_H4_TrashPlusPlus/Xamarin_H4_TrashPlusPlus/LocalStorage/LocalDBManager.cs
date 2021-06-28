@@ -8,10 +8,20 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage
 {
     class LocalDBManager : IStorageManager
     {
-        private Database.Database database;
+        private Token _token;
+        private Database.Database _database;
         public LocalDBManager()
         {
-            database = new Database.Database(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TrashToken.db3"));
+            _database = new Database.Database(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TrashToken.db3"));
+        }
+
+        /// <summary>
+        /// looks if there is a token saved
+        /// </summary>
+        /// <returns>if there is a token</returns>
+        public bool ConaintsLocalToken()
+        {
+            return _token != null;
         }
 
 
@@ -20,7 +30,8 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage
         /// </summary>
         public void DeleteToken()
         {
-            database.DeleteTokenAsync().Wait();
+            _database.DeleteTokenAsync().Wait();
+            _token = null;
         }
 
         /// <summary>
@@ -29,10 +40,18 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage
         /// <returns>The first token</returns>
         public Token GetToken()
         {
-            List<Token> tokens = database.GetTokenAsync().Result;
-            if (tokens.Count > 0)
+            if (_token == null)
             {
-                return tokens[0];
+                List<Token> tokens = _database.GetTokenAsync().Result;
+                if (tokens.Count > 0)
+                {
+                    _token = tokens[0];
+                    return tokens[0];
+                }
+            }
+            else
+            {
+                return _token;
             }
             return null;
         }
@@ -43,7 +62,11 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage
         /// <param name="token">The token to save</param>
         public void SaveToken(Token token)
         {
-            database.SaveTokenAsync(token).Wait();
+            if (token.save)
+            {
+                _database.SaveTokenAsync(token).Wait();
+            }
+            this._token = token;
         }
     }
 }

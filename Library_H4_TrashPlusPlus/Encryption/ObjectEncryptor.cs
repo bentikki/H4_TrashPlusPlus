@@ -44,12 +44,52 @@ namespace Library_H4_TrashPlusPlus.Encryption
             return encryptedUser;
         }
 
-        private static CreateUserRequest EncryptCreateUserRequest(IEncryption encryption, CreateUserRequest createUserRequest)
+        public static CreateUserRequest EncryptCreateUserRequest(IEncryption encryption, CreateUserRequest createUserRequest)
         {
             CreateUserRequest encryptedUser = createUserRequest;
             encryptedUser.Mail = encryption.Encrypt(createUserRequest.Mail);
             encryptedUser.Username = encryption.Encrypt(createUserRequest.Username);
+            encryptedUser.Password = encryption.Encrypt(createUserRequest.Password);
             return encryptedUser;
+        }
+
+        /// <summary>
+        /// Encrypts CreateUserRequest object.
+        /// </summary>
+        /// <param name="encryption">Encryption method to use.</param>
+        /// <param name="requestToEncrypted">the request object to ecrypt.</param>
+        /// <returns>Ecrypted request object.</returns>
+        public static AuthenticateRequest EcryptAuthenticateRequest(IEncryption encryption, AuthenticateRequest requestToEncrypted)
+        {
+            if (requestToEncrypted != null)
+            {
+                AuthenticateRequest encryptedRequest = requestToEncrypted;
+                encryptedRequest.Password = encryption.Encrypt(requestToEncrypted.Password);
+                encryptedRequest.Username = encryption.Encrypt(requestToEncrypted.Username);
+
+                return encryptedRequest;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Encrypts CreateUserRequest object.
+        /// </summary>
+        /// <param name="encryption">Encryption method to use.</param>
+        /// <param name="requestToEncrypted">the request object to ecrypt.</param>
+        /// <returns>Ecrypted request object.</returns>
+        public static CreateUserRequest EcryptCreateUserRequest(IEncryption encryption, CreateUserRequest requestToEncrypted)
+        {
+            if (requestToEncrypted != null)
+            {
+                CreateUserRequest encryptedRequest = requestToEncrypted;
+                encryptedRequest.Mail = encryption.Encrypt(requestToEncrypted.Mail);
+                encryptedRequest.Username = encryption.Encrypt(requestToEncrypted.Username);
+                encryptedRequest.Password = encryption.Encrypt(requestToEncrypted.Password);
+
+                return encryptedRequest;
+            }
+            return null;
         }
     }
 }

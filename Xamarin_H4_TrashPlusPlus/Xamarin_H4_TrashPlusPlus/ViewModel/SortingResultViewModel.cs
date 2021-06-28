@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.Forms;
+using Xamarin_H4_TrashPlusPlus.LocalStorage;
 using Xamarin_H4_TrashPlusPlus.View;
 
 namespace Xamarin_H4_TrashPlusPlus.ViewModel
@@ -13,11 +16,17 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
     class SortingResultViewModel : BaseViewModel
     {
         private IBinTypeService _binTypeService;
+        
+        private IBinType binType;
 
         public bool Registered { get; set; }
-
-        private IBinType binType;
         public string ResultHeader { get; set; }
+        public bool RegisterOption { get; set; }
+
+        public string Barcode { get; set; }
+        public ICommand RegisterCommand { get; set; }
+        public ICommand ScanAgainCommand { get; set; }
+        public ICommand HomeCommand { get; set; }
 
         public IBinType BinType
         {
@@ -28,15 +37,21 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
             }
         }
 
-        public SortingResultViewModel (IChangePage pageChanger, ITrash trash, IBinTypeService binTypeService) : base(pageChanger)
+        public SortingResultViewModel (IChangePage pageChanger, ITrash trash, string barcode, IBinTypeService binTypeService) : base(pageChanger)
         {
             Registered = trash != null;
-            
+            Barcode = barcode;
+            RegisterOption = (Registered == false && StorageManagerFactory.GetLocalDBManager().GetToken() != null);
+
+            RegisterCommand = new Command(() => _pageChanger.PopPushPage(new RegisterSortingPage(barcode)));
+            ScanAgainCommand = new Command(() => _pageChanger.PushPage(new ScanningPage()));
+            HomeCommand = new Command(() => _pageChanger.PopPushPage(new HomePage()));
+
             if (Registered)
             {
                 ResultHeader = "Sorteringsmetode fundet!";
                 this._binTypeService = binTypeService;
-                _ = this.GetBinType(trash);
+                Task.Run(() => this.GetBinType(trash));
             }
             else
             {
