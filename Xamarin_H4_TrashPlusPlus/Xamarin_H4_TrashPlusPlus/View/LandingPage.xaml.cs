@@ -19,6 +19,12 @@ namespace Xamarin_H4_TrashPlusPlus.View
             InitializeComponent();
             BindingContext = new landingViewModel(this, UserServiceFactory.GetUserServiceApi());
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            ((landingViewModel)BindingContext).LoginCommand.Execute(null);
+        }
         /// <summary>
         /// Changes the page to the given page
         /// </summary>

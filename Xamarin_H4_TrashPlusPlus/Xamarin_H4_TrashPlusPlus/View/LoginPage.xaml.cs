@@ -49,8 +49,8 @@ namespace Xamarin_H4_TrashPlusPlus.View
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                Navigation.PopAsync(false);
-                Navigation.PushAsync(page, false);
+                Navigation.PopToRootAsync(false);
+                Navigation.PushAsync(page);
             }
             );
         }

@@ -9,6 +9,7 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage
     {
         void SaveToken(Token token);
         void DeleteToken();
+        bool ConaintsLocalToken();
         Token GetToken();
     }
 }

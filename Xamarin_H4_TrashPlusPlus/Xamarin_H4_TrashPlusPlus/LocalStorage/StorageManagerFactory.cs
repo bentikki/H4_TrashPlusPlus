@@ -8,7 +8,7 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage
     class StorageManagerFactory
     {
 
-        private static IStorageManager localDBStorageManager;
+        private static IStorageManager _localDBStorageManager;
 
         /// <summary>
         /// Gets or creates the Local database manager
@@ -16,16 +16,16 @@ namespace Xamarin_H4_TrashPlusPlus.LocalStorage
         /// <returns>the local database manager</returns>
         internal static IStorageManager GetLocalDBManager()
         {
-            if (localDBStorageManager == null)
+            if (_localDBStorageManager == null)
             {
-                localDBStorageManager = new LocalDBManager();
+                _localDBStorageManager = new LocalDBManager();
             }
-            return localDBStorageManager;
+            return _localDBStorageManager;
         }
 
-        internal static Token CreateToken(string tokenValue)
+        internal static Token CreateToken(string tokenValue, bool localSave = false)
         {
-            return new Token() { token = tokenValue };
+            return new Token() { token = tokenValue, save = localSave };
         }
     }
 }
