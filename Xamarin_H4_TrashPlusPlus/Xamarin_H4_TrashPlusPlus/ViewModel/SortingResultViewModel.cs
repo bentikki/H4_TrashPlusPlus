@@ -48,7 +48,7 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         {
             using (UserDialogs.Instance.Loading("Viser sortering..."))
             {
-                this.BinType = await this._binTypeService.GetBinTypeByIdAsync(trash.FK_BinId);
+                this.BinType = await this._binTypeService.GetBinTypeByIdAsync(trash.BinId);
             }
         }
     }
