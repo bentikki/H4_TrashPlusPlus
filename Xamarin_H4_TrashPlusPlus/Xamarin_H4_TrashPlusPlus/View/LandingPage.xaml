@@ -23,7 +23,7 @@
                 TextColor="{DynamicResource GreyColor}"></Label>
             <Label
                 Grid.Row="2"
-                Text="Mockup to empower your creative workflow"
+                Text="Gør din hverdag lettere"
                 HorizontalTextAlignment="Center"
                 VerticalTextAlignment="Center"
                 FontSize="30"
@@ -31,7 +31,7 @@
                 TextColor="{DynamicResource DarkColor}"></Label>
             <Label
                 Grid.Row="3"
-                Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                Text="Ved hjælp at Trash plus+, kan du nemt finde den foretrukkende affaldssortering for alle indpakninger. Bare scan stregkoden, så viser vi hvad andre brugere har rapporteret!"
                 HorizontalTextAlignment="Center"
                 FontSize="15"
                 Padding="50,0,50,0"

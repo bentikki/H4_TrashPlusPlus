@@ -56,7 +56,9 @@
                         Grid.Column="1"
                         Orientation="Horizontal">
                         <Label Text="Ny bruger?"></Label>
-                        <Label Text="Opret en ny bruger" TextColor="{StaticResource LinkColor}">
+                        <Label
+                        AutomationId="CreateUserTextButton" 
+                            Text="Opret en ny bruger" TextColor="{StaticResource LinkColor}">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ChangeToSignUpCommand}" NumberOfTapsRequired="1"/>
                             </Label.GestureRecognizers>
