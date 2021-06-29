@@ -91,7 +91,7 @@ namespace Xamarin.UI.Tests
             app.Tap(c => c.Marked("automationLoginButton"));
             app.WaitForElement(c => c.Marked("Logger ind..."));
 
-            app.WaitForElement(l => l.Marked("automationGoToHome"), timeout: TimeSpan.FromSeconds(10));
+            app.WaitForElement(l => l.Marked("automationGoToHome"), timeout: TimeSpan.FromSeconds(30));
         }
 
         private void EnterCredentials(string username, string password, bool rememberMe = false)

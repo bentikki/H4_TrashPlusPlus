@@ -70,7 +70,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
                 {
                     Username = mail,
                     Password = password,
-                    PublicKey = PublicAsyncEncryption.GetPublicKey()
+                    PublicKey = _asyncEncryption.GetPublicKey()
                 };
                 authenticateRequest = ObjectEncryptor.EcryptAuthenticateRequest(PublicAsyncEncryption, authenticateRequest);
                 AuthenticateResponse apiResponseUser = this.apiRequester.PostApi<AuthenticateResponse>(apiPath, authenticateRequest);
@@ -107,7 +107,7 @@ namespace Library_H4_TrashPlusPlus.Users.Repository
             {
                 string apiPath = "user/createuser";
 
-                userToCreate.PublicKey = PublicAsyncEncryption.GetPublicKey();
+                userToCreate.PublicKey = _asyncEncryption.GetPublicKey();
 
                 userToCreate = ObjectEncryptor.EcryptCreateUserRequest(PublicAsyncEncryption, userToCreate);
 
