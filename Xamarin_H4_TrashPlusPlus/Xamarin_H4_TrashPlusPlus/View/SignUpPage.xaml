@@ -89,6 +89,7 @@
                             ></local:CustomEntry>
                     </Frame>
                     <Frame
+                        AutomationId="Password"
                         Grid.Row="5"
                         Grid.Column="1"
                         BorderColor="{Binding PasswordColor}"
@@ -97,13 +98,13 @@
                         Padding="10,0,10,0"
                         >
                         <local:CustomEntry
-                            AutomationId="Password"
                             IsPassword="True"
                             Placeholder="Password"
                             Text="{Binding Password}"
                             ></local:CustomEntry>
                     </Frame>
                     <Frame
+                        AutomationId="RePassword"
                         Grid.Row="6"
                         Grid.Column="1"
                         BorderColor="{Binding RePasswordColor}"
@@ -111,7 +112,6 @@
                         CornerRadius="12"
                         Padding="10,0,10,0">
                         <local:CustomEntry
-                            AutomationId="RePassword"
                             IsPassword="True"
                             Placeholder="RePassword"
                             Text="{Binding RePassword}"

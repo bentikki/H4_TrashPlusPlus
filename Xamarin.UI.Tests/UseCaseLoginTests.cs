@@ -11,7 +11,7 @@ namespace Xamarin.UI.Tests
     //[TestFixture(Platform.iOS)]
     public class UseCaseLoginTests
     {
-        IApp app;
+        internal IApp app;
         Platform platform;
 
         public string testUsername;
@@ -21,6 +21,13 @@ namespace Xamarin.UI.Tests
         {
             testUsername = "btotestuser@mail.com";
             testPassword = "btotest1";
+            this.platform = platform;
+        }
+
+        public UseCaseLoginTests(Platform platform, string username, string password)
+        {
+            testUsername = username;
+            testPassword = password;
             this.platform = platform;
         }
 

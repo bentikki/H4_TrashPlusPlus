@@ -21,9 +21,9 @@ namespace Xamarin.UI.Tests
 
         public UseCaseCreateUserTests(Platform platform)
         {
-            long randomNumber = new Random().Next(0, 10000);
-            testUsername = "testUser" + randomNumber;
-            testMail = "testUser " + randomNumber + "@mail.com";
+            long randomNumber = new Random().Next(0, 100000);
+            testUsername = "UITestUser" + randomNumber;
+            testMail = "UITestUser" + randomNumber + "@mail.com";
             testPassword = "btotest1";
             this.platform = platform;
         }
@@ -39,6 +39,9 @@ namespace Xamarin.UI.Tests
         {
 
             this.Create(this.testUsername, this.testMail, this.testPassword, this.testPassword);
+            UseCaseLoginTests useCaseLoginTests = new UseCaseLoginTests(platform, this.testMail, this.testPassword);
+            useCaseLoginTests.app = this.app;
+            useCaseLoginTests.LoginAndLogout_WithValidCredentials_ShouldLogUserIn();
             Assert.Pass("User have been Created has been successfull");
         }
 
@@ -69,6 +72,7 @@ namespace Xamarin.UI.Tests
             app.EnterText(c => c.Marked("Username"), username);
             app.EnterText(c => c.Marked("Mail"), mail);
             app.EnterText(c => c.Marked("Password"), password);
+            app.DismissKeyboard();
             app.EnterText(c => c.Marked("RePassword"), rePassword);
             app.DismissKeyboard();
         }
