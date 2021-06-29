@@ -121,7 +121,7 @@
                         AutomationId="automationCreateButton"
                         Grid.Row="7"
                         Grid.Column="1"
-                        Text="login"
+                        Text="Opret bruger"
                         CornerRadius="26"
                         Command="{Binding CreateCommand}"
                         BackgroundColor="{DynamicResource AppPrimaryColor}"></Button>
