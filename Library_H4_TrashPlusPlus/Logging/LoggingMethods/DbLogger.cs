@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Library_H4_TrashPlusPlus.Logging.LoggingMethods
 {
+    /// <summary>
+    /// Error logging via Database Table
+    /// </summary>
     internal class DbLogger : LoggingMaster
     {
         public DbLogger(IncidentLevel level) : base(level) { }
@@ -21,7 +24,7 @@ namespace Library_H4_TrashPlusPlus.Logging.LoggingMethods
                 {
                     await conn.OpenAsync();
 
-                    // Execute stored procedure to create new user with hashed password.
+                    // Execute stored procedure to create new error log
                     var procedure = "[SPLogError]";
                     var values = new
                     {

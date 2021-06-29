@@ -43,6 +43,7 @@
                         Grid.ColumnSpan="2"
                         CornerRadius="25"></Button>
                     <Button
+                        AutomationId="automationLogOutButton"
                         Grid.Row="3"
                         Grid.Column="1"
                         Text="log ud"
@@ -51,6 +52,7 @@
                         CornerRadius="25"
                         Command="{Binding LogOutCommand}"></Button>
                     <Button
+                        AutomationId="automationLogInButton"
                         Grid.Row="3"
                         Grid.Column="1"
                         Text="log ind"

@@ -216,10 +216,11 @@ namespace Xamarin_H4_TrashPlusPlus.ViewModel
         public async void CreateUserAsync()
         {
             IUser user = null;
-            using (UserDialogs.Instance.Loading("Creating account..."))
+            using (UserDialogs.Instance.Loading("Opretter bruger..."))
             {
                 if (DefaultValidators.ValidateMail(Mail).Count == 0 && DefaultValidators.ValidatePassword(Password).Count == 0 && Password == RePassword && DefaultValidators.ValidateUsername(Username).Count == 0)
                 {
+                    await Task.Delay(300);
                     user = await _userService.CreateUserAsync(Mail, Username, Password);
                 }
             }
