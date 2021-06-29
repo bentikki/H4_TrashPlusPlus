@@ -69,6 +69,7 @@
                         Padding="10,0,10,0"
                         >
                         <local:CustomEntry
+                            AutomationId="Username"
                             Placeholder="Brugernavn"
                             Text="{Binding Username}"
                             ></local:CustomEntry>
@@ -82,6 +83,7 @@
                         Padding="10,0,10,0"
                         >
                         <local:CustomEntry
+                            AutomationId="Mail"
                             Placeholder="Mail"
                             Text="{Binding Mail}"
                             ></local:CustomEntry>
@@ -95,6 +97,7 @@
                         Padding="10,0,10,0"
                         >
                         <local:CustomEntry
+                            AutomationId="Password"
                             IsPassword="True"
                             Placeholder="Password"
                             Text="{Binding Password}"
@@ -108,12 +111,14 @@
                         CornerRadius="12"
                         Padding="10,0,10,0">
                         <local:CustomEntry
+                            AutomationId="RePassword"
                             IsPassword="True"
                             Placeholder="RePassword"
                             Text="{Binding RePassword}"
                             ></local:CustomEntry>
                     </Frame>
                     <Button 
+                        AutomationId="automationCreateButton"
                         Grid.Row="7"
                         Grid.Column="1"
                         Text="login"

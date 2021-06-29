@@ -46,6 +46,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UseCaseCreateUserTests.cs" />
     <Compile Include="UseCaseLoginTests.cs" />
     <Compile Include="AppInitializer.cs" />
   </ItemGroup>
